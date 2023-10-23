@@ -1,0 +1,26 @@
+{
+  "name": "oxil/kinicrm",
+  "version": "0.1",
+  "description": "KinCRM - Open source Customer Relationship Manager library for the Kini suite",
+  "keywords": [
+    "PHP",
+    "intelligence",
+    "customer relationship management"
+  ],
+  "homepage": "https://kinicrm.com",
+  "type": "library",
+  "require": {
+    "oxil/kiniauth": "dev-master",
+    "oxil/kinimailer": "dev-main"
+  },
+  "scripts": {
+    "dev": "rm -rf vendor/oxil/kini*; ln -s ../../../kinikit/kinikit-core vendor/oxil/kinikit-core; ln -s ../../../kinikit/kinikit-mvc vendor/oxil/kinikit-mvc; ln -s ../../../kinikit/kinikit-persistence vendor/oxil/kinikit-persistence; ln -s ../../../kiniauth vendor/oxil/kiniauth; ln -s ../../../kiniauth vendor/oxil/kinimailer"
+  },
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "KiniCRM\\Test\\": "php/test/",
+      "KiniCRM\\": "php/src/"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+# Config file for Kinintel example
+
+search.paths = ../vendor/oxil/kiniauth/php/src;../vendor/oxil/kinimailer/php/src;../vendor/oxil/kinicrm/php/src;
+
+db.provider = sqlite3
+db.filename = DB/kinicrm-example.db
+db.logFile = DB/db.log
+
