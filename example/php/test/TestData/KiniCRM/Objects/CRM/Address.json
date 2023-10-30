@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "street1": "13 Fruity Loop Lane",
+    "street2": "Appleville",
+    "city": "Fruit Bowl",
+    "county": "Orangeville",
+    "postcode": "OR11 3RR",
+    "countryCode": "GB"
+  },
+  {
+    "id": 2,
+    "street1": "65 Design Street",
+    "street2": "Graphics land",
+    "city": "Pencilham",
+    "county": "Pencil",
+    "postcode": "PE26 3RR",
+    "countryCode": "GB"
+  },
+  {
+    "id": 3,
+    "street1": "84 Melon Street",
+    "street2": "Melonland",
+    "city": "Melon",
+    "county": "Fruitshire",
+    "postcode": "FR3 7UU",
+    "countryCode": "GB"
+  }
+]

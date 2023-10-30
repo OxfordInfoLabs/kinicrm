@@ -2,7 +2,7 @@
 
 namespace KiniCRM\Objects\CRM;
 
-use Kiniauth\Controllers\Attachment;
+use Kiniauth\Objects\Attachment\AttachmentSummary;
 
 /**
  * @table kcr_contact
@@ -36,11 +36,9 @@ class Contact {
      */
     private $telephone;
 
-
     /**
-     * @var Attachment
-     * @oneToOne
-     * @childJoinColumns parent_object_id,parent_object_type=Contact
+     * @var string
+     * @sqlType TEXT
      */
     private $photo;
 
@@ -51,12 +49,27 @@ class Contact {
      */
     private $address;
 
-
     /**
      * @var string
      * @sqlType LONGTEXT
      */
     private $notes;
+
+    /**
+     * @var AttachmentSummary[]
+     * @oneToMany
+     * @readOnly
+     * @childJoinColumns parent_object_id,parent_object_type=Contact
+     */
+    private $attachments;
+
+
+    /**
+     * @var ContactOrganisationDepartment[]
+     * @oneToMany
+     * @childJoinColumns contact_id
+     */
+    private $organisationDepartments;
 
 
     /**
@@ -135,6 +148,56 @@ class Contact {
      */
     public function setNotes($notes) {
         $this->notes = $notes;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAccountId() {
+        return $this->accountId;
+    }
+
+    /**
+     * @param int $accountId
+     */
+    public function setAccountId($accountId) {
+        $this->accountId = $accountId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoto() {
+        return $this->photo;
+    }
+
+    /**
+     * @param string $photo
+     */
+    public function setPhoto($photo) {
+        $this->photo = $photo;
+    }
+
+    /**
+     * @return AttachmentSummary[]
+     */
+    public function getAttachments() {
+        return $this->attachments;
+    }
+
+
+    /**
+     * @return ContactOrganisationDepartment[]
+     */
+    public function getOrganisationDepartments() {
+        return $this->organisationDepartments;
+    }
+
+    /**
+     * @param ContactOrganisationDepartment[] $organisationDepartments
+     */
+    public function setOrganisationDepartments($organisationDepartments) {
+        $this->organisationDepartments = $organisationDepartments;
     }
 
 

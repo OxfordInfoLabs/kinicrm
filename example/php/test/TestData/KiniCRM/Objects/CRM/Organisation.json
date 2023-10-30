@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Fruity Loops Music",
+    "address": {
+      "id": 1
+    },
+    "primaryContact": {
+      "id": 1
+    },
+    "departments": [
+      {
+        "name": "Policy",
+        "notes": "Legal eagles, take note !!"
+      },
+      {
+        "name": "Tech"
+      }
+    ],
+    "notes": "Massive music jammin outfit"
+  },
+  {
+    "name": "Lions Design Corp.",
+    "address": {
+      "id": 2
+    },
+    "departments": [
+      {
+        "name": "Design"
+      },
+      {
+        "name": "Admin",
+        "notes": "Make sure your receipts are in on time !"
+      }
+    ],
+    "notes": "Design agency specialising in Lion themed websites"
+  }
+]

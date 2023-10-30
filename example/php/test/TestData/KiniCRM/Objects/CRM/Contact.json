@@ -1,0 +1,59 @@
+[
+  {
+    "name": "Mr Fruity Loop",
+    "emailAddress": "fruity@fruityloops.xyz",
+    "telephone": "07777 111333",
+    "notes": "This guy absolutely loves Bananas - Potassium overload",
+    "address": {
+      "id": 1
+    },
+    "organisationDepartments": [
+      {
+        "organisation": {
+          "id": 1
+        },
+        "department": {
+          "id": 2
+        }
+      }
+    ]
+  },
+  {
+    "name": "Miss Melon Balls",
+    "emailAddress": "melon@fruityloops.xyz",
+    "telephone": "01234 111333",
+    "notes": "This girl absolutely loves melons - watermelon especially",
+    "address": {
+      "id": 3
+    },
+    "organisationDepartments": [
+      {
+        "organisation": {
+          "id": 1
+        },
+        "department": {
+          "id": 1
+        }
+      }
+    ]
+  },
+  {
+    "name": "Tom Design",
+    "emailAddress": "tom@design.art",
+    "telephone": "01234 111333",
+    "notes": "This guy absolutely bosses the design piece.  Hands down !!",
+    "address": {
+      "id": 2
+    },
+    "organisationDepartments": [
+      {
+        "organisation": {
+          "id": 2
+        },
+        "department": {
+          "id": 4
+        }
+      }
+    ]
+  }
+]

@@ -1,25 +1,11 @@
 <?php
 
-namespace KiniCRM\Objects\CRM;
-
-
-use Kinikit\Persistence\ORM\ActiveRecord;
-
-/**
- * @table kcr_address
- * @generate
- */
-class Address extends ActiveRecord {
+class AddressItem {
 
     /**
      * @var integer
      */
     private $id;
-
-    /**
-     * @var integer
-     */
-    private $accountId;
 
     /**
      * @var string
@@ -53,24 +39,22 @@ class Address extends ActiveRecord {
     private $countryCode;
 
     /**
-     * @param int $accountId
      * @param string $street1
      * @param string $street2
      * @param string $city
      * @param string $county
      * @param string $postcode
      * @param string $countryCode
-     * @param int $id
+     * @param integer $id
      */
-    public function __construct($accountId, $street1, $street2, $city, $county, $postcode, $countryCode, $id = null) {
-        $this->id = $id;
-        $this->accountId = $accountId;
+    public function __construct($street1, $street2, $city, $county, $postcode, $countryCode, $id = null) {
         $this->street1 = $street1;
         $this->street2 = $street2;
         $this->city = $city;
         $this->county = $county;
         $this->postcode = $postcode;
         $this->countryCode = $countryCode;
+        $this->id = $id;
     }
 
 
@@ -82,32 +66,10 @@ class Address extends ActiveRecord {
     }
 
     /**
-     * @return int
-     */
-    public function getAccountId() {
-        return $this->accountId;
-    }
-
-    /**
-     * @param int $accountId
-     */
-    public function setAccountId($accountId) {
-        $this->accountId = $accountId;
-    }
-
-
-    /**
      * @return string
      */
     public function getStreet1() {
         return $this->street1;
-    }
-
-    /**
-     * @param string $street1
-     */
-    public function setStreet1($street1) {
-        $this->street1 = $street1;
     }
 
     /**
@@ -118,24 +80,10 @@ class Address extends ActiveRecord {
     }
 
     /**
-     * @param string $street2
-     */
-    public function setStreet2($street2) {
-        $this->street2 = $street2;
-    }
-
-    /**
      * @return string
      */
     public function getCity() {
         return $this->city;
-    }
-
-    /**
-     * @param string $city
-     */
-    public function setCity($city) {
-        $this->city = $city;
     }
 
     /**
@@ -146,13 +94,6 @@ class Address extends ActiveRecord {
     }
 
     /**
-     * @param string $county
-     */
-    public function setCounty($county) {
-        $this->county = $county;
-    }
-
-    /**
      * @return string
      */
     public function getPostcode() {
@@ -160,24 +101,10 @@ class Address extends ActiveRecord {
     }
 
     /**
-     * @param string $postcode
-     */
-    public function setPostcode($postcode) {
-        $this->postcode = $postcode;
-    }
-
-    /**
      * @return string
      */
     public function getCountryCode() {
         return $this->countryCode;
-    }
-
-    /**
-     * @param string $countryCode
-     */
-    public function setCountryCode($countryCode) {
-        $this->countryCode = $countryCode;
     }
 
 

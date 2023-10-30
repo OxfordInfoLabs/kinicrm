@@ -2,6 +2,10 @@
 
 namespace KiniCRM\Objects\CRM;
 
+/**
+ * @table kcr_department
+ * @generate
+ */
 class Department {
 
     /**

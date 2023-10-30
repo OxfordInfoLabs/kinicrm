@@ -2,22 +2,13 @@
 
 namespace KiniCRM\Objects\CRM;
 
+use Kiniauth\Objects\Attachment\AttachmentSummary;
 
 /**
  * @table kcr_organisation
  * @generate
  */
-class Organisation {
-
-    /**
-     * @var integer
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $name;
+class Organisation extends OrganisationSummary {
 
     /**
      * @var Address
@@ -35,9 +26,15 @@ class Organisation {
 
 
     /**
+     * @var string
+     * @sqlType TEXT
+     */
+    private $logo;
+
+    /**
      * @var Department[]
      * @oneToMany
-     * childJoinColumns organisation_id
+     * @childJoinColumns organisation_id
      */
     private $departments;
 
@@ -50,26 +47,13 @@ class Organisation {
 
 
     /**
-     * @return int
+     * @var AttachmentSummary[]
+     * @oneToMany
+     * @readOnly
+     * @childJoinColumns parent_object_id,parent_object_type=Organisation
      */
-    public function getId() {
-        return $this->id;
-    }
+    private $attachments;
 
-
-    /**
-     * @return string
-     */
-    public function getName() {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName($name) {
-        $this->name = $name;
-    }
 
     /**
      * @return Address
@@ -127,7 +111,33 @@ class Organisation {
         $this->departments = $departments;
     }
 
+    /**
+     * @return string
+     */
+    public function getLogo() {
+        return $this->logo;
+    }
 
+    /**
+     * @param string $logo
+     */
+    public function setLogo($logo) {
+        $this->logo = $logo;
+    }
+
+    /**
+     * @return AttachmentSummary[]
+     */
+    public function getAttachments() {
+        return $this->attachments;
+    }
+
+    /**
+     * @param AttachmentSummary[] $attachments
+     */
+    public function setAttachments($attachments) {
+        $this->attachments = $attachments;
+    }
 
 
 }
