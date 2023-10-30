@@ -3,28 +3,52 @@
 namespace KiniCRM\Services\CRM;
 
 use KiniCRM\Objects\CRM\Address;
+use KiniCRM\TestBase;
+use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
 
-class AddressServiceTest extends \PHPUnit\Framework\TestCase {
+include_once "autoloader.php";
+
+class AddressServiceTest extends TestBase {
 
     /**
      * @var AddressService
      */
     private $addressService;
 
-    /**
-     *
-     *
-     * @return void
-     */
     public function setUp(): void {
-
+        $this->addressService = new AddressService();
     }
 
 
     public function testCanSaveFilterAndRemoveAddresses() {
 
-        $address1 = new Address(0, "3 The Lane", "Somewhere", "Oxford","Oxon", "OX33 1RW","GB");
+        $address1 = new Address(0, "3 The Lane", "Somewhere", "Oxford", "Oxon", "OX1 6DD", "GB");
+        $this->addressService->saveAddress($address1);
 
+        $address2 = new Address(0, "4 The Lane", "Nowhere", "Cambridge", "Cambs", "CB4 2WW", "FR");
+        $this->addressService->saveAddress($address2);
+
+
+        // Check string, limit offset
+        $this->assertEquals([$address1, $address2], $this->addressService->filterAddresses("lane"));
+        $this->assertEquals([$address1], $this->addressService->filterAddresses("lane", 1));
+        $this->assertEquals([$address2], $this->addressService->filterAddresses("lane", 5, 1));
+
+        // Check other search fields
+        $this->assertEquals([$address2], $this->addressService->filterAddresses("Nowh"));
+        $this->assertEquals([$address1], $this->addressService->filterAddresses("Oxfo"));
+        $this->assertEquals([$address2], $this->addressService->filterAddresses("Cambs"));
+        $this->assertEquals([$address2], $this->addressService->filterAddresses("CB"));
+        $this->assertEquals([$address2], $this->addressService->filterAddresses("FR"));
+
+        $this->addressService->removeAddress($address1->getId());
+
+        try {
+            Address::fetch($address1->getId());
+            $this->fail("Should have thrown here");
+        } catch (ObjectNotFoundException $e) {
+            // Success
+        }
 
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace KiniCRM;
+
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Persistence\Tools\TestDataInstaller;
 

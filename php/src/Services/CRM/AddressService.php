@@ -15,6 +15,22 @@ class AddressService {
      */
     public function filterAddresses($searchString = "", $limit = 10, $offset = 0) {
 
+        $query = "WHERE CONCAT(street1,street2,city,county,postcode,country_code) LIKE ?";
+        $params = ["%" . $searchString . "%"];
+
+        if ($limit) {
+            $query .= " LIMIT ?";
+            $params[] = $limit;
+        }
+
+        if ($offset) {
+            $query .= " OFFSET ?";
+            $params[] = $offset;
+        }
+
+
+        return Address::filter($query, $params);
+
     }
 
     /**
@@ -24,7 +40,7 @@ class AddressService {
      * @return Address
      */
     public function saveAddress($address) {
-        $address->save;
+        $address->save();
         return $address;
     }
 
