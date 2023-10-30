@@ -4,12 +4,13 @@ namespace KiniCRM\Objects\CRM;
 
 use Kiniauth\Objects\Attachment\AttachmentSummary;
 use KiniCRM\ValueObjects\CRM\ContactItem;
+use Kinikit\Persistence\ORM\ActiveRecord;
 
 /**
  * @table kcr_contact
  * @generate
  */
-class Contact {
+class Contact extends ActiveRecord {
 
     /**
      * @var integer

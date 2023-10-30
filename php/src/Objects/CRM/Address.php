@@ -59,6 +59,7 @@ class Address extends ActiveRecord {
      */
     public function __construct($addressItem, $accountId = null) {
         if ($addressItem instanceof AddressItem) {
+            $this->id = $addressItem->getId();
             $this->street1 = $addressItem->getStreet1();
             $this->street2 = $addressItem->getStreet2();
             $this->city = $addressItem->getCity();

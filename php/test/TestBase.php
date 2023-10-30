@@ -2,6 +2,7 @@
 
 namespace KiniCRM;
 
+use Kiniauth\Bootstrap;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Persistence\Tools\TestDataInstaller;
 
@@ -11,7 +12,6 @@ class TestBase extends \PHPUnit\Framework\TestCase {
     private static $run = false;
 
     public static function setUpBeforeClass(): void {
-
 
         if (!self::$run) {
 
