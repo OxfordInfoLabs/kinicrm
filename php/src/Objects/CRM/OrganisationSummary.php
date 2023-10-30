@@ -3,10 +3,14 @@
 namespace KiniCRM\Objects\CRM;
 
 
+use KiniCRM\ValueObjects\CRM\OrganisationItem;
+use KiniCRM\ValueObjects\CRM\OrganisationSummaryItem;
+use Kinikit\Persistence\ORM\ActiveRecord;
+
 /**
  * @table kcr_organisation
  */
-class OrganisationSummary {
+class OrganisationSummary extends ActiveRecord {
 
     /**
      * @var integer
@@ -22,6 +26,28 @@ class OrganisationSummary {
      * @var string
      */
     protected $name;
+
+    /**
+     * @var string
+     * @sqlType TEXT
+     */
+    protected $logo;
+
+
+    /**
+     * Construct with required stuff
+     *
+     * @param OrganisationSummaryItem $organisationItem
+     * @param $accountId
+     */
+    public function __construct($organisationItem, $accountId = null) {
+        if ($organisationItem instanceof OrganisationSummaryItem) {
+            $this->id = $organisationItem->getId();
+            $this->name = $organisationItem->getName();
+            $this->logo = $organisationItem->getLogo();
+        }
+        $this->accountId = $accountId;
+    }
 
     /**
      * @return int
@@ -57,5 +83,19 @@ class OrganisationSummary {
      */
     public function getName() {
         return $this->name;
+    }
+
+    /**
+     * @param string $logo
+     */
+    public function setLogo($logo) {
+        $this->logo = $logo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogo() {
+        return $this->logo;
     }
 }

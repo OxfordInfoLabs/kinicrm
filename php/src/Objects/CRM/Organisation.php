@@ -3,6 +3,7 @@
 namespace KiniCRM\Objects\CRM;
 
 use Kiniauth\Objects\Attachment\AttachmentSummary;
+use KiniCRM\ValueObjects\CRM\OrganisationItem;
 
 /**
  * @table kcr_organisation
@@ -26,12 +27,6 @@ class Organisation extends OrganisationSummary {
 
 
     /**
-     * @var string
-     * @sqlType TEXT
-     */
-    private $logo;
-
-    /**
      * @var Department[]
      * @oneToMany
      * @childJoinColumns organisation_id
@@ -53,6 +48,29 @@ class Organisation extends OrganisationSummary {
      * @childJoinColumns parent_object_id,parent_object_type=Organisation
      */
     private $attachments;
+
+
+    /**
+     * @param OrganisationItem $organisation
+     * @param integer $accountId
+     */
+    public function __construct($organisation, $accountId = null) {
+        parent::__construct($organisation, $accountId);
+
+        // Map back from organisation item objects
+        if ($organisation instanceof OrganisationItem) {
+            $this->address = $organisation->getAddress() ? new Address($organisation->getAddress(), $accountId) : null;
+            $this->primaryContact = $organisation->getPrimaryContact() ? new Contact($organisation->getPrimaryContact(), $accountId) : null;
+            $this->notes = $organisation->getNotes();
+
+            // Map all departments
+            $this->departments = [];
+            foreach ($organisation->getDepartments() ?? [] as $department) {
+                $this->departments[] = new Department($department);
+            }
+
+        }
+    }
 
 
     /**
@@ -109,20 +127,6 @@ class Organisation extends OrganisationSummary {
      */
     public function setDepartments($departments) {
         $this->departments = $departments;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLogo() {
-        return $this->logo;
-    }
-
-    /**
-     * @param string $logo
-     */
-    public function setLogo($logo) {
-        $this->logo = $logo;
     }
 
     /**

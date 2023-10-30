@@ -4,6 +4,7 @@ namespace KiniCRM\Services\CRM;
 
 use KiniCRM\Objects\CRM\Address;
 use KiniCRM\TestBase;
+use KiniCRM\ValueObjects\CRM\AddressItem;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
 
 include_once "autoloader.php";
@@ -22,10 +23,10 @@ class AddressServiceTest extends TestBase {
 
     public function testCanSaveFilterAndRemoveAddresses() {
 
-        $address1 = new Address(0, "3 The Lane", "Somewhere", "Oxford", "Oxon", "OX1 6DD", "GB");
+        $address1 = new Address(new AddressItem("3 The Lane", "Somewhere", "Oxford", "Oxon", "OX1 6DD", "GB"), 0);
         $this->addressService->saveAddress($address1);
 
-        $address2 = new Address(0, "4 The Lane", "Nowhere", "Cambridge", "Cambs", "CB4 2WW", "FR");
+        $address2 = new Address(new AddressItem("4 The Lane", "Nowhere", "Cambridge", "Cambs", "CB4 2WW", "FR"), 0);
         $this->addressService->saveAddress($address2);
 
 

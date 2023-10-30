@@ -3,6 +3,7 @@
 namespace KiniCRM\Objects\CRM;
 
 
+use KiniCRM\ValueObjects\CRM\AddressItem;
 use Kinikit\Persistence\ORM\ActiveRecord;
 
 /**
@@ -53,24 +54,19 @@ class Address extends ActiveRecord {
     private $countryCode;
 
     /**
-     * @param int $accountId
-     * @param string $street1
-     * @param string $street2
-     * @param string $city
-     * @param string $county
-     * @param string $postcode
-     * @param string $countryCode
-     * @param int $id
+     * @param AddressItem $addressItem
+     * @param $accountId
      */
-    public function __construct($accountId, $street1, $street2, $city, $county, $postcode, $countryCode, $id = null) {
-        $this->id = $id;
+    public function __construct($addressItem, $accountId = null) {
+        if ($addressItem instanceof AddressItem) {
+            $this->street1 = $addressItem->getStreet1();
+            $this->street2 = $addressItem->getStreet2();
+            $this->city = $addressItem->getCity();
+            $this->county = $addressItem->getCounty();
+            $this->postcode = $addressItem->getPostcode();
+            $this->countryCode = $addressItem->getCountryCode();
+        }
         $this->accountId = $accountId;
-        $this->street1 = $street1;
-        $this->street2 = $street2;
-        $this->city = $city;
-        $this->county = $county;
-        $this->postcode = $postcode;
-        $this->countryCode = $countryCode;
     }
 
 

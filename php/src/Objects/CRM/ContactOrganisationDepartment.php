@@ -2,6 +2,8 @@
 
 namespace KiniCRM\Objects\CRM;
 
+use KiniCRM\ValueObjects\CRM\OrganisationDepartmentItem;
+
 /**
  * @table kcr_contact_organisation_department
  * @generate
@@ -28,6 +30,18 @@ class ContactOrganisationDepartment {
      * @parentJoinColumns department_id
      */
     private $department;
+
+
+    /**
+     * @param OrganisationDepartmentItem $organisationDepartment
+     */
+    public function __construct($organisationDepartment) {
+        if ($organisationDepartment instanceof OrganisationDepartmentItem) {
+            $this->organisation = $organisationDepartment->getOrganisationSummary() ? new OrganisationSummary($organisationDepartment->getOrganisationSummary()) : null;
+            $this->department = $organisationDepartment->getDepartment() ? new Department($organisationDepartment->getDepartment()) : null;
+        }
+    }
+
 
     /**
      * @return int

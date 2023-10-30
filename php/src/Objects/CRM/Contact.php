@@ -3,6 +3,7 @@
 namespace KiniCRM\Objects\CRM;
 
 use Kiniauth\Objects\Attachment\AttachmentSummary;
+use KiniCRM\ValueObjects\CRM\ContactItem;
 
 /**
  * @table kcr_contact
@@ -70,6 +71,31 @@ class Contact {
      * @childJoinColumns contact_id
      */
     private $organisationDepartments;
+
+
+    /**
+     * @param ContactItem $contact
+     * @param integer $accountId
+     */
+    public function __construct($contact, $accountId = null) {
+        if ($contact instanceof ContactItem) {
+            $this->id = $contact->getId();
+            $this->name = $contact->getName();
+            $this->emailAddress = $contact->getEmailAddress();
+            $this->telephone = $contact->getTelephone();
+            $this->photo = $contact->getPhoto();
+            $this->notes = $contact->getNotes();
+
+            $this->address = $contact->getAddress() ? new Address($contact->getAddress(), $accountId) : null;
+
+            $this->organisationDepartments = [];
+            foreach ($contact->getOrganisationDepartments() ?? [] as $organisationDepartment) {
+                $this->organisationDepartments[] = new ContactOrganisationDepartment($organisationDepartment);
+            }
+
+        }
+        $this->accountId = $accountId;
+    }
 
 
     /**

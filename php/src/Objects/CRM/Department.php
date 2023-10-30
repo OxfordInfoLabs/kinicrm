@@ -2,6 +2,8 @@
 
 namespace KiniCRM\Objects\CRM;
 
+use KiniCRM\ValueObjects\CRM\DepartmentItem;
+
 /**
  * @table kcr_department
  * @generate
@@ -29,6 +31,19 @@ class Department {
      * @sqlType LONGTEXT
      */
     private $notes;
+
+
+    /**
+     * @param DepartmentItem $departmentItem
+     */
+    public function __construct($department) {
+        if ($department instanceof DepartmentItem) {
+            $this->id = $department->getId();
+            $this->name = $department->getName();
+            $this->notes = $department->getNotes();
+        }
+    }
+
 
     /**
      * @return int

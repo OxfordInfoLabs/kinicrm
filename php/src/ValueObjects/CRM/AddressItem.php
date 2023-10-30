@@ -1,5 +1,9 @@
 <?php
 
+namespace KiniCRM\ValueObjects\CRM;
+
+use KiniCRM\Objects\CRM\Address;
+
 class AddressItem {
 
     /**
@@ -105,6 +109,15 @@ class AddressItem {
      */
     public function getCountryCode() {
         return $this->countryCode;
+    }
+
+
+    /**
+     * @param Address $address
+     * @return AddressItem
+     */
+    public static function fromAddress($address) {
+        return new AddressItem($address->getStreet1(), $address->getStreet2(), $address->getCity(), $address->getCounty(), $address->getPostcode(), $address->getCountryCode());
     }
 
 
