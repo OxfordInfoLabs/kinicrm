@@ -44,7 +44,7 @@ class Contact {
      * @param ContactItem $contact
      */
     public function saveContact($contact) {
-        $this->contactService->saveContact(new \KiniCRM\Objects\CRM\Contact($contact, 0));
+        return $this->contactService->saveContact(new \KiniCRM\Objects\CRM\Contact($contact, 0));
     }
 
     /**

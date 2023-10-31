@@ -43,7 +43,7 @@ class Address {
      * @param AddressItem $address
      */
     public function saveAddress($address) {
-        $this->addressService->saveAddress(new \KiniCRM\Objects\CRM\Address($address, 0));
+        return $this->addressService->saveAddress(new \KiniCRM\Objects\CRM\Address($address, 0));
     }
 
     /**

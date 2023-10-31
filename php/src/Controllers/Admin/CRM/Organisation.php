@@ -43,7 +43,7 @@ class Organisation {
      * @param OrganisationItem $organisation
      */
     public function saveOrganisation($organisation) {
-        $this->organisationService->saveOrganisation(new \KiniCRM\Objects\CRM\Organisation($organisation, 0));
+        return $this->organisationService->saveOrganisation(new \KiniCRM\Objects\CRM\Organisation($organisation, 0));
     }
 
     /**
