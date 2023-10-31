@@ -12,7 +12,7 @@ class ContactOrganisationDepartment {
 
     /**
      * @var integer
-     * @primaryKey 
+     * @primaryKey
      */
     private $contactId;
 
