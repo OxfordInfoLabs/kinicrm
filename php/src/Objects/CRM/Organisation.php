@@ -45,7 +45,7 @@ class Organisation extends OrganisationSummary {
      * @var AttachmentSummary[]
      * @oneToMany
      * @readOnly
-     * @childJoinColumns parent_object_id,parent_object_type=Organisation
+     * @childJoinColumns parent_object_id,parent_object_type=CRMOrganisation
      */
     private $attachments;
 

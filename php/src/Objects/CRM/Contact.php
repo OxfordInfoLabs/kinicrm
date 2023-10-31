@@ -61,7 +61,7 @@ class Contact extends ActiveRecord {
      * @var AttachmentSummary[]
      * @oneToMany
      * @readOnly
-     * @childJoinColumns parent_object_id,parent_object_type=Contact
+     * @childJoinColumns parent_object_id,parent_object_type=CRMContact
      */
     private $attachments;
 

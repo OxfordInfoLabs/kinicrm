@@ -2,6 +2,7 @@
 
 namespace KiniCRM\Services\CRM;
 
+use Kiniauth\Objects\Attachment\Attachment;
 use KiniCRM\Objects\CRM\Address;
 use KiniCRM\Objects\CRM\Contact;
 use KiniCRM\Objects\CRM\Organisation;
@@ -13,6 +14,8 @@ use KiniCRM\ValueObjects\CRM\DepartmentItem;
 use KiniCRM\ValueObjects\CRM\OrganisationDepartmentItem;
 use KiniCRM\ValueObjects\CRM\OrganisationItem;
 use KiniCRM\ValueObjects\CRM\OrganisationSummaryItem;
+use Kinikit\Core\DependencyInjection\Container;
+use Kinikit\MVC\Request\FileUpload;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
 
 include_once "autoloader.php";
@@ -27,7 +30,7 @@ class ContactServiceTest extends TestBase {
 
 
     public function setUp(): void {
-        $this->contactService = new ContactService();
+        $this->contactService = Container::instance()->get(ContactService::class);
     }
 
 
@@ -88,6 +91,34 @@ class ContactServiceTest extends TestBase {
         } catch (ObjectNotFoundException $e) {
 
         }
+
+    }
+
+    public function testCanAttachUploadedFilesToContactAndRemoveThem() {
+
+
+        $contactItem = new ContactItem("Bobby Jones", "bobby@oxil.co.uk",
+            "07595 893322", "BIG IMAGE", null, "New Contact", [],
+            []);
+
+        $contact1 = new Contact($contactItem, 0);
+        $this->contactService->saveContact($contact1);
+
+        $fileUpload1 = new FileUpload("test", ["name" => "test.txt", "tmp_name" => __DIR__ . "/test.txt"]);
+        $fileUpload2 = new FileUpload("test", ["name" => "test2.txt", "tmp_name" => __DIR__ . "/test2.txt"]);
+
+        $this->contactService->attachUploadedFilesToContact($contact1->getId(), [$fileUpload1, $fileUpload2]);
+
+        $attachments = Attachment::filter("WHERE parent_object_type = ? AND parent_object_id = ?", "CRMContact", $contact1->getId());
+        $this->assertEquals(2, sizeof($attachments));
+        $this->assertEquals(file_get_contents(__DIR__ . "/test.txt"), $attachments[0]->getContent());
+        $this->assertEquals(file_get_contents(__DIR__ . "/test2.txt"), $attachments[1]->getContent());
+
+        $this->contactService->removeAttachmentFromContact($contact1->getId(), $attachments[0]->getId());
+
+        $attachments = Attachment::filter("WHERE parent_object_type = ? AND parent_object_id = ?", "CRMContact", $contact1->getId());
+        $this->assertEquals(1, sizeof($attachments));
+        $this->assertEquals(file_get_contents(__DIR__ . "/test2.txt"), $attachments[0]->getContent());
 
     }
 

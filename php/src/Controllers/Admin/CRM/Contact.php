@@ -4,6 +4,7 @@ namespace KiniCRM\Controllers\Admin\CRM;
 
 use KiniCRM\Services\CRM\ContactService;
 use KiniCRM\ValueObjects\CRM\ContactItem;
+use Kinikit\MVC\Request\FileUpload;
 
 class Contact {
 
@@ -53,6 +54,31 @@ class Contact {
      */
     public function removeContact($contactId) {
         $this->contactService->removeContact($contactId);
+    }
+
+
+    /**
+     * @http POST /attachments/$contactId
+     *
+     * @param integer $contactId
+     * @param FileUpload[] $fileUploads
+     *
+     * @return void
+     */
+    public function uploadContactAttachments($contactId, $fileUploads) {
+        $this->contactService->attachUploadedFilesToContact($contactId, $fileUploads);
+    }
+
+    /**
+     * @http DELETE /attachments/$contactId/$attachmentId
+     *
+     * @param integer $contactId
+     * @param integer $attachmentId
+     *
+     * @return void
+     */
+    public function removeContactAttachment($contactId, $attachmentId) {
+        $this->contactService->removeAttachmentFromContact($contactId, $attachmentId);
     }
 
 

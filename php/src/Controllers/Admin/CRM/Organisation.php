@@ -4,6 +4,7 @@ namespace KiniCRM\Controllers\Admin\CRM;
 
 use KiniCRM\Services\CRM\OrganisationService;
 use KiniCRM\ValueObjects\CRM\OrganisationItem;
+use Kinikit\MVC\Request\FileUpload;
 
 class Organisation {
 
@@ -53,6 +54,32 @@ class Organisation {
     public function removeOrganisation($organisationId) {
         $this->organisationService->removeOrganisation($organisationId);
     }
+
+
+    /**
+     * @http POST /attachments/$organisationId
+     *
+     * @param integer $organisationId
+     * @param FileUpload[] $fileUploads
+     *
+     * @return void
+     */
+    public function uploadOrganisationAttachments($organisationId, $fileUploads) {
+        $this->organisationService->attachUploadedFilesToOrganisation($organisationId, $fileUploads);
+    }
+
+    /**
+     * @http DELETE /attachments/$organisationId/$attachmentId
+     *
+     * @param integer $organisationId
+     * @param integer $attachmentId
+     *
+     * @return void
+     */
+    public function removeOrganisationAttachment($organisationId, $attachmentId) {
+        $this->organisationService->removeAttachmentFromOrganisation($organisationId, $attachmentId);
+    }
+
 
 
 }

@@ -2,10 +2,27 @@
 
 namespace KiniCRM\Services\CRM;
 
-use KiniCRM\Objects\CRM\Address;
+use Kiniauth\Objects\Attachment\AttachmentSummary;
+use Kiniauth\Services\Attachment\AttachmentService;
+use KiniCRM\Objects\CRM\Contact;
 use KiniCRM\Objects\CRM\Organisation;
+use Kinikit\Core\Stream\File\ReadOnlyFileStream;
+use Kinikit\MVC\Request\FileUpload;
 
 class OrganisationService {
+
+    /**
+     * @var AttachmentService
+     */
+    private $attachmentService;
+
+    /**
+     * @param AttachmentService $attachmentService
+     */
+    public function __construct($attachmentService) {
+        $this->attachmentService = $attachmentService;
+    }
+
 
 
     /**
@@ -60,5 +77,44 @@ class OrganisationService {
         $organisation->remove();
 
     }
+
+
+    /**
+     * Upload attachments to an organisation
+     *
+     * @param integer $organisationId
+     * @param FileUpload[] $uploadedFiles
+     *
+     * @return void
+     */
+    public function attachUploadedFilesToOrganisation($organisationId, $uploadedFiles) {
+
+        // Check access to contact first
+        $contact = Contact::fetch($organisationId);
+
+        foreach ($uploadedFiles as $fileUpload) {
+            $attachmentSummary = new AttachmentSummary($fileUpload->getClientFilename(), $fileUpload->getMimeType(),
+                "CRMOrganisation", $organisationId, null, null, $contact->getAccountId());
+            $this->attachmentService->saveAttachment($attachmentSummary, new ReadOnlyFileStream($fileUpload->getTemporaryFilePath()));
+        }
+    }
+
+    /**
+     * Remove an attachment from a contact
+     *
+     * @param integer $organisationId
+     * @param integer $attachmentId
+     * @return void
+     */
+    public function removeAttachmentFromOrganisation($organisationId, $attachmentId) {
+
+        // Check access to contact first
+        Organisation::fetch($organisationId);
+
+        // Remove attachment
+        $this->attachmentService->removeAttachment($attachmentId);
+    }
+
+
 
 }

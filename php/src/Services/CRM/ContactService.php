@@ -2,9 +2,26 @@
 
 namespace KiniCRM\Services\CRM;
 
+use Kiniauth\Objects\Attachment\AttachmentSummary;
+use Kiniauth\Services\Attachment\AttachmentService;
 use KiniCRM\Objects\CRM\Contact;
+use Kinikit\Core\Stream\File\ReadOnlyFileStream;
+use Kinikit\MVC\Request\FileUpload;
 
 class ContactService {
+
+    /**
+     * @var AttachmentService
+     */
+    private $attachmentService;
+
+    /**
+     * @param AttachmentService $attachmentService
+     */
+    public function __construct($attachmentService) {
+        $this->attachmentService = $attachmentService;
+    }
+
 
     /**
      * Filter addresses using passed search string
@@ -58,5 +75,44 @@ class ContactService {
         $contact->remove();
 
     }
+
+
+    /**
+     * Upload attachments to a contact
+     *
+     * @param integer $contactId
+     * @param FileUpload[] $uploadedFiles
+     *
+     * @return void
+     */
+    public function attachUploadedFilesToContact($contactId, $uploadedFiles) {
+
+        // Check access to contact first
+        $contact = Contact::fetch($contactId);
+
+        foreach ($uploadedFiles as $fileUpload) {
+            $attachmentSummary = new AttachmentSummary($fileUpload->getClientFilename(), $fileUpload->getMimeType(),
+                "CRMContact", $contactId, null, null, $contact->getAccountId());
+            $this->attachmentService->saveAttachment($attachmentSummary, new ReadOnlyFileStream($fileUpload->getTemporaryFilePath()));
+        }
+    }
+
+
+    /**
+     * Remove an attachment from a contact
+     *
+     * @param integer $contactId
+     * @param integer $attachmentId
+     * @return void
+     */
+    public function removeAttachmentFromContact($contactId, $attachmentId) {
+
+        // Check access to contact first
+        $contact = Contact::fetch($contactId);
+
+        // Remove attachment
+        $this->attachmentService->removeAttachment($attachmentId);
+    }
+
 
 }
