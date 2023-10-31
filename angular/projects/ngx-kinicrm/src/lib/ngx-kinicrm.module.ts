@@ -1,0 +1,68 @@
+import {ModuleWithProviders, NgModule} from '@angular/core';
+import {ContactsComponent} from './components/contacts/contacts.component';
+import {BrowserModule} from '@angular/platform-browser';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
+import {MatIconModule} from '@angular/material/icon';
+import { EditContactComponent } from './components/contacts/edit-contact/edit-contact.component';
+import {RouterLink, RouterModule} from '@angular/router';
+import {HttpClientModule} from '@angular/common/http';
+import { GooglePlaceModule } from "ngx-google-places-autocomplete";
+import { OrganisationsComponent } from './components/organisations/organisations.component';
+import { EditOrganisationComponent } from './components/organisations/edit-organisation/edit-organisation.component';
+import { AddressBookComponent } from './components/address-book/address-book.component';
+import { DepartmentsComponent } from './components/departments/departments.component';
+import { EditDepartmentComponent } from './components/departments/edit-department/edit-department.component';
+import {FormsModule} from '@angular/forms';
+import {MatSelectModule} from '@angular/material/select';
+import {MatButtonModule} from '@angular/material/button';
+import {AddressComponent} from './components/address-book/address/address.component';
+
+
+@NgModule({
+    declarations: [
+        ContactsComponent,
+        EditContactComponent,
+        AddressComponent,
+        OrganisationsComponent,
+        EditOrganisationComponent,
+        AddressBookComponent,
+        DepartmentsComponent,
+        EditDepartmentComponent
+    ],
+    imports: [
+        BrowserModule,
+        CommonModule,
+        MatIconModule,
+        HttpClientModule,
+        RouterModule,
+        GooglePlaceModule,
+        NgOptimizedImage,
+        FormsModule,
+        MatSelectModule,
+        MatButtonModule
+    ],
+    exports: [
+        ContactsComponent,
+        EditContactComponent,
+        AddressBookComponent,
+        AddressComponent,
+        OrganisationsComponent,
+        EditOrganisationComponent
+    ]
+})
+export class NgxKinicrmModule {
+    static forRoot(conf?: KinicrmModuleConfig): ModuleWithProviders<NgxKinicrmModule> {
+        return {
+            ngModule: NgxKinicrmModule,
+            providers: [
+                {provide: KinicrmModuleConfig, useValue: conf || {}}
+            ]
+        };
+    }
+}
+
+export class KinicrmModuleConfig {
+    guestHttpURL?: string;
+    accessHttpURL?: string;
+    adminHttpURL?: string;
+}
