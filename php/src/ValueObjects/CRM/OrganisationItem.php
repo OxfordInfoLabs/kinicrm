@@ -94,7 +94,7 @@ class OrganisationItem extends OrganisationSummaryItem {
      * @param Organisation $organisation
      * @return OrganisationItem
      */
-    public function fromOrganisation($organisation) {
+    public static function fromOrganisation($organisation) {
 
         $departments = [];
         foreach ($organisation->getDepartments() ?? [] as $department) {

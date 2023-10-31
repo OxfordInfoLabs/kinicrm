@@ -32,7 +32,7 @@ class Organisation {
     public function searchForOrganisations($searchString, $limit = 10, $offset = 0) {
         $organisations = $this->organisationService->filterOrganisations($searchString, $limit, $offset);
         return array_map(function ($organisation) {
-            return OrganisationItem::fromOrganisationSummary($organisation);
+            return OrganisationItem::fromOrganisation($organisation);
         }, $organisations);
     }
 
@@ -43,7 +43,7 @@ class Organisation {
      * @param OrganisationItem $organisation
      */
     public function saveOrganisation($organisation) {
-        return $this->organisationService->saveOrganisation(new \KiniCRM\Objects\CRM\Organisation($organisation, 0));
+        return OrganisationItem::fromOrganisation($this->organisationService->saveOrganisation(new \KiniCRM\Objects\CRM\Organisation($organisation, 0)));
     }
 
     /**
@@ -79,7 +79,6 @@ class Organisation {
     public function removeOrganisationAttachment($organisationId, $attachmentId) {
         $this->organisationService->removeAttachmentFromOrganisation($organisationId, $attachmentId);
     }
-
 
 
 }
