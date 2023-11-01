@@ -23,6 +23,7 @@ class Department {
 
     /**
      * @var string
+     * @required
      */
     private $name;
 

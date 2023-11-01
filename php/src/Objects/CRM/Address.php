@@ -24,6 +24,7 @@ class Address extends ActiveRecord {
 
     /**
      * @var string
+     * @required
      */
     private $street1;
 
@@ -35,6 +36,7 @@ class Address extends ActiveRecord {
 
     /**
      * @var string
+     * @required
      */
     private $city;
 
@@ -45,11 +47,13 @@ class Address extends ActiveRecord {
 
     /**
      * @var string
+     * @required
      */
     private $postcode;
 
     /**
      * @var string
+     * @required
      */
     private $countryCode;
 

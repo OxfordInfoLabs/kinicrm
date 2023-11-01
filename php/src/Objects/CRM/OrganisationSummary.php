@@ -23,6 +23,7 @@ class OrganisationSummary extends ActiveRecord {
 
     /**
      * @var string
+     * @required
      */
     protected $name;
 

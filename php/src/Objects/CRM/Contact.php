@@ -26,12 +26,14 @@ class Contact extends ActiveRecord {
 
     /**
      * @var string
+     * @required
      */
     private $name;
 
 
     /**
      * @var string
+     * @required
      */
     private $emailAddress;
 
