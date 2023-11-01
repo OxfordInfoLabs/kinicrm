@@ -6,6 +6,7 @@ use Kiniauth\Objects\Attachment\AttachmentSummary;
 use Kiniauth\Objects\Security\UserSummary;
 use KiniCRM\ValueObjects\CRM\ContactItem;
 use Kinikit\Persistence\ORM\ActiveRecord;
+use Kinimailer\Objects\MailingList\MailingListSubscriber;
 
 /**
  * @table kcr_contact
@@ -41,7 +42,7 @@ class Contact extends ActiveRecord {
 
     /**
      * @var string
-     * @sqlType TEXT
+     * @sqlType LONGTEXT
      */
     private $photo;
 
@@ -82,6 +83,9 @@ class Contact extends ActiveRecord {
      * @readOnly
      */
     private $userSummary;
+
+
+
 
     /**
      * @param ContactItem $contact

@@ -28,7 +28,7 @@ class OrganisationSummary extends ActiveRecord {
 
     /**
      * @var string
-     * @sqlType TEXT
+     * @sqlType LONGTEXT
      */
     protected $logo;
 
