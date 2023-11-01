@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {Component, OnInit} from '@angular/core';
+import {BehaviorSubject, merge, Subject} from 'rxjs';
+import {AddressService} from '../../services/address.service';
+import {debounceTime, map, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'kcrm-address-book',
   templateUrl: './address-book.component.html',
   styleUrls: ['./address-book.component.css']
 })
-export class AddressBookComponent {
+export class AddressBookComponent implements OnInit {
 
     public addresses: any = [];
     public searchText = new BehaviorSubject('');
@@ -16,7 +18,29 @@ export class AddressBookComponent {
     public endOfResults = false;
     public loading = true;
 
-    constructor() {
+    private reload = new Subject();
+
+    constructor(private addressService: AddressService) {
+    }
+
+    async ngOnInit() {
+        merge(this.searchText, this.reload)
+            .pipe(
+                debounceTime(300),
+                // distinctUntilChanged(),
+                switchMap(() =>
+                    this.getAddresses()
+                )
+            ).subscribe((addresses: any) => {
+            this.endOfResults = addresses.length < this.limit;
+            this.addresses = addresses;
+            this.loading = false;
+        });
+
+        this.searchText.subscribe(() => {
+            this.page = 1;
+            this.offset = 0;
+        });
     }
 
     public increaseOffset() {
@@ -32,5 +56,16 @@ export class AddressBookComponent {
 
     public pageSizeChange(value: number) {
         this.limit = value;
+    }
+
+    private getAddresses() {
+        return this.addressService.searchForAddresses(
+            this.searchText.getValue() || '',
+            this.limit,
+            this.offset
+        ).pipe(map((feeds: any) => {
+                return feeds;
+            })
+        );
     }
 }

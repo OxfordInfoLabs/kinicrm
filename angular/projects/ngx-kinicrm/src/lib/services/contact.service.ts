@@ -14,26 +14,26 @@ export class ContactService {
                 private config: KinicrmModuleConfig) {
     }
 
-    public getContacts(filterString = '', limit = 10, offset = 0) {
-        const contacts = localStorage.getItem('contacts');
-        return contacts ? JSON.parse(contacts) : [];
+    public searchForContacts(searchString = '', limit = 10, offset = 0) {
+        const url = this.config.adminHttpURL + '/crm/contact';
+        return this.http.get(url, {
+            params: {
+                searchString, limit: limit.toString(), offset: offset.toString()
+            }
+        })
     }
 
     public getContact(id: number) {
-        const contacts = this.getContacts();
-        return _.find(contacts, {id});
+        return this.http.get(this.config.adminHttpURL + '/crm/contact/' + id).toPromise();
     }
 
-    public saveContact(contact: any) {
-        contact.created = moment().toISOString();
-        const contacts = this.getContacts();
-        contacts.push(contact);
-        localStorage.setItem('contacts', JSON.stringify(contacts));
+    public saveContact(address: any) {
+        return this.http.post(this.config.adminHttpURL + '/crm/contact', address).toPromise();
     }
 
-    public deleteContact(id: number) {
-        const contacts = this.getContacts();
-        _.remove(contacts, {id});
-        localStorage.setItem('contacts', JSON.stringify(contacts));
+    public deleteContact(addressId: number) {
+        return this.http.delete(this.config.adminHttpURL + '/crm/contact', {
+            params: {addressId}
+        }).toPromise();
     }
 }

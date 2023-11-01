@@ -19,7 +19,7 @@
             </div>
 
             <div class="">
-                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-12">
+                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
                     <div class="col-span-full flex items-center gap-x-8">
                         <img *ngIf="contact.photo" [src]="contact.photo"
                             alt="" class="h-24 w-24 flex-none rounded-lg bg-gray-800 object-cover">
@@ -58,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-12">
+                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
                     <div class="sm:col-span-full">
                         <div class="mb-4 flex align-center justify-between text-sm font-medium leading-6 text-gray-900">
                             Select Organisation(s)
@@ -127,19 +127,26 @@
                     </div>
 
                 </div>
-                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 py-12">
+                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 py-8">
 
                     <div class="sm:col-span-full">
                         <label class="block text-sm font-medium leading-6 text-gray-900">Select Address</label>
                         <div class="flex flex-wrap mt-2">
-                            <div class="flex-1 mr-4 sm:w-full">
-                                <mat-select name="address" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                    <mat-option>United States</mat-option>
-                                    <mat-option>Canada</mat-option>
-                                    <mat-option>Mexico</mat-option>
+                            <div class="flex-1 mr-4 sm:w-full max-w-3/4">
+                                <mat-select name="address" [(ngModel)]="contact.address" [compareWith]="addressDisplay"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    <mat-option *ngFor="let address of addresses" [value]="address" class="hover:bg-gray-50">
+                                        <span class="font-semibold">{{address.street1}}&nbsp;</span>
+                                        <span *ngIf="address.street2">{{address.street2}}</span>
+                                        <span *ngIf="address.city">, {{address.city}}</span>
+                                        <span *ngIf="address.county">, {{address.county}}</span>
+                                        <span *ngIf="address.postcode">, {{address.postcode}}</span>
+                                        <span *ngIf="address.countryCode">, {{address.countryCode}}</span>
+                                    </mat-option>
                                 </mat-select>
                             </div>
-                            <button type="button" class="inline-flex items-center gap-x-1.5 rounded-md bg-gray-100 px-2 py-1 text-xs font-semibold text-primary shadow-sm border border-primary">
+                            <button type="button" (click)="addAddress()"
+                                    class="inline-flex items-center gap-x-1.5 rounded-md bg-gray-100 px-2 py-1 text-xs font-semibold text-primary shadow-sm border border-primary">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                      class="-ml-0.5 h-6 w-6">
                                     <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd" />
@@ -187,7 +194,7 @@
         </div>
     </div>
 
-    <div class="shadow sm:overflow-hidden sm:rounded-md mb-8">
+    <div *ngIf="contact.id" class="shadow sm:overflow-hidden sm:rounded-md mb-8">
         <div class="space-y-6 bg-white px-4 py-6 sm:p-6">
             <div>
                 <h2 class="text-base font-semibold leading-7 ">Delete contact</h2>

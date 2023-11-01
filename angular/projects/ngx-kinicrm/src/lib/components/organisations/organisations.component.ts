@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {Component, OnInit} from '@angular/core';
+import {BehaviorSubject, merge, Subject} from 'rxjs';
+import {OrganisationService} from '../../services/organisation.service';
+import {debounceTime, map, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'kcrm-organisations',
   templateUrl: './organisations.component.html',
   styleUrls: ['./organisations.component.css']
 })
-export class OrganisationsComponent {
+export class OrganisationsComponent implements OnInit {
 
     public organisations: any = [];
     public searchText = new BehaviorSubject('');
@@ -16,7 +18,29 @@ export class OrganisationsComponent {
     public endOfResults = false;
     public loading = true;
 
-    constructor() {
+    private reload = new Subject();
+
+    constructor(private organisationService: OrganisationService) {
+    }
+
+    async ngOnInit() {
+        merge(this.searchText, this.reload)
+            .pipe(
+                debounceTime(300),
+                // distinctUntilChanged(),
+                switchMap(() =>
+                    this.getOrganisations()
+                )
+            ).subscribe((organisations: any) => {
+            this.endOfResults = organisations.length < this.limit;
+            this.organisations = organisations;
+            this.loading = false;
+        });
+
+        this.searchText.subscribe(() => {
+            this.page = 1;
+            this.offset = 0;
+        });
     }
 
     public increaseOffset() {
@@ -32,5 +56,16 @@ export class OrganisationsComponent {
 
     public pageSizeChange(value: number) {
         this.limit = value;
+    }
+
+    private getOrganisations() {
+        return this.organisationService.searchForOrganisations(
+            this.searchText.getValue() || '',
+            this.limit,
+            this.offset
+        ).pipe(map((feeds: any) => {
+                return feeds;
+            })
+        );
     }
 }

@@ -16,6 +16,8 @@ import {FormsModule} from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 import {AddressComponent} from './components/address-book/address/address.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import { AddressDialogComponent } from './components/address-book/address-dialog/address-dialog.component';
 
 
 @NgModule({
@@ -27,7 +29,8 @@ import {AddressComponent} from './components/address-book/address/address.compon
         EditOrganisationComponent,
         AddressBookComponent,
         DepartmentsComponent,
-        EditDepartmentComponent
+        EditDepartmentComponent,
+        AddressDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -39,7 +42,8 @@ import {AddressComponent} from './components/address-book/address/address.compon
         NgOptimizedImage,
         FormsModule,
         MatSelectModule,
-        MatButtonModule
+        MatButtonModule,
+        MatDialogModule
     ],
     exports: [
         ContactsComponent,

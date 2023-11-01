@@ -43,7 +43,7 @@ class OrganisationService {
      */
     public function filterOrganisations($searchString = "", $limit = 10, $offset = 0) {
 
-        $query = "WHERE CONCAT(name, primaryContact.name, primaryContact.email_address) LIKE ? ORDER BY name ";
+        $query = "WHERE CONCAT(name, IFNULL(primaryContact.name, ''), IFNULL(primaryContact.email_address, '')) LIKE ? ORDER BY name ";
         $params = ["%" . $searchString . "%"];
 
         if ($limit) {
