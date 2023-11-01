@@ -38,10 +38,10 @@ class OrganisationServiceTest extends TestBase {
 
         $addressItem = new AddressItem("Street1", "Street2", "Oxford", "Oxon", "OX4 2RD", "GB", $address->getId());
 
-        $primaryContact = new Contact(new ContactItem("Mark Robertshaw", "mark@oxil.co.uk", "07589 898888", "TEST PHOTO", $addressItem, "TEST NOTES", [], [], null), 0);
+        $primaryContact = new Contact(new ContactItem("Mark Robertshaw", "mark@oxil.co.uk", "07589 898888", "TEST PHOTO", $addressItem, "TEST NOTES", [], [], null, []), 0);
         $primaryContact->save();
 
-        $primaryContactItem = new ContactItem("Mark Robertshaw", "mark@oxil.co.uk", "07589 898888", "TEST PHOTO", $addressItem, "TEST NOTES", [], [], null,$primaryContact->getId());
+        $primaryContactItem = new ContactItem("Mark Robertshaw", "mark@oxil.co.uk", "07589 898888", "TEST PHOTO", $addressItem, "TEST NOTES", [], [], null, [], $primaryContact->getId());
 
         $organisationItem1 = new OrganisationItem("Test Organisation", $addressItem, $primaryContactItem, "TEST LOGO", [
             new DepartmentItem("HR", "Human Resources Inc."),

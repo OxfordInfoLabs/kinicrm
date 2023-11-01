@@ -62,6 +62,12 @@ class ContactItem {
      */
     private $user;
 
+    /**
+     * @var integer[]
+     */
+    private $subscribedMailingLists;
+
+
 
     /**
      * @param string $name
@@ -73,9 +79,10 @@ class ContactItem {
      * @param AttachmentItem[] $attachments
      * @param OrganisationDepartmentItem[] $organisationDepartments
      * @param ContactUserItem $contactUser
+     * @param $subscribedMailingLists
      * @param int $id
      */
-    public function __construct($name, $emailAddress, $telephone, $photo, $address, $notes, $attachments, $organisationDepartments, $contactUser, $id = null) {
+    public function __construct($name, $emailAddress, $telephone, $photo, $address, $notes, $attachments, $organisationDepartments, $contactUser, $subscribedMailingLists, $id = null) {
         $this->id = $id;
         $this->name = $name;
         $this->emailAddress = $emailAddress;
@@ -85,6 +92,9 @@ class ContactItem {
         $this->notes = $notes;
         $this->attachments = $attachments;
         $this->organisationDepartments = $organisationDepartments;
+        $this->user = $contactUser;
+
+        $this->subscribedMailingLists = $subscribedMailingLists;
     }
 
     /**
@@ -150,6 +160,21 @@ class ContactItem {
         return $this->organisationDepartments;
     }
 
+    /**
+     * @return ContactUserItem
+     */
+    public function getUser() {
+        return $this->user;
+    }
+
+    /**
+     * @return integer[]
+     */
+    public function getSubscribedMailingLists() {
+        return $this->subscribedMailingLists;
+    }
+    
+
 
     /**
      * @param Contact $contact
@@ -167,10 +192,14 @@ class ContactItem {
             $organisationDepartments[] = OrganisationDepartmentItem::fromOrganisationDepartment($department);
         }
 
+        $subscribedMailingLists = array_map(function ($mailingList) {
+            return $mailingList->getMailingListId();
+        }, $contact->getSubscribedMailingLists() ?? []);
+
 
         return new ContactItem($contact->getName(), $contact->getEmailAddress(), $contact->getTelephone(), $contact->getPhoto(), $contact->getAddress() ? new AddressItem($contact->getAddress()) : null,
             $contact->getNotes(), $attachments, $organisationDepartments,
-            $contact->getUserSummary() ? ContactUserItem::fromUserSummary($contact->getUserSummary()) : null,
+            $contact->getUserSummary() ? ContactUserItem::fromUserSummary($contact->getUserSummary()) : null, $subscribedMailingLists,
             $contact->getId());
     }
 

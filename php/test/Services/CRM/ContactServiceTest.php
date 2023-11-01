@@ -18,6 +18,7 @@ use KiniCRM\ValueObjects\CRM\OrganisationSummaryItem;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\MVC\Request\FileUpload;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
+use Kinimailer\Objects\MailingList\MailingListSubscriber;
 
 include_once "autoloader.php";
 
@@ -58,7 +59,7 @@ class ContactServiceTest extends TestBase {
         $contactItem = new ContactItem("Bobby Jones", "bobby@oxil.co.uk",
             "07595 893322", "BIG IMAGE", $addressItem, "New Contact", [],
             [new OrganisationDepartmentItem($organisationSummaryItem, $department1),
-                new OrganisationDepartmentItem($organisationSummaryItem, $department2)], null);
+                new OrganisationDepartmentItem($organisationSummaryItem, $department2)], null, []);
 
         $contact1 = new Contact($contactItem, 0);
         $this->contactService->saveContact($contact1);
@@ -67,7 +68,7 @@ class ContactServiceTest extends TestBase {
 
         $contactItem = new ContactItem("Mr Jones", "smith@oxil.co.uk",
             "07595 543221", "BIG IMAGE", $addressItem, "New Contact", [],
-            [new OrganisationDepartmentItem($organisationSummaryItem, $department2)], null);
+            [new OrganisationDepartmentItem($organisationSummaryItem, $department2)], null, []);
 
         $contact2 = new Contact($contactItem, 0);
         $this->contactService->saveContact($contact2);
@@ -103,7 +104,7 @@ class ContactServiceTest extends TestBase {
 
         $contactItem = new ContactItem("Bobby Jones", "bobby@oxil.co.uk",
             "07595 893322", "BIG IMAGE", null, "New Contact", [],
-            [], null);
+            [], null, []);
 
         $contact1 = new Contact($contactItem, 0);
         $this->contactService->saveContact($contact1);
@@ -131,13 +132,40 @@ class ContactServiceTest extends TestBase {
 
         $contactItem = new ContactItem("Sam Davis", "sam@samdavisdesign.co.uk",
             "07595 893322", "BIG IMAGE", null, "New Contact", [],
-            [], null);
+            [], null, []);
 
         $contact1 = new Contact($contactItem, 0);
         $this->contactService->saveContact($contact1);
         $contact1 = Contact::fetch($contact1->getId());
 
         $this->assertEquals(UserSummary::fetch(2), $contact1->getUserSummary());
+
+    }
+
+    public function testContactsWhoAreSubscribedToMailingListsEndUpWithMailingListsAttached() {
+
+        $contactItem = new ContactItem("Sam Davis", "sam@samdavisdesign.co.uk",
+            "07595 893322", "BIG IMAGE", null, "New Contact", [],
+            [], null, []);
+
+        $contact1 = new Contact($contactItem, 0);
+        $this->contactService->saveContact($contact1);
+
+        // Subscribe Sam to mailing list
+        $subscriber = new MailingListSubscriber(1, null, "sam@samdavisdesign.co.uk");
+        $subscriber->save();
+
+        $subscriber = new MailingListSubscriber(3, null, "sam@samdavisdesign.co.uk");
+        $subscriber->save();
+
+
+        $contact1 = Contact::fetch($contact1->getId());
+        $this->assertEquals(UserSummary::fetch(2), $contact1->getUserSummary());
+
+        $this->assertEquals(2, sizeof($contact1->getSubscribedMailingLists()));
+        $this->assertEquals(1, $contact1->getSubscribedMailingLists()[0]->getMailingListId());
+        $this->assertEquals(3, $contact1->getSubscribedMailingLists()[1]->getMailingListId());
+
 
     }
 

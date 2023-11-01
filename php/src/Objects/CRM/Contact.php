@@ -85,6 +85,14 @@ class Contact extends ActiveRecord {
     private $userSummary;
 
 
+    /**
+     * @var MailingListSubscriber[]
+     * @oneToMany
+     * @childJoinColumns email_address=>email_address
+     * @readOnly
+     *
+     */
+    private $subscribedMailingLists;
 
 
     /**
@@ -245,6 +253,13 @@ class Contact extends ActiveRecord {
      */
     public function getUserSummary() {
         return $this->userSummary;
+    }
+
+    /**
+     * @return MailingListSubscriber[]
+     */
+    public function getSubscribedMailingLists() {
+        return $this->subscribedMailingLists;
     }
 
 
