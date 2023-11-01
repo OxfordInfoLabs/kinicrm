@@ -3,10 +3,11 @@
 namespace KiniCRM\Services\CRM;
 
 use Kiniauth\Objects\Attachment\Attachment;
+use Kiniauth\Objects\Security\UserSummary;
 use KiniCRM\Objects\CRM\Address;
 use KiniCRM\Objects\CRM\Contact;
+use KiniCRM\Objects\CRM\ContactUserSummary;
 use KiniCRM\Objects\CRM\Organisation;
-use KiniCRM\Objects\CRM\OrganisationSummary;
 use KiniCRM\TestBase;
 use KiniCRM\ValueObjects\CRM\AddressItem;
 use KiniCRM\ValueObjects\CRM\ContactItem;
@@ -57,18 +58,16 @@ class ContactServiceTest extends TestBase {
         $contactItem = new ContactItem("Bobby Jones", "bobby@oxil.co.uk",
             "07595 893322", "BIG IMAGE", $addressItem, "New Contact", [],
             [new OrganisationDepartmentItem($organisationSummaryItem, $department1),
-                new OrganisationDepartmentItem($organisationSummaryItem, $department2)]);
+                new OrganisationDepartmentItem($organisationSummaryItem, $department2)], null);
 
         $contact1 = new Contact($contactItem, 0);
         $this->contactService->saveContact($contact1);
         $contact1 = Contact::fetch($contact1->getId());
 
 
-
-
         $contactItem = new ContactItem("Mr Jones", "smith@oxil.co.uk",
             "07595 543221", "BIG IMAGE", $addressItem, "New Contact", [],
-            [new OrganisationDepartmentItem($organisationSummaryItem, $department2)]);
+            [new OrganisationDepartmentItem($organisationSummaryItem, $department2)], null);
 
         $contact2 = new Contact($contactItem, 0);
         $this->contactService->saveContact($contact2);
@@ -104,7 +103,7 @@ class ContactServiceTest extends TestBase {
 
         $contactItem = new ContactItem("Bobby Jones", "bobby@oxil.co.uk",
             "07595 893322", "BIG IMAGE", null, "New Contact", [],
-            []);
+            [], null);
 
         $contact1 = new Contact($contactItem, 0);
         $this->contactService->saveContact($contact1);
@@ -124,6 +123,21 @@ class ContactServiceTest extends TestBase {
         $attachments = Attachment::filter("WHERE parent_object_type = ? AND parent_object_id = ?", "CRMContact", $contact1->getId());
         $this->assertEquals(1, sizeof($attachments));
         $this->assertEquals(file_get_contents(__DIR__ . "/test2.txt"), $attachments[0]->getContent());
+
+    }
+
+
+    public function testContactsWhoAreUsersHaveAUserSummaryObjectAttachedCorrectly() {
+
+        $contactItem = new ContactItem("Sam Davis", "sam@samdavisdesign.co.uk",
+            "07595 893322", "BIG IMAGE", null, "New Contact", [],
+            [], null);
+
+        $contact1 = new Contact($contactItem, 0);
+        $this->contactService->saveContact($contact1);
+        $contact1 = Contact::fetch($contact1->getId());
+
+        $this->assertEquals(UserSummary::fetch(2), $contact1->getUserSummary());
 
     }
 

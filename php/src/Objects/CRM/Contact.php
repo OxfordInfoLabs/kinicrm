@@ -3,6 +3,7 @@
 namespace KiniCRM\Objects\CRM;
 
 use Kiniauth\Objects\Attachment\AttachmentSummary;
+use Kiniauth\Objects\Security\UserSummary;
 use KiniCRM\ValueObjects\CRM\ContactItem;
 use Kinikit\Persistence\ORM\ActiveRecord;
 
@@ -73,6 +74,14 @@ class Contact extends ActiveRecord {
      */
     private $organisationDepartments;
 
+
+    /**
+     * @var UserSummary
+     * @manyToOne
+     * @parentJoinColumns email_address=>email_address
+     * @readOnly
+     */
+    private $userSummary;
 
     /**
      * @param ContactItem $contact
@@ -225,6 +234,13 @@ class Contact extends ActiveRecord {
      */
     public function setOrganisationDepartments($organisationDepartments) {
         $this->organisationDepartments = $organisationDepartments;
+    }
+
+    /**
+     * @return UserSummary
+     */
+    public function getUserSummary() {
+        return $this->userSummary;
     }
 
 
