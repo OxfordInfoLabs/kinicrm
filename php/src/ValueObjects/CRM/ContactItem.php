@@ -68,7 +68,6 @@ class ContactItem {
     private $subscribedMailingLists;
 
 
-
     /**
      * @param string $name
      * @param string $emailAddress
@@ -173,7 +172,6 @@ class ContactItem {
     public function getSubscribedMailingLists() {
         return $this->subscribedMailingLists;
     }
-    
 
 
     /**
@@ -189,7 +187,7 @@ class ContactItem {
 
         $organisationDepartments = [];
         foreach ($contact->getOrganisationDepartments() as $department) {
-            $organisationDepartments[] = OrganisationDepartmentItem::fromOrganisationDepartment($department);
+            $organisationDepartments[] = OrganisationDepartmentItem::fromContactOrganisationDepartment($department);
         }
 
         $subscribedMailingLists = array_map(function ($mailingList) {
