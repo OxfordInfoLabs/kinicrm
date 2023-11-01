@@ -5,6 +5,7 @@ namespace KiniCRM\Objects\CRM;
 use Kiniauth\Objects\Attachment\AttachmentSummary;
 use Kiniauth\Objects\Security\UserSummary;
 use KiniCRM\ValueObjects\CRM\ContactItem;
+use KiniCRM\ValueObjects\CRM\OrganisationDepartmentItem;
 use Kinikit\Persistence\ORM\ActiveRecord;
 use Kinimailer\Objects\MailingList\MailingListSubscriber;
 
@@ -114,7 +115,8 @@ class Contact extends ActiveRecord {
 
             $this->organisationDepartments = [];
             foreach ($contact->getOrganisationDepartments() ?? [] as $organisationDepartment) {
-                $this->organisationDepartments[] = new ContactOrganisationDepartment($organisationDepartment);
+                if (($organisationDepartment instanceof OrganisationDepartmentItem) && $organisationDepartment->getOrganisationSummary())
+                    $this->organisationDepartments[] = new ContactOrganisationDepartment($organisationDepartment);
             }
 
         }
