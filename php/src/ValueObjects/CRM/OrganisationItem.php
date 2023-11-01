@@ -20,12 +20,6 @@ class OrganisationItem extends OrganisationSummaryItem {
 
 
     /**
-     * @var DepartmentItem[]
-     */
-    private $departments;
-
-
-    /**
      * @var string
      */
     private $notes;
@@ -47,10 +41,9 @@ class OrganisationItem extends OrganisationSummaryItem {
      * @param int $id
      */
     public function __construct($name, $address, $primaryContact, $logo, $departments, $notes, $attachments, $id = null) {
-        parent::__construct($name, $logo, $id);
+        parent::__construct($name, $logo, $departments, $id);
         $this->address = $address;
         $this->primaryContact = $primaryContact;
-        $this->departments = $departments;
         $this->notes = $notes;
         $this->attachments = $attachments;
     }

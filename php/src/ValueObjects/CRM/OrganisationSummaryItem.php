@@ -25,7 +25,7 @@ class OrganisationSummaryItem {
     /**
      * @var DepartmentItem[]
      */
-    private $departments;
+    protected $departments;
 
 
     /**

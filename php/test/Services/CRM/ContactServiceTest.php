@@ -51,7 +51,10 @@ class ContactServiceTest extends TestBase {
         ], "New Org", []);
         $organisation = new Organisation($organisationItem, 0);
         $organisation->save();
+        $organisation = Organisation::fetch($organisation->getId());
+
         $organisationSummaryItem = OrganisationSummaryItem::fromOrganisationSummary($organisation);
+
         $department1 = DepartmentItem::fromDepartment($organisation->getDepartments()[0]);
         $department2 = DepartmentItem::fromDepartment($organisation->getDepartments()[1]);
 

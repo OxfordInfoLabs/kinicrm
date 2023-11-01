@@ -43,6 +43,14 @@ class Organisation extends OrganisationSummary {
 
 
     /**
+     * @var Department[]
+     * @oneToMany
+     * @childJoinColumns organisation_id
+     */
+    protected $departments;
+
+
+    /**
      * @param OrganisationItem $organisation
      * @param integer $accountId
      */
@@ -54,6 +62,12 @@ class Organisation extends OrganisationSummary {
             $this->address = $organisation->getAddress() ? new Address($organisation->getAddress(), $accountId) : null;
             $this->primaryContact = $organisation->getPrimaryContact() ? new Contact($organisation->getPrimaryContact(), $accountId) : null;
             $this->notes = $organisation->getNotes();
+
+            // Map all departments
+            $this->departments = [];
+            foreach ($organisation->getDepartments() ?? [] as $department) {
+                $this->departments[] = new Department($department);
+            }
         }
     }
 
@@ -101,7 +115,6 @@ class Organisation extends OrganisationSummary {
     }
 
 
-
     /**
      * @return AttachmentSummary[]
      */
@@ -114,6 +127,20 @@ class Organisation extends OrganisationSummary {
      */
     public function setAttachments($attachments) {
         $this->attachments = $attachments;
+    }
+
+    /**
+     * @return Department[]
+     */
+    public function getDepartments() {
+        return $this->departments;
+    }
+
+    /**
+     * @param Department[] $departments
+     */
+    public function setDepartments($departments): void {
+        $this->departments = $departments;
     }
 
 

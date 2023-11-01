@@ -37,8 +37,9 @@ class OrganisationSummary extends ActiveRecord {
      * @var Department[]
      * @oneToMany
      * @childJoinColumns organisation_id
+     * @readOnly
      */
-    private $departments;
+    private $departmentSummaries;
 
 
     /**
@@ -54,9 +55,9 @@ class OrganisationSummary extends ActiveRecord {
             $this->logo = $organisationItem->getLogo();
 
             // Map all departments
-            $this->departments = [];
+            $this->departmentSummaries = [];
             foreach ($organisationItem->getDepartments() ?? [] as $department) {
-                $this->departments[] = new Department($department);
+                $this->departmentSummaries[] = new Department($department);
             }
         }
         $this->accountId = $accountId;
@@ -116,14 +117,14 @@ class OrganisationSummary extends ActiveRecord {
      * @return Department[]
      */
     public function getDepartments() {
-        return $this->departments;
+        return $this->departmentSummaries;
     }
 
     /**
      * @param Department[] $departments
      */
     public function setDepartments($departments) {
-        $this->departments = $departments;
+        $this->departmentSummaries = $departments;
     }
 
 
