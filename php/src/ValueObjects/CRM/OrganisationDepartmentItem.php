@@ -46,7 +46,10 @@ class OrganisationDepartmentItem {
      * @return OrganisationDepartmentItem
      */
     public static function fromContactOrganisationDepartment($contactOrganisationDepartment) {
-        return new OrganisationDepartmentItem(OrganisationSummaryItem::fromOrganisationSummary($contactOrganisationDepartment->getOrganisation()), DepartmentItem::fromDepartment($contactOrganisationDepartment->getDepartment()));
+        
+        return new OrganisationDepartmentItem(
+            $contactOrganisationDepartment->getOrganisation() ? OrganisationSummaryItem::fromOrganisationSummary($contactOrganisationDepartment->getOrganisation()) : null,
+            $contactOrganisationDepartment->getDepartment() ? DepartmentItem::fromDepartment($contactOrganisationDepartment->getDepartment()) : null);
     }
 
 }
