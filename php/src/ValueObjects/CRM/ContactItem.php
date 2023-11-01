@@ -195,7 +195,7 @@ class ContactItem {
         }, $contact->getSubscribedMailingLists() ?? []);
 
 
-        return new ContactItem($contact->getName(), $contact->getEmailAddress(), $contact->getTelephone(), $contact->getPhoto(), $contact->getAddress() ? new AddressItem($contact->getAddress()) : null,
+        return new ContactItem($contact->getName(), $contact->getEmailAddress(), $contact->getTelephone(), $contact->getPhoto(), $contact->getAddress() ? AddressItem::fromAddress($contact->getAddress()) : null,
             $contact->getNotes(), $attachments, $organisationDepartments,
             $contact->getUserSummary() ? ContactUserItem::fromUserSummary($contact->getUserSummary()) : null, $subscribedMailingLists,
             $contact->getId());
