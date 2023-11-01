@@ -18,6 +18,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {AddressComponent} from './components/address-book/address/address.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { AddressDialogComponent } from './components/address-book/address-dialog/address-dialog.component';
+import { OrganisationDialogComponent } from './components/organisations/organisation-dialog/organisation-dialog.component';
+import { ContactDialogComponent } from './components/contacts/contact-dialog/contact-dialog.component';
 
 
 @NgModule({
@@ -30,7 +32,9 @@ import { AddressDialogComponent } from './components/address-book/address-dialog
         AddressBookComponent,
         DepartmentsComponent,
         EditDepartmentComponent,
-        AddressDialogComponent
+        AddressDialogComponent,
+        OrganisationDialogComponent,
+        ContactDialogComponent
     ],
     imports: [
         BrowserModule,

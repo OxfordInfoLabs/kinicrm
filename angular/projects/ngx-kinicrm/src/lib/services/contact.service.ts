@@ -31,9 +31,9 @@ export class ContactService {
         return this.http.post(this.config.adminHttpURL + '/crm/contact', address).toPromise();
     }
 
-    public deleteContact(addressId: number) {
+    public deleteContact(contactId: number) {
         return this.http.delete(this.config.adminHttpURL + '/crm/contact', {
-            params: {addressId}
+            params: {contactId}
         }).toPromise();
     }
 }

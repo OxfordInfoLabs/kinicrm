@@ -5,6 +5,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {OrganisationService} from '../../../services/organisation.service';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
+import {ContactService} from '../../../services/contact.service';
+import {ContactDialogComponent} from '../../contacts/contact-dialog/contact-dialog.component';
 
 @Component({
   selector: 'kcrm-edit-organisation',
@@ -21,16 +23,19 @@ export class EditOrganisationComponent implements OnInit {
         departments: [{}]
     };
     public addresses: any = [];
+    public contacts: any = [];
 
     constructor(private addressService: AddressService,
                 private dialog: MatDialog,
                 private organisationService: OrganisationService,
                 private route: ActivatedRoute,
-                private location: Location) {
+                private location: Location,
+                private contactService: ContactService) {
     }
 
     async ngOnInit() {
         this.loadAddresses();
+        this.loadContacts();
         this.route.params.subscribe(async (params: any) => {
             if (params.id) {
                 this.organisation = await this.organisationService.getOrganisation(params.id) || {
@@ -65,8 +70,20 @@ export class EditOrganisationComponent implements OnInit {
         });
     }
 
-    public addressDisplay(v1: any, v2: any) {
+    public compareWith(v1: any, v2: any) {
         return v1 && v2 && (v1.id === v2.id);
+    }
+
+    public addContact() {
+        const dialogRef = this.dialog.open(ContactDialogComponent, {
+            height: '745px',
+            width: '900px',
+        });
+
+        dialogRef.afterClosed().subscribe(async (newContact: any) => {
+            await this.loadContacts();
+            this.organisation.primaryContact = newContact;
+        });
     }
 
     public deleteOrganisation() {
@@ -86,5 +103,9 @@ export class EditOrganisationComponent implements OnInit {
 
     private async loadAddresses() {
         this.addresses = await this.addressService.searchForAddresses('', 1000, 0).toPromise();
+    }
+
+    private async loadContacts() {
+        this.contacts = await this.contactService.searchForContacts('', 1000, 0).toPromise();
     }
 }
