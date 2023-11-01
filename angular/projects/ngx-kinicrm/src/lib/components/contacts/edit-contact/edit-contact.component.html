@@ -36,17 +36,19 @@
                     </div>
 
                     <div class="sm:col-span-full">
-                        <label class="block text-sm font-medium leading-6 text-gray-900">Full name</label>
+                        <label class="block text-sm font-medium leading-6 text-gray-900">Full name <span class="text-red-600">*</span></label>
                         <div class="mt-2">
                             <input type="text" name="first-name" [(ngModel)]="contact.name"
+                                   [ngClass]="{'border-red-600 border': !contact.name}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
 
                     <div class="sm:col-span-4">
-                        <label class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+                        <label class="block text-sm font-medium leading-6 text-gray-900">Email address <span class="text-red-600">*</span></label>
                         <div class="mt-2">
                             <input name="email" type="email" [(ngModel)]="contact.emailAddress"
+                                   [ngClass]="{'border-red-600 border': !contact.emailAddress}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>

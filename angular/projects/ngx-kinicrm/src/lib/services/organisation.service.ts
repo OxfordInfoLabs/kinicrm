@@ -29,9 +29,9 @@ export class OrganisationService {
         return this.http.post(this.config.adminHttpURL + '/crm/organisation', address).toPromise();
     }
 
-    public deleteOrganisation(addressId: number) {
+    public deleteOrganisation(organisationId: number) {
         return this.http.delete(this.config.adminHttpURL + '/crm/organisation', {
-            params: {addressId}
+            params: {organisationId}
         }).toPromise();
     }
 }

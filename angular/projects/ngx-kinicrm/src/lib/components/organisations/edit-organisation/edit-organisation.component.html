@@ -35,9 +35,10 @@
                     </div>
 
                     <div class="sm:col-span-full">
-                        <label class="block text-sm font-medium leading-6 text-gray-900">Organisation name</label>
+                        <label class="block text-sm font-medium leading-6 text-gray-900">Organisation name <span class="text-red-600">*</span></label>
                         <div class="mt-2">
                             <input type="text" name="first-name" [(ngModel)]="organisation.name"
+                                   [ngClass]="{'border-red-600 border': !organisation.name}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
@@ -46,10 +47,11 @@
                 <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
 
                     <div class="sm:col-span-full">
-                        <label class="block text-sm font-medium leading-6 text-gray-900">Select Address</label>
+                        <label class="block text-sm font-medium leading-6 text-gray-900">Select Address <span class="text-red-600">*</span></label>
                         <div class="flex flex-wrap mt-2">
                             <div class="flex-1 mr-4 sm:w-full max-w-3/4">
                                 <mat-select name="address" [(ngModel)]="organisation.address" [compareWith]="compareWith"
+                                            [ngClass]="{'border-red-600 border': !organisation.address}"
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     <mat-option *ngFor="let address of addresses" [value]="address" class="hover:bg-gray-50">
                                         <span class="font-semibold">{{address.street1}}&nbsp;</span>
@@ -108,10 +110,11 @@
                         <div *ngFor="let department of organisation.departments; let i = index"
                              class="bg-gray-50 p-4 mb-4 flex">
                             <div class="flex-1">
-                                <label class="block text-xs font-normal leading-6 text-gray-700">Name</label>
+                                <label class="block text-xs font-normal leading-6 text-gray-700">Name <span class="text-red-600">*</span></label>
                                 <div class="flex flex-wrap">
                                     <div class="flex-1 mr-4 sm:w-full">
                                         <input type="text" name="department" [(ngModel)]="organisation.departments[i].name"
+                                               [ngClass]="{'border-red-600 border': !organisation.departments[i].name}"
                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
                                 </div>

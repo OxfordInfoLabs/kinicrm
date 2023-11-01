@@ -43,6 +43,9 @@ export class EditContactComponent implements OnInit {
                     organisationDepartments: [{}]
                 };
             }
+            if (!this.contact.organisationDepartments.length) {
+                this.contact.organisationDepartments = [{}];
+            }
         });
     }
 
