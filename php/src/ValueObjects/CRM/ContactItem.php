@@ -56,6 +56,13 @@ class ContactItem {
      */
     private $organisationDepartments;
 
+
+    /**
+     * @var ContactUserItem
+     */
+    private $user;
+
+
     /**
      * @param string $name
      * @param string $emailAddress
@@ -65,9 +72,10 @@ class ContactItem {
      * @param string $notes
      * @param AttachmentItem[] $attachments
      * @param OrganisationDepartmentItem[] $organisationDepartments
+     * @param ContactUserItem $contactUser
      * @param int $id
      */
-    public function __construct($name, $emailAddress, $telephone, $photo, $address, $notes, $attachments, $organisationDepartments, $id = null) {
+    public function __construct($name, $emailAddress, $telephone, $photo, $address, $notes, $attachments, $organisationDepartments, $contactUser, $id = null) {
         $this->id = $id;
         $this->name = $name;
         $this->emailAddress = $emailAddress;
@@ -159,8 +167,11 @@ class ContactItem {
             $organisationDepartments[] = OrganisationDepartmentItem::fromOrganisationDepartment($department);
         }
 
+
         return new ContactItem($contact->getName(), $contact->getEmailAddress(), $contact->getTelephone(), $contact->getPhoto(), $contact->getAddress() ? new AddressItem($contact->getAddress()) : null,
-            $contact->getNotes(), $attachments, $organisationDepartments, $contact->getId());
+            $contact->getNotes(), $attachments, $organisationDepartments,
+            $contact->getUserSummary() ? ContactUserItem::fromUserSummary($contact->getUserSummary()) : null,
+            $contact->getId());
     }
 
 

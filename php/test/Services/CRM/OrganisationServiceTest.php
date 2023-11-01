@@ -10,9 +10,7 @@ use KiniCRM\TestBase;
 use KiniCRM\ValueObjects\CRM\AddressItem;
 use KiniCRM\ValueObjects\CRM\ContactItem;
 use KiniCRM\ValueObjects\CRM\DepartmentItem;
-use KiniCRM\ValueObjects\CRM\OrganisationDepartmentItem;
 use KiniCRM\ValueObjects\CRM\OrganisationItem;
-use KiniCRM\ValueObjects\CRM\OrganisationSummaryItem;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\MVC\Request\FileUpload;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
@@ -40,10 +38,10 @@ class OrganisationServiceTest extends TestBase {
 
         $addressItem = new AddressItem("Street1", "Street2", "Oxford", "Oxon", "OX4 2RD", "GB", $address->getId());
 
-        $primaryContact = new Contact(new ContactItem("Mark Robertshaw", "mark@oxil.co.uk", "07589 898888", "TEST PHOTO", $addressItem, "TEST NOTES", [], []), 0);
+        $primaryContact = new Contact(new ContactItem("Mark Robertshaw", "mark@oxil.co.uk", "07589 898888", "TEST PHOTO", $addressItem, "TEST NOTES", [], [], null), 0);
         $primaryContact->save();
 
-        $primaryContactItem = new ContactItem("Mark Robertshaw", "mark@oxil.co.uk", "07589 898888", "TEST PHOTO", $addressItem, "TEST NOTES", [], [], $primaryContact->getId());
+        $primaryContactItem = new ContactItem("Mark Robertshaw", "mark@oxil.co.uk", "07589 898888", "TEST PHOTO", $addressItem, "TEST NOTES", [], [], null,$primaryContact->getId());
 
         $organisationItem1 = new OrganisationItem("Test Organisation", $addressItem, $primaryContactItem, "TEST LOGO", [
             new DepartmentItem("HR", "Human Resources Inc."),

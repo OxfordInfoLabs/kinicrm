@@ -3,7 +3,6 @@
 namespace KiniCRM\Objects\CRM;
 
 
-use KiniCRM\ValueObjects\CRM\OrganisationItem;
 use KiniCRM\ValueObjects\CRM\OrganisationSummaryItem;
 use Kinikit\Persistence\ORM\ActiveRecord;
 
