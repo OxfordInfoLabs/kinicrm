@@ -85,7 +85,7 @@
         </div>
     </div>
 
-    <div class="shadow sm:overflow-hidden sm:rounded-md mb-8">
+    <div *ngIf="address.id" class="shadow sm:overflow-hidden sm:rounded-md mb-8">
         <div class="space-y-6 bg-white px-4 py-6 sm:p-6">
             <div>
                 <h2 class="text-base font-semibold leading-7 ">Delete address</h2>
@@ -93,7 +93,7 @@
             </div>
 
             <form class="flex items-start md:col-span-2">
-                <button type="submit"
+                <button type="button" (click)="deleteAddress()"
                         class="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-400">
                     Yes, delete this address
                 </button>

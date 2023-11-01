@@ -11,13 +11,17 @@ export class AddressService {
                 private config: KinicrmModuleConfig) {
     }
 
-    public searchForAddresses(filterString = '', limit = 10, offset = 0) {
+    public searchForAddresses(searchString = '', limit = 10, offset = 0) {
         const url = this.config.adminHttpURL + '/crm/address';
         return this.http.get(url, {
             params: {
-                filterString, limit: limit.toString(), offset: offset.toString()
+                searchString, limit: limit.toString(), offset: offset.toString()
             }
         })
+    }
+
+    public getAddress(id: number) {
+        return this.http.get(this.config.adminHttpURL + '/crm/address/' + id).toPromise();
     }
 
     public saveAddress(address: any) {

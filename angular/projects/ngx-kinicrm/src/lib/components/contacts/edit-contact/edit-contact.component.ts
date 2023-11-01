@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ContactService} from '../../../services/contact.service';
+import {AddressService} from '../../../services/address.service';
+import {MatDialog} from '@angular/material/dialog';
+import {AddressDialogComponent} from '../../address-book/address-dialog/address-dialog.component';
 
 @Component({
   selector: 'kcrm-edit-contact',
@@ -17,15 +20,19 @@ export class EditContactComponent implements OnInit {
             }
         ]
     };
+    public addresses: any = [];
 
     constructor(private route: ActivatedRoute,
-                private contactService: ContactService) {
+                private contactService: ContactService,
+                private addressService: AddressService,
+                private dialog: MatDialog) {
     }
 
-    ngOnInit() {
-        this.route.params.subscribe((params: any) => {
+    async ngOnInit() {
+        this.loadAddresses();
+        this.route.params.subscribe(async (params: any) => {
             if (params.id) {
-                this.contact = this.contactService.getContact(params.id) || {
+                this.contact = await this.contactService.getContact(params.id) || {
                     organisationDepartments: [
                         {
                             organisation: null,
@@ -36,10 +43,6 @@ export class EditContactComponent implements OnInit {
             }
             console.log(this.contact);
         });
-    }
-
-    public handleAddressChange(event: any) {
-        console.log(event);
     }
 
     public delete() {
@@ -62,8 +65,29 @@ export class EditContactComponent implements OnInit {
         reader.readAsDataURL(file);
     }
 
+    public addAddress() {
+        const dialogRef = this.dialog.open(AddressDialogComponent, {
+            height: '745px',
+            width: '900px',
+        });
+
+        dialogRef.afterClosed().subscribe(async newAddress => {
+            await this.loadAddresses();
+            this.contact.address = newAddress;
+        });
+    }
+
     public addOrganisation() {
 
+    }
+
+    public addressDisplay(v1: any, v2: any) {
+        return v1 && v2 && (v1.id === v2.id);
+    }
+
+
+    private async loadAddresses() {
+        this.addresses = await this.addressService.searchForAddresses('', 1000, 0).toPromise();
     }
 
 }

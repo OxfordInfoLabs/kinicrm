@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {Component, EventEmitter, OnInit, Output, Input} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import * as _ from 'lodash';
 import {AddressService} from '../../../services/address.service';
+import {Location} from '@angular/common';
 
 @Component({
     selector: 'kcrm-address',
@@ -9,6 +10,10 @@ import {AddressService} from '../../../services/address.service';
     styleUrls: ['./address.component.css']
 })
 export class AddressComponent implements OnInit {
+
+    @Output() addressSaved = new EventEmitter();
+
+    @Input() back: boolean = true;
 
     public address: any = {};
     public countryCodes = [
@@ -258,14 +263,25 @@ export class AddressComponent implements OnInit {
     ];
 
     constructor(private route: ActivatedRoute,
-                private addressService: AddressService) {
+                private addressService: AddressService,
+                private router: Router,
+                private location: Location) {
     }
 
     ngOnInit() {
+        this.route.params.subscribe(async (params: any) => {
+            if (params.id) {
+                this.address = await this.addressService.getAddress(params.id)
+            }
+        });
     }
 
     public handleAddressChange(event: any) {
         const components = event.address_components;
+
+        const streetNumber = _.find(components, component => {
+            return component.types.indexOf('street_number') > -1;
+        });
 
         // If we encounter a business or point or interest - handle appropriately
         if (event.types.indexOf('point_of_interest') > -1 ||
@@ -273,19 +289,18 @@ export class AddressComponent implements OnInit {
         ) {
             this.address.street1 = event.name;
 
-            this.address.street2 = _.find(components, component => {
+            const premise = _.find(components, component => {
                 return component.types.indexOf('premise') > -1;
-            })?.long_name + ', ' || '';
-            this.address.street2 += _.find(components, component => {
-                return component.types.indexOf('street_number') > -1;
-            })?.long_name + ' ' || '';
+            });
+            this.address.street2 = premise ? premise.long_name + ', ' : '';
+
+            this.address.street2 += streetNumber ? streetNumber.long_name + ' ' : '';
+
             this.address.street2 += _.find(components, component => {
                 return component.types.indexOf('route') > -1;
             })?.long_name || '';
         } else {
-            this.address.street1 = _.find(components, component => {
-                return component.types.indexOf('street_number') > -1;
-            })?.long_name || '';
+            this.address.street1 = streetNumber ? streetNumber + ' ' : '';
 
             this.address.street1 += ' ' + _.find(components, component => {
                 return component.types.indexOf('route') > -1;
@@ -314,6 +329,18 @@ export class AddressComponent implements OnInit {
     }
 
     public async saveAddress() {
-        await this.addressService.saveAddress(this.address);
+        this.address = await this.addressService.saveAddress(this.address);
+        this.addressSaved.next(this.address);
+        if (this.back) {
+            this.location.back();
+        }
+    }
+
+    public async deleteAddress() {
+        const message = 'Are you sure you would like to remove this address?';
+        if (window.confirm(message)) {
+            await this.addressService.deleteAddress(this.address.id);
+            this.location.back();
+        }
     }
 }
