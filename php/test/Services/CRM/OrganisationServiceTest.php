@@ -50,6 +50,7 @@ class OrganisationServiceTest extends TestBase {
 
         $organisation1 = new Organisation($organisationItem1, 0);
         $this->organisationService->saveOrganisation($organisation1);
+        $organisation1 = Organisation::fetch($organisation1->getId());
 
         $organisationItem2 = new OrganisationItem("New Org", $addressItem, $primaryContactItem, "TEST LOGO 2", [
             new DepartmentItem("Design", "Design Dept."),
@@ -58,6 +59,7 @@ class OrganisationServiceTest extends TestBase {
 
         $organisation2 = new Organisation($organisationItem2, 0);
         $this->organisationService->saveOrganisation($organisation2);
+        $organisation2 = Organisation::fetch($organisation2->getId());
 
         $this->assertEquals($organisation2, $this->organisationService->getOrganisation($organisation2->getId()));
 

@@ -5,6 +5,13 @@ namespace KiniCRM\ValueObjects\CRM;
 use KiniCRM\Objects\CRM\OrganisationSummary;
 
 class OrganisationSummaryItem {
+
+    /**
+     * @var integer
+     */
+    private $id;
+
+
     /**
      * @var string
      */
@@ -16,18 +23,21 @@ class OrganisationSummaryItem {
     private $logo;
 
     /**
-     * @var integer
+     * @var DepartmentItem[]
      */
-    private $id;
+    private $departments;
+
 
     /**
      * @param string $name
      * @param string $logo
+     * @param DepartmentItem[] $departments
      * @param int $id
      */
-    public function __construct($name, $logo, $id = null) {
+    public function __construct($name, $logo, $departments, $id = null) {
         $this->name = $name;
         $this->logo = $logo;
+        $this->departments = $departments;
         $this->id = $id;
     }
 
@@ -53,12 +63,22 @@ class OrganisationSummaryItem {
         return $this->name;
     }
 
+    /**
+     * @return DepartmentItem[]
+     */
+    public function getDepartments() {
+        return $this->departments;
+    }
+
 
     /**
      * @param OrganisationSummary $organisationSummary
      * @return OrganisationSummaryItem
      */
     public static function fromOrganisationSummary($organisationSummary) {
-        return new OrganisationSummaryItem($organisationSummary->getName(), $organisationSummary->getLogo(), $organisationSummary->getId());
+        $departments = array_map(function ($department) {
+            return DepartmentItem::fromDepartment($department);
+        }, $organisationSummary->getDepartments() ?? []);
+        return new OrganisationSummaryItem($organisationSummary->getName(), $organisationSummary->getLogo(), $departments, $organisationSummary->getId());
     }
 }
