@@ -22,6 +22,19 @@ class Contact {
 
 
     /**
+     * Get a contact by id
+     *
+     * @http GET /$id
+     *
+     * @param $id
+     * @return ContactItem
+     */
+    public function getContact($id) {
+        return ContactItem::fromContact($this->contactService->getContact($id));
+    }
+
+
+    /**
      * @http GET /
      *
      * @param $searchString

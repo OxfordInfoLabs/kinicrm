@@ -8,6 +8,16 @@ class AddressService {
 
 
     /**
+     * Get an address by id.
+     *
+     * @param $id
+     * @return Address
+     */
+    public function getAddress($id) {
+        return Address::fetch($id);
+    }
+
+    /**
      * Filter addresses using passed search string
      *
      * @param $searchString

@@ -30,6 +30,8 @@ class AddressServiceTest extends TestBase {
         $this->addressService->saveAddress($address2);
 
 
+        $this->assertEquals($address2, $this->addressService->getAddress($address2->getId()));
+
         // Check string, limit offset
         $this->assertEquals([$address1, $address2], $this->addressService->filterAddresses("lane"));
         $this->assertEquals([$address1], $this->addressService->filterAddresses("lane", 1));

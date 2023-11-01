@@ -24,6 +24,15 @@ class ContactService {
 
 
     /**
+     * @param $id
+     *
+     * @return Contact
+     */
+    public function getContact($id){
+        return Contact::fetch($id);
+    }
+
+    /**
      * Filter addresses using passed search string
      *
      * @param $searchString

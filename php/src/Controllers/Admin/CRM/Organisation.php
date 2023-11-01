@@ -20,6 +20,17 @@ class Organisation {
         $this->organisationService = $organisationService;
     }
 
+
+    /**
+     * @http GET /$id
+     *
+     * @param $id
+     * @return OrganisationItem
+     */
+    public function getOrganisation($id) {
+        return OrganisationItem::fromOrganisation($this->organisationService->getOrganisation($id));
+    }
+
     /**
      * @http GET /
      *

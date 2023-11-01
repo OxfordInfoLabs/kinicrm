@@ -21,6 +21,16 @@ class Address {
 
 
     /**
+     * @http GET /$id
+     *
+     * @param $id
+     * @return AddressItem
+     */
+    public function getAddress($id) {
+        return AddressItem::fromAddress($this->addressService->getAddress($id));
+    }
+
+    /**
      * @http GET /
      *
      * @param $searchString

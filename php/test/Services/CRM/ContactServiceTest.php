@@ -64,6 +64,8 @@ class ContactServiceTest extends TestBase {
         $contact1 = Contact::fetch($contact1->getId());
 
 
+
+
         $contactItem = new ContactItem("Mr Jones", "smith@oxil.co.uk",
             "07595 543221", "BIG IMAGE", $addressItem, "New Contact", [],
             [new OrganisationDepartmentItem($organisationSummaryItem, $department2)]);
@@ -71,6 +73,9 @@ class ContactServiceTest extends TestBase {
         $contact2 = new Contact($contactItem, 0);
         $this->contactService->saveContact($contact2);
         $contact2 = Contact::fetch($contact2->getId());
+
+        $this->assertEquals($contact2, $this->contactService->getContact($contact2->getId()));
+
 
         // Check filtering, offset limits
         $this->assertEquals([$contact1, $contact2], $this->contactService->filterContacts("oxil"));

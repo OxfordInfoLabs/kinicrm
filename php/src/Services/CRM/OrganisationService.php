@@ -24,6 +24,16 @@ class OrganisationService {
     }
 
 
+    /**
+     * Get an organisation by id
+     *
+     * @param $id
+     * @return Organisation
+     */
+    public function getOrganisation($id){
+        return Organisation::fetch($id);
+    }
+
 
     /**
      * Filter organisations using passed search string

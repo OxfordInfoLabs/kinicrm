@@ -61,6 +61,8 @@ class OrganisationServiceTest extends TestBase {
         $organisation2 = new Organisation($organisationItem2, 0);
         $this->organisationService->saveOrganisation($organisation2);
 
+        $this->assertEquals($organisation2, $this->organisationService->getOrganisation($organisation2->getId()));
+
         // Check simple filtering, offset, limit
         $this->assertEquals([$organisation2, $organisation1], $this->organisationService->filterOrganisations("Org"));
         $this->assertEquals([$organisation2], $this->organisationService->filterOrganisations("Org", 1));
@@ -113,7 +115,6 @@ class OrganisationServiceTest extends TestBase {
         $this->assertEquals(file_get_contents(__DIR__ . "/test2.txt"), $attachments[0]->getContent());
 
     }
-
 
 
 }
