@@ -50,7 +50,7 @@ class OrganisationDepartmentItem {
     /**
      * @return string
      */
-    public function getJobTitle(): string {
+    public function getJobTitle(){
         return $this->jobTitle;
     }
 
