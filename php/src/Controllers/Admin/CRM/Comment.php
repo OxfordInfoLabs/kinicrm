@@ -24,14 +24,14 @@ class Comment {
     /**
      * @http POST /$scope/$scopeId
      *
-     * @param CommentScope $scope
+     * @param string $scope
      * @param integer $scopeId
      * @param string $message
      *
      * @return CommentItem
      */
     public function createScopeComment($scope, $scopeId, $message) {
-        $comment = $this->commentService->createComment($scope, $scopeId, $message);
+        $comment = $this->commentService->createComment(CommentScope::from($scope), $scopeId, $message);
         return CommentItem::fromComment($comment);
     }
 
