@@ -3,12 +3,8 @@
 namespace KiniCRM\Objects\CRM;
 
 use Kiniauth\Objects\Security\UserSummary;
+use KiniCRM\ValueObjects\Enum\CommentScope;
 use Kinikit\Persistence\ORM\ActiveRecord;
-
-enum CommentScope: string {
-    case Contact = "Contact";
-    case Organisation = "Organisation";
-}
 
 ;
 

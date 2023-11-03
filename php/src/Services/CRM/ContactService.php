@@ -40,7 +40,7 @@ class ContactService {
      */
     public function filterContacts($searchString = "", $limit = 10, $offset = 0) {
 
-        $query = "WHERE CONCAT(name,emailAddress,IFNULL(telephone, '')) LIKE ?";
+        $query = "WHERE CONCAT(name,emailAddress,IFNULL(telephone, '')) LIKE ? ORDER BY id DESC";
         $params = ["%" . $searchString . "%"];
 
         if ($limit) {

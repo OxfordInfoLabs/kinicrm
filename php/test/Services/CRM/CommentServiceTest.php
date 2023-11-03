@@ -5,8 +5,8 @@ namespace KiniCRM\Services\CRM;
 use Kiniauth\Objects\Security\UserSummary;
 use Kiniauth\Test\Services\Security\AuthenticationHelper;
 use KiniCRM\Objects\CRM\Comment;
-use KiniCRM\Objects\CRM\CommentScope;
 use KiniCRM\TestBase;
+use KiniCRM\ValueObjects\Enum\CommentScope;
 use Kinikit\Core\DependencyInjection\Container;
 
 include_once "autoloader.php";

@@ -6,7 +6,7 @@ use Kiniauth\Objects\Account\Account;
 use Kiniauth\Objects\Security\User;
 use Kiniauth\Objects\Security\UserSummary;
 use KiniCRM\Objects\CRM\Comment;
-use KiniCRM\Objects\CRM\CommentScope;
+use KiniCRM\ValueObjects\Enum\CommentScope;
 
 class CommentService {
 

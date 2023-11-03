@@ -84,9 +84,9 @@ class ContactServiceTest extends TestBase {
 
 
         // Check filtering, offset limits
-        $this->assertEquals([$contact1, $contact2], $this->contactService->filterContacts("oxil"));
-        $this->assertEquals([$contact1], $this->contactService->filterContacts("oxil", 1));
-        $this->assertEquals([$contact2], $this->contactService->filterContacts("oxil", 10, 1));
+        $this->assertEquals([$contact2, $contact1], $this->contactService->filterContacts("oxil"));
+        $this->assertEquals([$contact2], $this->contactService->filterContacts("oxil", 1));
+        $this->assertEquals([$contact1], $this->contactService->filterContacts("oxil", 10, 1));
 
         // Check other fields
         $this->assertEquals([$contact1], $this->contactService->filterContacts("bob"));
