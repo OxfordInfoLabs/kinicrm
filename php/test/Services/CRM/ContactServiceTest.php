@@ -4,6 +4,7 @@ namespace KiniCRM\Services\CRM;
 
 use Kiniauth\Objects\Attachment\Attachment;
 use Kiniauth\Objects\Security\UserSummary;
+use Kiniauth\Test\Services\Security\AuthenticationHelper;
 use KiniCRM\Objects\CRM\Address;
 use KiniCRM\Objects\CRM\Contact;
 use KiniCRM\Objects\CRM\ContactUserSummary;
@@ -38,6 +39,8 @@ class ContactServiceTest extends TestBase {
 
     public function testCanSaveFilterAndDeleteContacts() {
 
+        AuthenticationHelper::login("admin@kinicart.com", "password");
+
         // Save an address
         $addressItem = new AddressItem("33 My Lane", "Somewhere", "London", "Greater London", "NW1 2RR", "GB");
         $address = new Address($addressItem, 0);
@@ -61,8 +64,8 @@ class ContactServiceTest extends TestBase {
 
         $contactItem = new ContactItem("Bobby Jones", "bobby@oxil.co.uk",
             "07595 893322", "BIG IMAGE", $addressItem, "New Contact", [],
-            [new OrganisationDepartmentItem($organisationSummaryItem, $department1),
-                new OrganisationDepartmentItem($organisationSummaryItem, $department2)], null, []);
+            [new OrganisationDepartmentItem($organisationSummaryItem, $department1, "Master"),
+                new OrganisationDepartmentItem($organisationSummaryItem, $department2, "Geek")], null, []);
 
         $contact1 = new Contact($contactItem, 0);
         $this->contactService->saveContact($contact1);
@@ -71,7 +74,7 @@ class ContactServiceTest extends TestBase {
 
         $contactItem = new ContactItem("Mr Jones", "smith@oxil.co.uk",
             "07595 543221", "BIG IMAGE", $addressItem, "New Contact", [],
-            [new OrganisationDepartmentItem($organisationSummaryItem, $department2)], null, []);
+            [new OrganisationDepartmentItem($organisationSummaryItem, $department2, "Boss")], null, []);
 
         $contact2 = new Contact($contactItem, 0);
         $this->contactService->saveContact($contact2);

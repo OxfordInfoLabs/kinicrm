@@ -17,12 +17,19 @@ class OrganisationDepartmentItem {
     private $department;
 
     /**
+     * @var string
+     */
+    private $jobTitle;
+
+    /**
      * @param OrganisationSummaryItem $organisationSummary
      * @param DepartmentItem $department
+     * @param string $jobTitle
      */
-    public function __construct($organisationSummary, $department) {
+    public function __construct($organisationSummary, $department, $jobTitle) {
         $this->organisationSummary = $organisationSummary;
         $this->department = $department;
+        $this->jobTitle = $jobTitle;
     }
 
 
@@ -40,16 +47,24 @@ class OrganisationDepartmentItem {
         return $this->department;
     }
 
+    /**
+     * @return string
+     */
+    public function getJobTitle(): string {
+        return $this->jobTitle;
+    }
+
 
     /**
      * @param ContactOrganisationDepartment $contactOrganisationDepartment
      * @return OrganisationDepartmentItem
      */
     public static function fromContactOrganisationDepartment($contactOrganisationDepartment) {
-        
+
         return new OrganisationDepartmentItem(
             $contactOrganisationDepartment->getOrganisation() ? OrganisationSummaryItem::fromOrganisationSummary($contactOrganisationDepartment->getOrganisation()) : null,
-            $contactOrganisationDepartment->getDepartment() ? DepartmentItem::fromDepartment($contactOrganisationDepartment->getDepartment()) : null);
+            $contactOrganisationDepartment->getDepartment() ? DepartmentItem::fromDepartment($contactOrganisationDepartment->getDepartment()) : null,
+            $contactOrganisationDepartment->getJobTitle());
     }
 
 }
