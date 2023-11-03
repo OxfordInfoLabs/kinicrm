@@ -39,7 +39,7 @@ class Comment {
     /**
      * @http GET /$scope/$scopeId
      *
-     * @param CommentScope $scope
+     * @param string $scope
      * @param int $scopeId
      * @param string $searchString
      * @param int $limit
@@ -47,8 +47,8 @@ class Comment {
      *
      * @return CommentItem[]
      */
-    public function searchForComments(CommentScope $scope, int $scopeId, string $searchString = "", int $limit = 10, int $offset = 0) {
-        $comments = $this->commentService->searchForComments($scope, $scopeId, $searchString, $limit, $offset);
+    public function searchForComments(string $scope, int $scopeId, string $searchString = "", int $limit = 10, int $offset = 0) {
+        $comments = $this->commentService->searchForComments(CommentScope::from($scope), $scopeId, $searchString, $limit, $offset);
         return array_map(function ($comment) {
             return CommentItem::fromComment($comment);
         }, $comments);
