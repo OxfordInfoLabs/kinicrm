@@ -22,7 +22,7 @@
                 <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
                     <div class="col-span-full flex items-center gap-x-8">
                         <img *ngIf="organisation.logo" [src]="organisation.logo"
-                             alt="" class="h-24 w-24 flex-none rounded-lg bg-gray-800 object-cover">
+                             alt="" class="h-24 flex-none rounded-lg bg-gray-800 object-cover">
                         <div>
                             <button type="button" (click)="logo.click()"
                                     class="rounded-md bg-secondary px-3 py-2 text-sm font-semibold text-white shadow-sm ">
@@ -35,9 +35,10 @@
                     </div>
 
                     <div class="sm:col-span-full">
-                        <label class="block text-sm font-medium leading-6 text-gray-900">Organisation name</label>
+                        <label class="block text-sm font-medium leading-6 text-gray-900">Organisation name <span class="text-red-600">*</span></label>
                         <div class="mt-2">
                             <input type="text" name="first-name" [(ngModel)]="organisation.name"
+                                   [ngClass]="{'border-red-600 border': !organisation.name}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
                     </div>
@@ -46,10 +47,11 @@
                 <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
 
                     <div class="sm:col-span-full">
-                        <label class="block text-sm font-medium leading-6 text-gray-900">Select Address</label>
+                        <label class="block text-sm font-medium leading-6 text-gray-900">Select Address <span class="text-red-600">*</span></label>
                         <div class="flex flex-wrap mt-2">
                             <div class="flex-1 mr-4 sm:w-full max-w-3/4">
-                                <mat-select name="address" [(ngModel)]="organisation.address" [compareWith]="addressDisplay"
+                                <mat-select name="address" [(ngModel)]="organisation.address" [compareWith]="compareWith"
+                                            [ngClass]="{'border-red-600 border': !organisation.address}"
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     <mat-option *ngFor="let address of addresses" [value]="address" class="hover:bg-gray-50">
                                         <span class="font-semibold">{{address.street1}}&nbsp;</span>
@@ -80,13 +82,15 @@
                         <label class="block text-sm font-medium leading-6 text-gray-900">Select Primary Contact</label>
                         <div class="flex flex-wrap mt-2">
                             <div class="flex-1 mr-4 sm:w-full">
-                                <mat-select name="address" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                    <mat-option>United States</mat-option>
-                                    <mat-option>Canada</mat-option>
-                                    <mat-option>Mexico</mat-option>
+                                <mat-select name="contact" [(ngModel)]="organisation.primaryContact" [compareWith]="compareWith"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    <mat-option *ngFor="let contact of contacts" [value]="contact">
+                                        {{contact.name}}
+                                    </mat-option>
                                 </mat-select>
                             </div>
-                            <button type="button" class="inline-flex items-center gap-x-1.5 rounded-md bg-gray-100 px-2 py-1 text-xs font-semibold text-primary shadow-sm border border-primary">
+                            <button type="button" (click)="addContact()"
+                                    class="inline-flex items-center gap-x-1.5 rounded-md bg-gray-100 px-2 py-1 text-xs font-semibold text-primary shadow-sm border border-primary">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                      class="-ml-0.5 h-6 w-6">
                                     <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd" />
@@ -106,10 +110,11 @@
                         <div *ngFor="let department of organisation.departments; let i = index"
                              class="bg-gray-50 p-4 mb-4 flex">
                             <div class="flex-1">
-                                <label class="block text-xs font-normal leading-6 text-gray-700">Name</label>
+                                <label class="block text-xs font-normal leading-6 text-gray-700">Name <span class="text-red-600">*</span></label>
                                 <div class="flex flex-wrap">
                                     <div class="flex-1 mr-4 sm:w-full">
                                         <input type="text" name="department" [(ngModel)]="organisation.departments[i].name"
+                                               [ngClass]="{'border-red-600 border': !organisation.departments[i].name}"
                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
                                 </div>

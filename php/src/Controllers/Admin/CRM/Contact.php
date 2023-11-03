@@ -4,6 +4,7 @@ namespace KiniCRM\Controllers\Admin\CRM;
 
 use KiniCRM\Services\CRM\ContactService;
 use KiniCRM\ValueObjects\CRM\ContactItem;
+use Kinikit\Core\Logging\Logger;
 use Kinikit\MVC\Request\FileUpload;
 
 class Contact {
