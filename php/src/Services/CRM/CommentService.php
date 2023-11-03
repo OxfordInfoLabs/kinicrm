@@ -17,6 +17,7 @@ class CommentService {
      * @param int $scopeId
      * @param string $message
      * @param mixed $userId
+     * @param mixed $accountId
      *
      * @return Comment
      */
