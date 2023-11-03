@@ -2,9 +2,10 @@
 
 namespace KiniCRM\Controllers\Admin\CRM;
 
-use KiniCRM\Objects\CRM\CommentScope;
+
 use KiniCRM\Services\CRM\CommentService;
 use KiniCRM\ValueObjects\CRM\CommentItem;
+use KiniCRM\ValueObjects\Enum\CommentScope;
 
 class Comment {
 
