@@ -4,7 +4,7 @@ namespace KiniCRM\ValueObjects\CRM;
 
 use Kiniauth\Objects\Security\UserSummary;
 
-class ContactUserItem {
+class UserSummaryItem {
 
     /**
      * @var integer
@@ -77,10 +77,10 @@ class ContactUserItem {
      * Generate a contact user item from a user summary
      *
      * @param UserSummary $getUserSummary
-     * @return ContactUserItem
+     * @return UserSummaryItem
      */
     public static function fromUserSummary(UserSummary $userSummary) {
-        return new ContactUserItem($userSummary->getId(), $userSummary->getName(), $userSummary->getEmailAddress(), $userSummary->getStatus());
+        return new UserSummaryItem($userSummary->getId(), $userSummary->getName(), $userSummary->getEmailAddress(), $userSummary->getStatus());
     }
 
 

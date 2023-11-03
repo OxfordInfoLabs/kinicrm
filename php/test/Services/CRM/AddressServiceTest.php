@@ -2,6 +2,7 @@
 
 namespace KiniCRM\Services\CRM;
 
+use Kiniauth\Test\Services\Security\AuthenticationHelper;
 use KiniCRM\Objects\CRM\Address;
 use KiniCRM\TestBase;
 use KiniCRM\ValueObjects\CRM\AddressItem;
@@ -22,6 +23,9 @@ class AddressServiceTest extends TestBase {
 
 
     public function testCanSaveFilterAndRemoveAddresses() {
+
+        AuthenticationHelper::login("admin@kinicart.com", "password");
+
 
         $address1 = new Address(new AddressItem("3 The Lane", "Somewhere", "Oxford", "Oxon", "OX1 6DD", "GB"), 0);
         $this->addressService->saveAddress($address1);

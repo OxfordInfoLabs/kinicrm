@@ -58,7 +58,7 @@ class ContactItem {
 
 
     /**
-     * @var ContactUserItem
+     * @var UserSummaryItem
      */
     private $user;
 
@@ -77,7 +77,7 @@ class ContactItem {
      * @param string $notes
      * @param AttachmentItem[] $attachments
      * @param OrganisationDepartmentItem[] $organisationDepartments
-     * @param ContactUserItem $contactUser
+     * @param UserSummaryItem $contactUser
      * @param $subscribedMailingLists
      * @param int $id
      */
@@ -160,7 +160,7 @@ class ContactItem {
     }
 
     /**
-     * @return ContactUserItem
+     * @return UserSummaryItem
      */
     public function getUser() {
         return $this->user;
@@ -197,7 +197,7 @@ class ContactItem {
 
         return new ContactItem($contact->getName(), $contact->getEmailAddress(), $contact->getTelephone(), $contact->getPhoto(), $contact->getAddress() ? AddressItem::fromAddress($contact->getAddress()) : null,
             $contact->getNotes(), $attachments, $organisationDepartments,
-            $contact->getUserSummary() ? ContactUserItem::fromUserSummary($contact->getUserSummary()) : null, $subscribedMailingLists,
+            $contact->getUserSummary() ? UserSummaryItem::fromUserSummary($contact->getUserSummary()) : null, $subscribedMailingLists,
             $contact->getId());
     }
 
