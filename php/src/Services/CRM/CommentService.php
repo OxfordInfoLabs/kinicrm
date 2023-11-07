@@ -7,6 +7,7 @@ use Kiniauth\Objects\Security\User;
 use Kiniauth\Objects\Security\UserSummary;
 use KiniCRM\Objects\CRM\Comment;
 use KiniCRM\ValueObjects\Enum\CommentScope;
+use Kinikit\Persistence\ORM\Query\Query;
 
 class CommentService {
 
@@ -48,20 +49,14 @@ class CommentService {
      */
     public function searchForComments(CommentScope $scope, int $scopeId, string $searchString = "", int $limit = 10, int $offset = 0) {
 
-        $query = "WHERE scope = ? AND scope_id = ? AND message LIKE ? ORDER BY id DESC";
-        $params = [$scope->name, $scopeId, "%" . $searchString . "%"];
 
-        if ($limit) {
-            $query .= " LIMIT ?";
-            $params[] = $limit;
-        }
+        $query = new Query(Comment::class);
+        return $query->query([
+            "scope" => $scope->name,
+            "scopeId" => $scopeId,
+            "message" => "%" . $searchString . "%"
+        ], "id DESC", $limit, $offset);
 
-        if ($offset) {
-            $query .= " OFFSET ?";
-            $params[] = $offset;
-        }
-
-        return Comment::filter($query, $params);
 
     }
 

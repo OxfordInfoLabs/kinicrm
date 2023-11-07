@@ -7,6 +7,8 @@ use Kiniauth\Services\Attachment\AttachmentService;
 use KiniCRM\Objects\CRM\Contact;
 use Kinikit\Core\Stream\File\ReadOnlyFileStream;
 use Kinikit\MVC\Request\FileUpload;
+use Kinikit\Persistence\ORM\Query\Filter\LikeFilter;
+use Kinikit\Persistence\ORM\Query\Query;
 
 class ContactService {
 
@@ -28,7 +30,7 @@ class ContactService {
      *
      * @return Contact
      */
-    public function getContact($id){
+    public function getContact($id) {
         return Contact::fetch($id);
     }
 
@@ -40,22 +42,11 @@ class ContactService {
      */
     public function filterContacts($searchString = "", $limit = 10, $offset = 0) {
 
-        $query = "WHERE CONCAT(name,emailAddress,IFNULL(telephone, '')) LIKE ? ORDER BY id DESC";
-        $params = ["%" . $searchString . "%"];
 
-        if ($limit) {
-            $query .= " LIMIT ?";
-            $params[] = $limit;
-        }
+        $query = new Query(Contact::class);
+        return $query->query(new LikeFilter(["name", "emailAddress", "telephone"], "%" . $searchString . "%"), "id DESC", $limit, $offset);
 
-        if ($offset) {
-            $query .= " OFFSET ?";
-            $params[] = $offset;
-        }
-
-
-        return Contact::filter($query, $params);
-
+      
     }
 
     /**

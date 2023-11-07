@@ -65,11 +65,14 @@ class ContactServiceTest extends TestBase {
         $contactItem = new ContactItem("Bobby Jones", "bobby@oxil.co.uk",
             "07595 893322", "BIG IMAGE", $addressItem, "New Contact", [],
             [new OrganisationDepartmentItem($organisationSummaryItem, $department1, "Master"),
-                new OrganisationDepartmentItem($organisationSummaryItem, $department2, "Geek")], null, []);
+                new OrganisationDepartmentItem($organisationSummaryItem, $department2, "Geek"),
+                ], null, []);
 
         $contact1 = new Contact($contactItem, 0);
         $this->contactService->saveContact($contact1);
         $contact1 = Contact::fetch($contact1->getId());
+
+        $this->assertEquals(2, sizeof($contact1->getOrganisationDepartments()));
 
 
         $contactItem = new ContactItem("Mr Jones", "smith@oxil.co.uk",

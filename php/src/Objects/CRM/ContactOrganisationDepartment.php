@@ -18,6 +18,19 @@ class ContactOrganisationDepartment {
 
 
     /**
+     * @var integer
+     * @primaryKey
+     */
+    private $organisationId;
+
+
+    /**
+     * @var integer
+     * @primaryKey
+     */
+    private $departmentId;
+
+    /**
      * @var OrganisationSummary
      * @manyToOne
      * @parentJoinColumns organisation_id

@@ -3,6 +3,8 @@
 namespace KiniCRM\Services\CRM;
 
 use KiniCRM\Objects\CRM\Address;
+use Kinikit\Persistence\ORM\Query\Filter\LikeFilter;
+use Kinikit\Persistence\ORM\Query\Query;
 
 class AddressService {
 
@@ -25,21 +27,11 @@ class AddressService {
      */
     public function filterAddresses($searchString = "", $limit = 10, $offset = 0) {
 
-        $query = "WHERE CONCAT(street1,street2,city,county,postcode,country_code) LIKE ? ORDER by street1, street2, city";
-        $params = ["%" . $searchString . "%"];
-
-        if ($limit) {
-            $query .= " LIMIT ?";
-            $params[] = $limit;
-        }
-
-        if ($offset) {
-            $query .= " OFFSET ?";
-            $params[] = $offset;
-        }
-
-
-        return Address::filter($query, $params);
+        $query = new Query(Address::class);
+        return $query->query([
+            new LikeFilter(["street1", "street2", "city", "county", "postcode", "country_code"],
+                "%" . $searchString . "%")
+        ], [], $limit, $offset);
 
     }
 
