@@ -25,7 +25,7 @@ class AddressService {
      */
     public function filterAddresses($searchString = "", $limit = 10, $offset = 0) {
 
-        $query = "WHERE CONCAT(street1,street2,city,county,postcode,country_code) LIKE ? ORDER by street1, street2, city";
+        $query = "WHERE CONCAT(IFNULL(street1, ''),IFNULL(street2, ''),IFNULL(city, ''),IFNULL(county, ''),IFNULL(postcode, ''),IFNULL(country_code, '')) LIKE ? ORDER by street1, street2, city";
         $params = ["%" . $searchString . "%"];
 
         if ($limit) {

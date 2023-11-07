@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import {KinicrmModuleConfig} from '../ngx-kinicrm.module';
@@ -35,5 +35,23 @@ export class ContactService {
         return this.http.delete(this.config.adminHttpURL + '/crm/contact', {
             params: {contactId}
         }).toPromise();
+    }
+
+    public uploadAttachments(contactId: number, fileUploads: any) {
+        const HttpUploadOptions = {
+            headers: new HttpHeaders({ 'Content-Type': 'file' })
+        };
+        return this.http.post(this.config.adminHttpURL + '/crm/contact/attachments/' + contactId,
+            fileUploads, HttpUploadOptions)
+            .toPromise();
+    }
+
+    public removeAttachment(contactId: number, attachmentId: number) {
+        return this.http.delete(this.config.adminHttpURL + `/crm/contact/attachments/${contactId}/${attachmentId}`)
+            .toPromise();
+    }
+
+    public streamAttachment(id: number) {
+        window.open(this.config.accessHttpURL + '/attachment/' + id);
     }
 }

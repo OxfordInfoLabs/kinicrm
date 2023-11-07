@@ -18,7 +18,7 @@
             </div>
 
             <div class="">
-                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-12">
+                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 py-4">
                     <div class="col-span-full">
                         <label class="block text-sm font-medium leading-6 text-gray-900">Find Address</label>
                         <div class="mt-2">
@@ -67,7 +67,8 @@
                         <div class="mt-2">
                             <select name="country" [(ngModel)]="address.countryCode"
                                     class="block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                                <option *ngFor="let countryCode of countryCodes" [value]="countryCode.code">
+                                <option *ngFor="let countryCode of countryCodes" [value]="countryCode.code"
+                                        [disabled]="countryCode.disabled">
                                     {{countryCode.name}}
                                 </option>
                             </select>
@@ -99,6 +100,5 @@
                 </button>
             </form>
         </div>
-        <div class="bg-gray-50 px-4 py-3 text-right sm:px-6"></div>
     </div>
 </div>
