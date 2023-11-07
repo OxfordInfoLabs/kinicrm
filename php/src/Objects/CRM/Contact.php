@@ -6,6 +6,7 @@ use Kiniauth\Objects\Attachment\AttachmentSummary;
 use Kiniauth\Objects\Security\UserSummary;
 use KiniCRM\ValueObjects\CRM\ContactItem;
 use KiniCRM\ValueObjects\CRM\OrganisationDepartmentItem;
+use KiniCRM\ValueObjects\Enum\ObjectScope;
 use Kinikit\Persistence\ORM\ActiveRecord;
 use Kinimailer\Objects\MailingList\MailingListSubscriber;
 
@@ -99,6 +100,21 @@ class Contact extends ActiveRecord {
 
 
     /**
+     * @var ItemCategory[]
+     * @oneToMany
+     * @childJoinColumns item_id,item_type=Contact
+     */
+    private $categories;
+
+    /**
+     * @var ItemTag[]
+     * @oneToMany
+     * @childJoinColumns item_id,item_type=Contact
+     */
+    private $tags;
+
+
+    /**
      * @param ContactItem $contact
      * @param integer $accountId
      */
@@ -118,6 +134,15 @@ class Contact extends ActiveRecord {
                 if (($organisationDepartment instanceof OrganisationDepartmentItem) && $organisationDepartment->getOrganisationSummary())
                     $this->organisationDepartments[] = new ContactOrganisationDepartment($organisationDepartment);
             }
+
+            $this->tags = array_map(function ($tagItem) use ($accountId) {
+                return new ItemTag($tagItem, $accountId);
+            }, $contact->getTags());
+
+            $this->categories = array_map(function ($categoryItem) use ($accountId) {
+                return new ItemCategory($categoryItem, $accountId);
+            }, $contact->getCategories());
+
 
         }
         $this->accountId = $accountId;
@@ -264,6 +289,34 @@ class Contact extends ActiveRecord {
      */
     public function getSubscribedMailingLists() {
         return $this->subscribedMailingLists;
+    }
+
+    /**
+     * @return ItemCategory[]
+     */
+    public function getCategories(): ?array {
+        return $this->categories;
+    }
+
+    /**
+     * @param ItemCategory[] $categories
+     */
+    public function setCategories(array $categories): void {
+        $this->categories = $categories;
+    }
+
+    /**
+     * @return ItemTag[]
+     */
+    public function getTags(): ?array {
+        return $this->tags;
+    }
+
+    /**
+     * @param ItemTag[] $tags
+     */
+    public function setTags(array $tags): void {
+        $this->tags = $tags;
     }
 
 

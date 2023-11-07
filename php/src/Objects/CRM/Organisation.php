@@ -51,6 +51,21 @@ class Organisation extends OrganisationSummary {
 
 
     /**
+     * @var ItemCategory[]
+     * @oneToMany
+     * @childJoinColumns item_id,item_type=Organisation
+     */
+    private $categories;
+
+    /**
+     * @var ItemTag[]
+     * @oneToMany
+     * @childJoinColumns item_id,item_type=Organisation
+     */
+    private $tags;
+
+
+    /**
      * @param OrganisationItem $organisation
      * @param integer $accountId
      */
@@ -68,6 +83,15 @@ class Organisation extends OrganisationSummary {
             foreach ($organisation->getDepartments() ?? [] as $department) {
                 $this->departments[] = new Department($department);
             }
+
+            $this->tags = array_map(function ($tagItem) use ($accountId) {
+                return new ItemTag($tagItem, $accountId);
+            }, $organisation->getTags());
+
+            $this->categories = array_map(function ($categoryItem) use ($accountId) {
+                return new ItemCategory($categoryItem, $accountId);
+            }, $organisation->getCategories());
+
         }
     }
 
@@ -141,6 +165,34 @@ class Organisation extends OrganisationSummary {
      */
     public function setDepartments($departments): void {
         $this->departments = $departments;
+    }
+
+    /**
+     * @return ItemCategory[]
+     */
+    public function getCategories(): ?array {
+        return $this->categories;
+    }
+
+    /**
+     * @param ItemCategory[] $categories
+     */
+    public function setCategories(array $categories): void {
+        $this->categories = $categories;
+    }
+
+    /**
+     * @return ItemTag[]
+     */
+    public function getTags(): ?array {
+        return $this->tags;
+    }
+
+    /**
+     * @param ItemTag[] $tags
+     */
+    public function setTags(array $tags): void {
+        $this->tags = $tags;
     }
 
 

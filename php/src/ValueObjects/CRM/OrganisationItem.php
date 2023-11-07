@@ -26,9 +26,22 @@ class OrganisationItem extends OrganisationSummaryItem {
 
 
     /**
+     * @var TagItem[]
+     */
+    private $tags;
+
+
+    /**
+     * @var CategoryItem[]
+     */
+    private $categories;
+
+
+    /**
      * @var AttachmentItem[]
      */
     private $attachments;
+
 
     /**
      * @param string $name
@@ -38,14 +51,18 @@ class OrganisationItem extends OrganisationSummaryItem {
      * @param DepartmentItem[] $departments
      * @param string $notes
      * @param AttachmentItem[] $attachments
+     * @param CategoryItem[] $categories
+     * @param TagItem[] $tags
      * @param int $id
      */
-    public function __construct($name, $address, $primaryContact, $logo, $departments, $notes, $attachments, $id = null) {
+    public function __construct($name, $address, $primaryContact, $logo, $departments, $notes, $attachments, $categories = [], $tags = [], $id = null) {
         parent::__construct($name, $logo, $departments, $id);
         $this->address = $address;
         $this->primaryContact = $primaryContact;
         $this->notes = $notes;
         $this->attachments = $attachments;
+        $this->categories = $categories;
+        $this->tags = $tags;
     }
 
     /**
@@ -77,6 +94,20 @@ class OrganisationItem extends OrganisationSummaryItem {
     }
 
     /**
+     * @return TagItem[]
+     */
+    public function getTags(): array {
+        return $this->tags;
+    }
+
+    /**
+     * @return CategoryItem[]
+     */
+    public function getCategories(): array {
+        return $this->categories;
+    }
+
+    /**
      * @return AttachmentItem[]
      */
     public function getAttachments() {
@@ -94,6 +125,16 @@ class OrganisationItem extends OrganisationSummaryItem {
             $departments[] = DepartmentItem::fromDepartment($department);
         }
 
+        $tags = array_map(function ($tag) {
+            return TagItem::fromItemTag($tag) ?? null;
+        }, $organisation->getTags() ?? []);
+
+
+        $categories = array_map(function ($category) {
+            return CategoryItem::fromItemCategory($category) ?? null;
+        }, $organisation->getCategories() ?? []);
+
+
         $attachments = [];
         foreach ($organisation->getAttachments() ?? [] as $attachment) {
             $attachments[] = AttachmentItem::fromAttachmentSummary($attachment);
@@ -101,7 +142,7 @@ class OrganisationItem extends OrganisationSummaryItem {
 
         return new OrganisationItem($organisation->getName(), AddressItem::fromAddress($organisation->getAddress()),
             $organisation->getPrimaryContact() ? ContactItem::fromContact($organisation->getPrimaryContact()) : null,
-            $organisation->getLogo(), $departments, $organisation->getNotes(), $attachments, $organisation->getId());
+            $organisation->getLogo(), $departments, $organisation->getNotes(), $attachments, $categories, $tags, $organisation->getId());
 
     }
 

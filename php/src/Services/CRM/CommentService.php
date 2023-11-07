@@ -6,7 +6,7 @@ use Kiniauth\Objects\Account\Account;
 use Kiniauth\Objects\Security\User;
 use Kiniauth\Objects\Security\UserSummary;
 use KiniCRM\Objects\CRM\Comment;
-use KiniCRM\ValueObjects\Enum\CommentScope;
+use KiniCRM\ValueObjects\Enum\ObjectScope;
 use Kinikit\Persistence\ORM\Query\Query;
 
 class CommentService {
@@ -14,7 +14,7 @@ class CommentService {
     /**
      * Create a comment
      *
-     * @param CommentScope $scope
+     * @param ObjectScope $scope
      * @param int $scopeId
      * @param string $message
      * @param mixed $userId
@@ -22,7 +22,7 @@ class CommentService {
      *
      * @return Comment
      */
-    public function createComment(CommentScope $scope, int $scopeId, string $message, $userId = User::LOGGED_IN_USER, $accountId = Account::LOGGED_IN_ACCOUNT) {
+    public function createComment(ObjectScope $scope, int $scopeId, string $message, $userId = User::LOGGED_IN_USER, $accountId = Account::LOGGED_IN_ACCOUNT) {
 
         // Fetch the user summary for passed id.
         $userSummary = UserSummary::fetch($userId);
@@ -39,7 +39,7 @@ class CommentService {
     /**
      * Search for comments
      *
-     * @param CommentScope $scope
+     * @param ObjectScope $scope
      * @param integer $scopeId
      * @param string $searchString
      * @param integer $limit
@@ -47,7 +47,7 @@ class CommentService {
      *
      * @return Comment[]
      */
-    public function searchForComments(CommentScope $scope, int $scopeId, string $searchString = "", int $limit = 10, int $offset = 0) {
+    public function searchForComments(ObjectScope $scope, int $scopeId, string $searchString = "", int $limit = 10, int $offset = 0) {
 
 
         $query = new Query(Comment::class);

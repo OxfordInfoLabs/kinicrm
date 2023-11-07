@@ -3,7 +3,7 @@
 namespace KiniCRM\Objects\CRM;
 
 use Kiniauth\Objects\Security\UserSummary;
-use KiniCRM\ValueObjects\Enum\CommentScope;
+use KiniCRM\ValueObjects\Enum\ObjectScope;
 use Kinikit\Persistence\ORM\ActiveRecord;
 
 ;
@@ -26,10 +26,10 @@ class Comment extends ActiveRecord {
 
 
     /**
-     * @var CommentScope
+     * @var ObjectScope
      * @required
      */
-    private ?CommentScope $scope;
+    private ?ObjectScope $scope;
 
 
     /**
@@ -62,7 +62,7 @@ class Comment extends ActiveRecord {
     private ?string $message;
 
     /**
-     * @param CommentScope $scope
+     * @param ObjectScope $scope
      * @param int $scopeId
      * @param \DateTime $dateTime
      * @param UserSummary $userSummary
@@ -70,7 +70,7 @@ class Comment extends ActiveRecord {
      * @param int $accountId
      * @param int $id
      */
-    public function __construct(?CommentScope $scope, ?int $scopeId, ?\DateTime $dateTime, ?UserSummary $userSummary, ?string $message, ?int $accountId, ?int $id = null) {
+    public function __construct(?ObjectScope $scope, ?int $scopeId, ?\DateTime $dateTime, ?UserSummary $userSummary, ?string $message, ?int $accountId, ?int $id = null) {
         $this->scope = $scope;
         $this->scopeId = $scopeId;
         $this->dateTime = $dateTime;
@@ -97,16 +97,16 @@ class Comment extends ActiveRecord {
 
 
     /**
-     * @return CommentScope
+     * @return ObjectScope
      */
-    public function getScope(): CommentScope {
+    public function getScope(): ObjectScope {
         return $this->scope;
     }
 
     /**
-     * @param CommentScope $scope
+     * @param ObjectScope $scope
      */
-    public function setScope(CommentScope $scope): void {
+    public function setScope(ObjectScope $scope): void {
         $this->scope = $scope;
     }
 

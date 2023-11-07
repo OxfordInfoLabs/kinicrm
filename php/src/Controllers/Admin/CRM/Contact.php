@@ -45,7 +45,7 @@ class Contact {
      * @return ContactItem[]
      */
     public function searchForContacts($searchString, $limit = 10, $offset = 0) {
-        $contacts = $this->contactService->filterContacts($searchString, $limit, $offset);
+        $contacts = $this->contactService->filterContacts($searchString, [], $limit, $offset);
         return array_map(function ($contact) {
             return ContactItem::fromContact($contact);
         }, $contacts);

@@ -69,6 +69,18 @@ class ContactItem {
 
 
     /**
+     * @var TagItem[]
+     */
+    private $tags;
+
+
+    /**
+     * @var CategoryItem[]
+     */
+    private $categories;
+
+
+    /**
      * @param string $name
      * @param string $emailAddress
      * @param string $telephone
@@ -78,10 +90,12 @@ class ContactItem {
      * @param AttachmentItem[] $attachments
      * @param OrganisationDepartmentItem[] $organisationDepartments
      * @param UserSummaryItem $contactUser
-     * @param $subscribedMailingLists
+     * @param integer[] $subscribedMailingLists
+     * @param CategoryItem $categories
+     * @param TagItem $tags
      * @param int $id
      */
-    public function __construct($name, $emailAddress, $telephone, $photo, $address, $notes, $attachments, $organisationDepartments, $contactUser, $subscribedMailingLists, $id = null) {
+    public function __construct($name, $emailAddress, $telephone, $photo, $address, $notes, $attachments, $organisationDepartments, $contactUser, $subscribedMailingLists, $categories, $tags, $id = null) {
         $this->id = $id;
         $this->name = $name;
         $this->emailAddress = $emailAddress;
@@ -94,6 +108,8 @@ class ContactItem {
         $this->user = $contactUser;
 
         $this->subscribedMailingLists = $subscribedMailingLists;
+        $this->categories = $categories;
+        $this->tags = $tags;
     }
 
     /**
@@ -173,6 +189,20 @@ class ContactItem {
         return $this->subscribedMailingLists;
     }
 
+    /**
+     * @return TagItem[]
+     */
+    public function getTags(): array {
+        return $this->tags;
+    }
+
+    /**
+     * @return CategoryItem[]
+     */
+    public function getCategories(): array {
+        return $this->categories;
+    }
+
 
     /**
      * @param Contact $contact
@@ -195,9 +225,21 @@ class ContactItem {
         }, $contact->getSubscribedMailingLists() ?? []);
 
 
+        $tags = array_map(function ($tag) {
+            return TagItem::fromItemTag($tag) ?? null;
+        }, $contact->getTags() ?? []);
+
+
+        $categories = array_map(function ($category) {
+            return CategoryItem::fromItemCategory($category) ?? null;
+        }, $contact->getCategories() ?? []);
+
+
+
         return new ContactItem($contact->getName(), $contact->getEmailAddress(), $contact->getTelephone(), $contact->getPhoto(), $contact->getAddress() ? AddressItem::fromAddress($contact->getAddress()) : null,
             $contact->getNotes(), $attachments, $organisationDepartments,
             $contact->getUserSummary() ? UserSummaryItem::fromUserSummary($contact->getUserSummary()) : null, $subscribedMailingLists,
+            $categories, $tags,
             $contact->getId());
     }
 

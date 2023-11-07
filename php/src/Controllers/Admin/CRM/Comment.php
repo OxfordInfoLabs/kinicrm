@@ -5,7 +5,7 @@ namespace KiniCRM\Controllers\Admin\CRM;
 
 use KiniCRM\Services\CRM\CommentService;
 use KiniCRM\ValueObjects\CRM\CommentItem;
-use KiniCRM\ValueObjects\Enum\CommentScope;
+use KiniCRM\ValueObjects\Enum\ObjectScope;
 
 class Comment {
 
@@ -32,7 +32,7 @@ class Comment {
      * @return CommentItem
      */
     public function createScopeComment($scope, $scopeId, $message) {
-        $comment = $this->commentService->createComment(CommentScope::from($scope), $scopeId, $message);
+        $comment = $this->commentService->createComment(ObjectScope::from($scope), $scopeId, $message);
         return CommentItem::fromComment($comment);
     }
 
@@ -48,7 +48,7 @@ class Comment {
      * @return CommentItem[]
      */
     public function searchForComments(string $scope, int $scopeId, string $searchString = "", int $limit = 10, int $offset = 0) {
-        $comments = $this->commentService->searchForComments(CommentScope::from($scope), $scopeId, $searchString, $limit, $offset);
+        $comments = $this->commentService->searchForComments(ObjectScope::from($scope), $scopeId, $searchString, $limit, $offset);
         return array_map(function ($comment) {
             return CommentItem::fromComment($comment);
         }, $comments);

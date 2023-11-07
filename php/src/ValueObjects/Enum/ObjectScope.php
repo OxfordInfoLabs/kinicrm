@@ -2,7 +2,7 @@
 
 namespace KiniCRM\ValueObjects\Enum;
 
-enum CommentScope: string {
+enum ObjectScope: string {
     case Contact = "Contact";
     case Organisation = "Organisation";
 }

@@ -37,16 +37,25 @@ class ContactService {
     /**
      * Filter addresses using passed search string
      *
-     * @param $searchString
+     * @param string $searchString
+     * @param array $filters
+     * @param int $limit
+     * @param int $offset
      * @return Contact[]
      */
-    public function filterContacts($searchString = "", $limit = 10, $offset = 0) {
-
+    public function filterContacts($searchString = "", $filters = [], $limit = 10, $offset = 0) {
 
         $query = new Query(Contact::class);
-        return $query->query(new LikeFilter(["name", "emailAddress", "telephone"], "%" . $searchString . "%"), "id DESC", $limit, $offset);
 
-      
+        // Grab permitted filters
+        $filters = array_intersect_key($filters, ["organisationDepartments.department.name" => 1, "categories.name" => 1, "tags.name" => 1]);
+
+        // Combine filters
+        $combinedFilters = array_merge($filters, [new LikeFilter(["name", "emailAddress", "telephone"], "%" . $searchString . "%")]);
+
+        return $query->query($combinedFilters, "id DESC", $limit, $offset);
+
+
     }
 
     /**
