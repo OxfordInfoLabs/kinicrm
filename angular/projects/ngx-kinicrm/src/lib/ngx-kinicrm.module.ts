@@ -20,6 +20,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { AddressDialogComponent } from './components/address-book/address-dialog/address-dialog.component';
 import { OrganisationDialogComponent } from './components/organisations/organisation-dialog/organisation-dialog.component';
 import { ContactDialogComponent } from './components/contacts/contact-dialog/contact-dialog.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { ContactDialogComponent } from './components/contacts/contact-dialog/con
         FormsModule,
         MatSelectModule,
         MatButtonModule,
-        MatDialogModule
+        MatDialogModule,
+        MatAutocompleteModule
     ],
     exports: [
         ContactsComponent,

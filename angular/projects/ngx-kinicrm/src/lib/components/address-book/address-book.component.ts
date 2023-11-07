@@ -46,16 +46,18 @@ export class AddressBookComponent implements OnInit {
     public increaseOffset() {
         this.page = this.page + 1;
         this.offset = (this.limit * this.page) - this.limit;
-
+        this.reload.next(Date.now());
     }
 
     public decreaseOffset() {
         this.page = this.page <= 1 ? 1 : this.page - 1;
         this.offset = (this.limit * this.page) - this.limit;
+        this.reload.next(Date.now());
     }
 
     public pageSizeChange(value: number) {
         this.limit = value;
+        this.reload.next(Date.now());
     }
 
     private getAddresses() {

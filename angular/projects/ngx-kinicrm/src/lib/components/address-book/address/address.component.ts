@@ -17,6 +17,9 @@ export class AddressComponent implements OnInit {
 
     public address: any = {};
     public countryCodes = [
+        {name: 'United Kingdom', code: 'GB'},
+        {name: 'United States', code: 'US'},
+        {name: '----------------------------', code: '--', disabled: true},
         {name: 'Afghanistan', code: 'AF'},
         {name: 'Åland Islands', code: 'AX'},
         {name: 'Albania', code: 'AL'},
@@ -300,7 +303,7 @@ export class AddressComponent implements OnInit {
                 return component.types.indexOf('route') > -1;
             })?.long_name || '';
         } else {
-            this.address.street1 = streetNumber ? streetNumber + ' ' : '';
+            this.address.street1 = streetNumber ? streetNumber.long_name + ' ' : '';
 
             this.address.street1 += ' ' + _.find(components, component => {
                 return component.types.indexOf('route') > -1;
@@ -314,6 +317,12 @@ export class AddressComponent implements OnInit {
         this.address.city = _.find(components, component => {
             return component.types.indexOf('postal_town') > -1;
         })?.long_name || '';
+
+        if (!this.address.city) {
+            this.address.city = _.find(components, component => {
+                return component.types.indexOf('locality') > -1;
+            })?.long_name || '';
+        }
 
         this.address.county = _.find(components, component => {
             return component.types.indexOf('administrative_area_level_2') > -1;

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {KinicrmModuleConfig} from '../ngx-kinicrm.module';
 
 @Injectable({
@@ -33,5 +33,23 @@ export class OrganisationService {
         return this.http.delete(this.config.adminHttpURL + '/crm/organisation', {
             params: {organisationId}
         }).toPromise();
+    }
+
+    public uploadAttachments(organisationId: number, fileUploads: any) {
+        const HttpUploadOptions = {
+            headers: new HttpHeaders({ 'Content-Type': 'file' })
+        };
+        return this.http.post(this.config.adminHttpURL + '/crm/organisation/attachments/' + organisationId,
+            fileUploads, HttpUploadOptions)
+            .toPromise();
+    }
+
+    public removeAttachment(organisationId: number, attachmentId: number) {
+        return this.http.delete(this.config.adminHttpURL + `/crm/organisation/attachments/${organisationId}/${attachmentId}`)
+            .toPromise();
+    }
+
+    public streamAttachment(id: number) {
+        window.open(this.config.accessHttpURL + '/attachment/' + id);
     }
 }
