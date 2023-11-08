@@ -12,23 +12,14 @@ class ContactOrganisationDepartment {
 
     /**
      * @var integer
-     * @primaryKey
+     */
+    private $id;
+
+    /**
+     * @var integer
      */
     private $contactId;
 
-
-    /**
-     * @var integer
-     * @primaryKey
-     */
-    private $organisationId;
-
-
-    /**
-     * @var integer
-     * @primaryKey
-     */
-    private $departmentId;
 
     /**
      * @var OrganisationSummary
