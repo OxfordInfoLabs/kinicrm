@@ -137,11 +137,11 @@ class Contact extends ActiveRecord {
 
             $this->tags = array_map(function ($tagItem) use ($accountId) {
                 return new ItemTag($tagItem, $accountId);
-            }, $contact->getTags());
+            }, $contact->getTags() ?? []);
 
             $this->categories = array_map(function ($categoryItem) use ($accountId) {
                 return new ItemCategory($categoryItem, $accountId);
-            }, $contact->getCategories());
+            }, $contact->getCategories() ?? []);
 
 
         }
