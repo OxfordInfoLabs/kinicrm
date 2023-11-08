@@ -192,14 +192,14 @@ class ContactItem {
     /**
      * @return TagItem[]
      */
-    public function getTags(): array {
+    public function getTags(): ?array {
         return $this->tags;
     }
 
     /**
      * @return CategoryItem[]
      */
-    public function getCategories(): array {
+    public function getCategories(): ?array {
         return $this->categories;
     }
 
