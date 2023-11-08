@@ -7,7 +7,11 @@ use Kiniauth\Services\Attachment\AttachmentService;
 use KiniCRM\Objects\CRM\Contact;
 use KiniCRM\Objects\CRM\Organisation;
 use Kinikit\Core\Stream\File\ReadOnlyFileStream;
+use Kinikit\Core\Util\ArrayUtils;
 use Kinikit\MVC\Request\FileUpload;
+use Kinikit\Persistence\ORM\Query\Filter\LikeFilter;
+use Kinikit\Persistence\ORM\Query\Query;
+use Kinikit\Persistence\ORM\Query\SummarisedValue;
 
 class OrganisationService {
 
@@ -15,6 +19,12 @@ class OrganisationService {
      * @var AttachmentService
      */
     private $attachmentService;
+
+    const FILTER_MAP = [
+        "tags" => "tags.tag.name",
+        "categories" => "categories.category.name",
+        "search" => "search"
+    ];
 
     /**
      * @param AttachmentService $attachmentService
@@ -30,34 +40,49 @@ class OrganisationService {
      * @param $id
      * @return Organisation
      */
-    public function getOrganisation($id){
+    public function getOrganisation($id) {
         return Organisation::fetch($id);
     }
 
 
     /**
-     * Filter organisations using passed search string
+     * Filter organisations
      *
-     * @param $searchString
+     * @param array $filters
+     * @param integer $limit
+     * @param integer $offset
+     *
      * @return Organisation[]
      */
-    public function filterOrganisations($searchString = "", $limit = 10, $offset = 0) {
+    public function filterOrganisations($filters = [], $limit = 10, $offset = 0) {
 
-        $query = "WHERE CONCAT(name, IFNULL(primaryContact.name, ''), IFNULL(primaryContact.email_address, '')) LIKE ? ORDER BY name ";
-        $params = ["%" . $searchString . "%"];
+        $query = new Query(Organisation::class);
 
-        if ($limit) {
-            $query .= " LIMIT ?";
-            $params[] = $limit;
-        }
+        $filters = $this->processFilters($filters);
 
-        if ($offset) {
-            $query .= " OFFSET ?";
-            $params[] = $offset;
-        }
+        return $query->query($filters, "name", $limit, $offset);
 
 
-        return Organisation::filter($query, $params);
+    }
+
+    /**
+     * Get organisation filter values
+     *
+     * @param string $member
+     * @param array $filters
+     *
+     * @return SummarisedValue[]
+     */
+    public function getOrganisationFilterValues($member, $filters = []) {
+
+        $query = new Query(Organisation::class);
+
+        unset($filters[$member]);
+
+        $filters = $this->processFilters($filters);
+
+        // Return summarised values
+        return $query->summariseByMember(self::FILTER_MAP[$member], $filters);
 
     }
 
@@ -125,6 +150,18 @@ class OrganisationService {
         $this->attachmentService->removeAttachment($attachmentId);
     }
 
+    /**
+     * @param array $filters
+     * @return array
+     */
+    private function processFilters(array $filters): array {
+        $filters = ArrayUtils::mapArrayKeys($filters, self::FILTER_MAP);
+
+        if (isset($filters["search"])) {
+            $filters["search"] = new LikeFilter(["name", "primaryContact.name", "primaryContact.email_address"], "%" . $filters["search"] . "%");
+        }
+        return $filters;
+    }
 
 
 }

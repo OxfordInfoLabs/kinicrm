@@ -24,6 +24,7 @@ use KiniCRM\ValueObjects\CRM\TagItem;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\MVC\Request\FileUpload;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
+use Kinikit\Persistence\ORM\Query\SummarisedValue;
 use Kinimailer\Objects\MailingList\MailingListSubscriber;
 
 include_once "autoloader.php";
@@ -112,20 +113,46 @@ class ContactServiceTest extends TestBase {
 
 
         // Check filtering, offset limits
-        $this->assertEquals([$contact2, $contact1], $this->contactService->filterContacts("oxil"));
-        $this->assertEquals([$contact2], $this->contactService->filterContacts("oxil", [], 1));
-        $this->assertEquals([$contact1], $this->contactService->filterContacts("oxil", [], 10, 1));
+        $this->assertEquals([$contact2, $contact1], $this->contactService->filterContacts());
+        $this->assertEquals([$contact2], $this->contactService->filterContacts([], 1));
+        $this->assertEquals([$contact1], $this->contactService->filterContacts([], 10, 1));
 
-        $this->assertEquals([$contact1], $this->contactService->filterContacts("", [
-            "organisationDepartments.department.name" => "HR"
+        $this->assertEquals([$contact2, $contact1], $this->contactService->filterContacts([
+            "organisations" => "Test one"
+        ]));
+
+        $this->assertEquals([$contact1], $this->contactService->filterContacts([
+            "departments" => "HR"
+        ]));
+
+        $this->assertEquals([$contact1], $this->contactService->filterContacts([
+            "tags" => "Tag 1"
+        ]));
+
+        $this->assertEquals([$contact2], $this->contactService->filterContacts([
+            "categories" => "Category 2"
         ]));
 
 
         // Check other fields
-        $this->assertEquals([$contact1], $this->contactService->filterContacts("bob"));
-        $this->assertEquals([$contact2], $this->contactService->filterContacts("smith"));
-        $this->assertEquals([$contact2], $this->contactService->filterContacts("221"));
-        $this->assertEquals([$contact1], $this->contactService->filterContacts("893"));
+        $this->assertEquals([$contact1], $this->contactService->filterContacts(["search" => "bob"]));
+        $this->assertEquals([$contact2], $this->contactService->filterContacts(["search" => "smith"]));
+        $this->assertEquals([$contact2], $this->contactService->filterContacts(["search" => "221"]));
+        $this->assertEquals([$contact1], $this->contactService->filterContacts(["search" => "893"]));
+
+
+        // Check we can get filtered member values
+        $tags = $this->contactService->getContactFilterValues("tags", []);
+        $this->assertEquals([new SummarisedValue("Bingo", 1), new SummarisedValue("Tag 1", 1), new SummarisedValue("Tag 2", 2)],
+            $tags);
+
+        $categories = $this->contactService->getContactFilterValues("categories", []);
+        $this->assertEquals([new SummarisedValue("Bango", 1), new SummarisedValue("Category 1", 1), new SummarisedValue("Category 2", 1)],
+            $categories);
+
+        $categories = $this->contactService->getContactFilterValues("categories", ["tags" => ["Bingo"]]);
+        $this->assertEquals([new SummarisedValue("Bango", 1), new SummarisedValue("Category 1", 1)],
+            $categories);
 
         $this->contactService->removeContact($contact1->getId());
 
@@ -136,7 +163,10 @@ class ContactServiceTest extends TestBase {
 
         }
 
+        Organisation::fetch($organisation->getId())->remove();
+
     }
+
 
     public function testCanAttachUploadedFilesToContactAndRemoveThem() {
 

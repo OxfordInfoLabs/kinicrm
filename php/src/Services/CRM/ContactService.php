@@ -6,9 +6,11 @@ use Kiniauth\Objects\Attachment\AttachmentSummary;
 use Kiniauth\Services\Attachment\AttachmentService;
 use KiniCRM\Objects\CRM\Contact;
 use Kinikit\Core\Stream\File\ReadOnlyFileStream;
+use Kinikit\Core\Util\ArrayUtils;
 use Kinikit\MVC\Request\FileUpload;
 use Kinikit\Persistence\ORM\Query\Filter\LikeFilter;
 use Kinikit\Persistence\ORM\Query\Query;
+use Kinikit\Persistence\ORM\Query\SummarisedValue;
 
 class ContactService {
 
@@ -16,6 +18,14 @@ class ContactService {
      * @var AttachmentService
      */
     private $attachmentService;
+
+    const FILTER_MAP = [
+        "organisations" => "organisationDepartments.organisation.name",
+        "departments" => "organisationDepartments.department.name",
+        "tags" => "tags.tag.name",
+        "categories" => "categories.category.name",
+        "search" => "search"
+    ];
 
     /**
      * @param AttachmentService $attachmentService
@@ -37,26 +47,47 @@ class ContactService {
     /**
      * Filter addresses using passed search string
      *
-     * @param string $searchString
      * @param array $filters
      * @param int $limit
      * @param int $offset
      * @return Contact[]
      */
-    public function filterContacts($searchString = "", $filters = [], $limit = 10, $offset = 0) {
+    public function filterContacts($filters = [], $limit = 10, $offset = 0) {
 
         $query = new Query(Contact::class);
 
-        // Grab permitted filters
-        $filters = array_intersect_key($filters, ["organisationDepartments.department.name" => 1, "categories.name" => 1, "tags.name" => 1]);
+        // Process filters
+        $filters = $this->processQueryFilters($filters);
 
-        // Combine filters
-        $combinedFilters = array_merge($filters, [new LikeFilter(["name", "emailAddress", "telephone"], "%" . $searchString . "%")]);
-
-        return $query->query($combinedFilters, "id DESC", $limit, $offset);
+        return $query->query($filters, "id DESC", $limit, $offset);
 
 
     }
+
+
+    /**
+     * Get contact filter values
+     *
+     * @param string $member
+     * @param array $filters
+     *
+     * @return SummarisedValue[]
+     */
+    public function getContactFilterValues($member, $filters = []) {
+
+        // Create query
+        $query = new Query(Contact::class);
+
+        unset($filters[$member]);
+
+        // Process filters
+        $filters = $this->processQueryFilters($filters);
+
+        // Return summarised values
+        return $query->summariseByMember(self::FILTER_MAP[$member], $filters);
+
+    }
+
 
     /**
      * Save a contact
@@ -121,6 +152,20 @@ class ContactService {
 
         // Remove attachment
         $this->attachmentService->removeAttachment($attachmentId);
+    }
+
+
+    /**
+     * @param array $filters
+     * @return array
+     */
+    private function processQueryFilters(array $filters): array {
+        $filters = ArrayUtils::mapArrayKeys($filters, self::FILTER_MAP);
+
+        if (isset($filters["search"])) {
+            $filters["search"] = new LikeFilter(["name", "emailAddress", "telephone"], "%" . $filters["search"] . "%");
+        }
+        return $filters;
     }
 
 

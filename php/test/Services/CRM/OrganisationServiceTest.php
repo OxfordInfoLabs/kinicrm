@@ -19,6 +19,7 @@ use KiniCRM\ValueObjects\CRM\TagItem;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\MVC\Request\FileUpload;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
+use Kinikit\Persistence\ORM\Query\SummarisedValue;
 
 include_once "autoloader.php";
 
@@ -55,7 +56,7 @@ class OrganisationServiceTest extends TestBase {
         $tag1 = new TagItem("Org Tag 1", null, $tag1->getId());
         $tag2 = new Tag(new TagItem("Org Tag 2", ""), 0);
         $tag2->save();
-        $tag2 = new TagItem("OrgTag 2", null, $tag2->getId());
+        $tag2 = new TagItem("Org Tag 2", null, $tag2->getId());
 
 
         $category1 = new Category(new CategoryItem("Org Category 1", ""), 0);
@@ -94,13 +95,22 @@ class OrganisationServiceTest extends TestBase {
         $this->assertEquals($organisation2, $this->organisationService->getOrganisation($organisation2->getId()));
 
         // Check simple filtering, offset, limit
-        $this->assertEquals([$organisation2, $organisation1], $this->organisationService->filterOrganisations("Org"));
-        $this->assertEquals([$organisation2], $this->organisationService->filterOrganisations("Org", 1));
-        $this->assertEquals([$organisation1], $this->organisationService->filterOrganisations("Org", 5, 1));
+        $this->assertEquals([$organisation2, $organisation1], $this->organisationService->filterOrganisations());
+        $this->assertEquals([$organisation2], $this->organisationService->filterOrganisations([], 1));
+        $this->assertEquals([$organisation1], $this->organisationService->filterOrganisations([], 5, 1));
 
         // Check search by contact fields
-        $this->assertEquals([$organisation2, $organisation1], $this->organisationService->filterOrganisations("Mark"));
-        $this->assertEquals([$organisation2, $organisation1], $this->organisationService->filterOrganisations("oxil"));
+        $this->assertEquals([$organisation2, $organisation1], $this->organisationService->filterOrganisations(["search" => "robertshaw"]));
+        $this->assertEquals([$organisation2, $organisation1], $this->organisationService->filterOrganisations(["search" => "oxil"]));
+
+        // Tags and cats
+        $this->assertEquals([$organisation1], $this->organisationService->filterOrganisations(["categories" => "Pink"]));
+        $this->assertEquals([$organisation1], $this->organisationService->filterOrganisations(["tags" => "Blue"]));
+
+
+        // Check we can get filter values
+        $this->assertEquals([new SummarisedValue("Blue", 1), new SummarisedValue("Org Tag 1", 1), new SummarisedValue("Org Tag 2", 1)],
+            $this->organisationService->getOrganisationFilterValues("tags", []));
 
 
         // Do delete

@@ -117,7 +117,11 @@ class AddressItem {
      * @return AddressItem
      */
     public static function fromAddress($address) {
-        return new AddressItem($address->getStreet1(), $address->getStreet2(), $address->getCity(), $address->getCounty(), $address->getPostcode(), $address->getCountryCode(), $address->getId());
+        if ($address) {
+            return new AddressItem($address->getStreet1(), $address->getStreet2(), $address->getCity(), $address->getCounty(), $address->getPostcode(), $address->getCountryCode(), $address->getId());
+        } else {
+            return null;
+        }
     }
 
 

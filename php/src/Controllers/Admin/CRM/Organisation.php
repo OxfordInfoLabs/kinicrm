@@ -5,6 +5,7 @@ namespace KiniCRM\Controllers\Admin\CRM;
 use KiniCRM\Services\CRM\OrganisationService;
 use KiniCRM\ValueObjects\CRM\OrganisationItem;
 use Kinikit\MVC\Request\FileUpload;
+use Kinikit\Persistence\ORM\Query\SummarisedValue;
 
 class Organisation {
 
@@ -32,19 +33,32 @@ class Organisation {
     }
 
     /**
-     * @http GET /
+     * @http POST /search
      *
-     * @param $searchString
-     * @param $limit
-     * @param $offset
+     * @param array $filters
+     * @param integer $limit
+     * @param integer $offset
      *
      * @return OrganisationItem[]
      */
-    public function searchForOrganisations($searchString, $limit = 10, $offset = 0) {
-        $organisations = $this->organisationService->filterOrganisations($searchString, $limit, $offset);
+    public function searchForOrganisations($filters = [], $limit = 10, $offset = 0) {
+        $organisations = $this->organisationService->filterOrganisations($filters, $limit, $offset);
         return array_map(function ($organisation) {
             return OrganisationItem::fromOrganisation($organisation);
         }, $organisations);
+    }
+
+
+    /**
+     * @http POST /filterValues/$memberName
+     *
+     * @param string $memberName
+     * @param array $filters
+     *
+     * @return SummarisedValue[]
+     */
+    public function getOrganisationFilterValues($memberName, $filters) {
+        return $this->organisationService->getOrganisationFilterValues($memberName, $filters);
     }
 
 

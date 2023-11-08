@@ -91,8 +91,8 @@ class ContactItem {
      * @param OrganisationDepartmentItem[] $organisationDepartments
      * @param UserSummaryItem $contactUser
      * @param integer[] $subscribedMailingLists
-     * @param CategoryItem $categories
-     * @param TagItem $tags
+     * @param CategoryItem[] $categories
+     * @param TagItem[] $tags
      * @param int $id
      */
     public function __construct($name, $emailAddress, $telephone, $photo, $address, $notes, $attachments, $organisationDepartments, $contactUser, $subscribedMailingLists, $categories, $tags, $id = null) {

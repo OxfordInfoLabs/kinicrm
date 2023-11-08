@@ -6,6 +6,7 @@ use KiniCRM\Services\CRM\ContactService;
 use KiniCRM\ValueObjects\CRM\ContactItem;
 use Kinikit\Core\Logging\Logger;
 use Kinikit\MVC\Request\FileUpload;
+use Kinikit\Persistence\ORM\Query\SummarisedValue;
 
 class Contact {
 
@@ -36,19 +37,32 @@ class Contact {
 
 
     /**
-     * @http GET /
+     * @http POST /search
      *
-     * @param $searchString
-     * @param $limit
-     * @param $offset
+     * @param array $filters
+     * @param integer $limit
+     * @param integer $offset
      *
      * @return ContactItem[]
      */
-    public function searchForContacts($searchString, $limit = 10, $offset = 0) {
-        $contacts = $this->contactService->filterContacts($searchString, [], $limit, $offset);
+    public function searchForContacts($filters = [], $limit = 10, $offset = 0) {
+        $contacts = $this->contactService->filterContacts($filters, $limit, $offset);
         return array_map(function ($contact) {
             return ContactItem::fromContact($contact);
         }, $contacts);
+    }
+
+
+    /**
+     * @http POST /filterValues/$memberName
+     *
+     * @param string $memberName
+     * @param array $filters
+     *
+     * @return SummarisedValue[]
+     */
+    public function getContactFilterValues($memberName, $filters) {
+        return $this->contactService->getContactFilterValues($memberName, $filters);
     }
 
 
