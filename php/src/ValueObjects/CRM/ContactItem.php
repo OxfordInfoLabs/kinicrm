@@ -221,7 +221,7 @@ class ContactItem {
         }
 
         $subscribedMailingLists = array_map(function ($mailingList) {
-            return $mailingList->getMailingListId();
+            return ["mailingListId" => $mailingList->getMailingListId(), "unsubscribeKey" => $mailingList->getUnsubscribeKey(), "emailHash" => $mailingList->returnEmailHash()];
         }, $contact->getSubscribedMailingLists() ?? []);
 
 

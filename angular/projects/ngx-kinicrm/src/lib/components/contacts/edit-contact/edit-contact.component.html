@@ -39,9 +39,9 @@
                 <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
                     <dt class="text-sm font-medium leading-6 text-gray-900">Organisation</dt>
                     <dd class="mt-1 text-sm leading-6 text-gray-700">
-                        <ng-template [ngIf]="contact.organisationDepartments.length">
+                        <ng-template [ngIf]="contact.organisationDepartments.length > 0">
                             <div>
-                                {{contact.organisationDepartments.length ? contact.organisationDepartments[0].organisationSummary.name : ''}}&nbsp;<span class="text-xs text-gray-400">{{contact.organisationDepartments.length ? contact.organisationDepartments[0].jobTitle : ''}}</span>
+                                {{contact.organisationDepartments[0].organisationSummary ? contact.organisationDepartments[0].organisationSummary.name : ''}}&nbsp;<span class="text-xs text-gray-400">{{contact.organisationDepartments[0].organisationSummary ? contact.organisationDepartments[0].jobTitle : ''}}</span>
                             </div>
                         </ng-template>
                     </dd>
@@ -60,7 +60,7 @@
             </dl>
 
             <div *ngIf="(edit || !contact.id) && !loading">
-                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
+                <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
                     <div class="col-span-full flex items-center gap-x-8">
                         <img *ngIf="contact.photo" [src]="contact.photo"
                              alt="" class="h-24 w-24 flex-none rounded-lg bg-gray-800 object-cover">
@@ -94,6 +94,21 @@
                         </div>
                     </div>
 
+                    <div *ngIf="emailExists" class="sm:col-span-full">
+                        <div class="rounded-md bg-yellow-50 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <h3 class="mb-0 text-sm font-medium text-yellow-800">This email address is already in use by another contact.</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div *ngIf="contact.user" class="sm:col-span-full">
                         <div class="rounded-md bg-secondarylight p-4">
                             <div class="flex">
@@ -120,7 +135,80 @@
                         </div>
                     </div>
                 </div>
-                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
+
+                <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
+                    <div class="sm:col-span-3">
+                        <label class="block text-sm font-medium leading-6 text-gray-900">Tags</label>
+                        <div class="mt-2">
+                            <input placeholder="New Tag..." #tagInput
+                                   [matChipInputFor]="tagChipGrid" [matAutocomplete]="auto"
+                                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                   (matChipInputTokenEnd)="addTag($event)"
+                                   [matAutocompletePosition]="'above'"
+                                   (keyup)="tagSearch.next($any($event).target.value)"
+                                   class="ml-0 block w-full rounded-md border-0 py-2 mb-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 "/>
+                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+                                <mat-option *ngFor="let tag of tags" [value]="tag">
+                                    {{tag.name}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-chip-grid #tagChipGrid aria-label="Tag selection">
+                                <mat-chip-row class="text-gray-500 bg-gray-50" *ngFor="let tag of contact.tags" (removed)="removeTag(tag)">
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                             class="mr-1 w-5 h-5 text-gray-400">
+                                            <path fill-rule="evenodd"
+                                                  d="M5.25 2.25a3 3 0 00-3 3v4.318a3 3 0 00.879 2.121l9.58 9.581c.92.92 2.39 1.186 3.548.428a18.849 18.849 0 005.441-5.44c.758-1.16.492-2.629-.428-3.548l-9.58-9.581a3 3 0 00-2.122-.879H5.25zM6.375 7.5a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                        {{tag.name}}
+                                    </div>
+
+                                    <button matChipRemove [attr.aria-label]="'remove ' + tag.name">
+                                        <mat-icon>cancel</mat-icon>
+                                    </button>
+                                </mat-chip-row>
+                            </mat-chip-grid>
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-3">
+                        <label class="block text-sm font-medium leading-6 text-gray-900">Categories</label>
+                        <div class="mt-2">
+                            <input placeholder="New Category..." #categoryInput
+                                   [matChipInputFor]="catChipGrid" [matAutocomplete]="catAuto"
+                                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                   (matChipInputTokenEnd)="addCategory($event)"
+                                   [matAutocompletePosition]="'above'"
+                                   (keyup)="categorySearch.next($any($event).target.value)"
+                                   class="ml-0 block w-full rounded-md border-0 py-2 mb-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 "/>
+                            <mat-autocomplete #catAuto="matAutocomplete" (optionSelected)="selectedCategory($event)">
+                                <mat-option *ngFor="let category of categories" [value]="category">
+                                    {{category.name}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-chip-grid #catChipGrid aria-label="Category selection">
+                                <mat-chip-row class="bg-primary text-white" *ngFor="let category of contact.categories" (removed)="removeCategory(category)">
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                             class="mr-1 w-5 h-5">
+                                            <path fill-rule="evenodd"
+                                                  d="M3 6a3 3 0 013-3h2.25a3 3 0 013 3v2.25a3 3 0 01-3 3H6a3 3 0 01-3-3V6zm9.75 0a3 3 0 013-3H18a3 3 0 013 3v2.25a3 3 0 01-3 3h-2.25a3 3 0 01-3-3V6zM3 15.75a3 3 0 013-3h2.25a3 3 0 013 3V18a3 3 0 01-3 3H6a3 3 0 01-3-3v-2.25zm9.75 0a3 3 0 013-3H18a3 3 0 013 3V18a3 3 0 01-3 3h-2.25a3 3 0 01-3-3v-2.25z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                        {{category.name}}
+                                    </div>
+
+                                    <button matChipRemove [attr.aria-label]="'remove ' + category.name">
+                                        <mat-icon>cancel</mat-icon>
+                                    </button>
+                                </mat-chip-row>
+                            </mat-chip-grid>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
                     <div class="sm:col-span-full">
                         <div class="mb-4 flex align-center justify-between text-sm font-medium leading-6 text-gray-900">
                             Select Organisation(s)
@@ -208,7 +296,7 @@
                     </div>
 
                 </div>
-                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 py-8">
+                <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
 
                     <div class="sm:col-span-full">
                         <div class="mb-4 flex align-center justify-between text-sm font-medium leading-6 text-gray-900">
@@ -249,6 +337,34 @@
                     </div>
 
                 </div>
+
+                <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 py-8">
+
+                    <div class="sm:col-span-full">
+                        <div class="mb-4 flex align-center justify-between text-sm font-medium leading-6 text-gray-900">
+                            Mailing Lists
+                        </div>
+
+                        <fieldset>
+                            <legend class="sr-only">Subscribe</legend>
+                            <div class="space-y-5">
+                                <div *ngFor="let mailingList of mailingLists" class="relative flex items-start">
+                                    <div class="flex h-6 items-center">
+                                        <input name="comments" type="checkbox" (change)="updateMailingList($event, mailingList, contact.subscribedMailingLists)"
+                                               [checked]="contact.subscribedMailingListIds ? contact.subscribedMailingListIds.indexOf(mailingList.id) > -1 : false"
+                                               class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                                    </div>
+                                    <div class="ml-3 text-sm leading-6">
+                                        <label class="font-medium text-gray-900">{{mailingList.title}}</label>
+                                        <span class="text-gray-500">{{mailingList.description}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                    </div>
+
+                </div>
             </div>
 
         </div>
@@ -260,85 +376,88 @@
         </div>
     </div>
 
-    <div *ngIf="contact.id" class="shadow sm:overflow-hidden sm:rounded-md mb-8">
-        <div class="space-y-6 bg-white px-4 py-6 sm:p-6">
-            <div>
-                <h3 class="text-base font-semibold leading-6 text-gray-900">Comments</h3>
-                <p class="mt-1 text-sm text-gray-500">Add comments to this contact</p>
-            </div>
+    <div *ngIf="contact.id" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 
-            <div class="max-h-96 overflow-y-scroll px-4">
-                <ul role="list" class="space-y-8">
-                    <li *ngFor="let comment of comments">
-                        <div class="flex space-x-3">
-                            <div class="flex-shrink-0">
-                                <img class="h-10 w-10 rounded-full"
-                                     [src]="comment.gravatarURL" alt="">
+        <div class="shadow sm:overflow-hidden sm:rounded-md mb-8">
+            <div class="space-y-6 bg-white px-4 py-6 sm:p-6">
+                <div>
+                    <h3 class="text-base font-semibold leading-6 text-gray-900">Comments</h3>
+                    <p class="mt-1 text-sm text-gray-500">Add comments to this contact</p>
+                </div>
+
+                <div class="max-h-96 overflow-y-scroll px-4">
+                    <ul role="list" class="space-y-8">
+                        <li *ngFor="let comment of comments">
+                            <div class="flex space-x-3">
+                                <div class="flex-shrink-0">
+                                    <img class="h-10 w-10 rounded-full"
+                                         [src]="comment.gravatarURL" alt="">
+                                </div>
+                                <div class="bg-gray-100 py-2 pl-2 pr-8 rounded-lg">
+                                    <div class="text-sm">
+                                        <a *ngIf="comment.user" class="font-medium text-gray-900">{{comment.user.name}}</a>
+                                    </div>
+                                    <div class="mt-1 text-sm text-gray-700">
+                                        <p class="whitespace-pre">{{comment.message}}</p>
+                                    </div>
+                                    <div class="mt-2 space-x-2 text-sm">
+                                        <span class="font-medium text-xs text-gray-500">{{comment.displayDate}}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="bg-gray-100 py-2 pl-2 pr-8 rounded-lg">
-                                <div class="text-sm">
-                                    <a *ngIf="comment.user" class="font-medium text-gray-900">{{comment.user.name}}</a>
-                                </div>
-                                <div class="mt-1 text-sm text-gray-700">
-                                    <p class="whitespace-pre">{{comment.message}}</p>
-                                </div>
-                                <div class="mt-2 space-x-2 text-sm">
-                                    <span class="font-medium text-xs text-gray-500">{{comment.displayDate}}</span>
-                                </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6">
+                <div class="flex space-x-3">
+                    <div class="flex-shrink-0">
+                        <img class="h-10 w-10 rounded-full"
+                             [src]="loggedInGravatar" alt="">
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <div>
+                            <textarea name="comment" rows="3" #comment (keydown)="addComment(comment, $event)"
+                                      class="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                      placeholder="Add comment"></textarea>
+                        </div>
+                        <div class="mt-3 flex items-center justify-between">
+                            <div class="text-xs text-gray-500 self-start">
+                                Commenting as {{loggedInUser.name}}<{{loggedInUser.emailAddress}}><br>
+                                Shift + Enter for new line
                             </div>
+                            <button type="button" (click)="addComment(comment)"
+                                    class="inline-flex items-center justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm ">Comment</button>
                         </div>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-        <div class="bg-gray-50 px-4 py-3 sm:px-6">
-            <div class="flex space-x-3">
-                <div class="flex-shrink-0">
-                    <img class="h-10 w-10 rounded-full"
-                         [src]="loggedInGravatar" alt="">
-                </div>
-                <div class="min-w-0 flex-1">
-                    <div>
-                        <textarea name="comment" rows="3" #comment (keydown)="addComment(comment, $event)"
-                                  class="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-                                  placeholder="Add comment"></textarea>
-                    </div>
-                    <div class="mt-3 flex items-center justify-between">
-                        <div class="text-xs text-gray-500 self-start">
-                            Commenting as {{loggedInUser.name}}<{{loggedInUser.emailAddress}}><br>
-                            Shift + Enter for new line
-                        </div>
-                        <button type="button" (click)="addComment(comment)"
-                                class="inline-flex items-center justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm ">Comment</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="shadow sm:overflow-hidden sm:rounded-md mb-8">
-        <div class="space-y-6 bg-white px-4 py-6 sm:p-6">
-            <div>
-                <h3 class="text-base font-semibold leading-6 text-gray-900">Notes</h3>
-                <p class="mt-1 text-sm text-gray-500">Add notes to this contact</p>
-            </div>
-
-            <div class="grid grid-cols-3 gap-6">
-
-                <div class="col-span-3">
-                    <textarea name="notes" rows="5" [(ngModel)]="contact.notes"
-                              class="mt-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                              placeholder=""></textarea>
+        <div class="flex flex-col shadow sm:overflow-hidden sm:rounded-md mb-8">
+            <div class="flex flex-col flex-1 space-y-6 bg-white px-4 py-6 sm:p-6">
+                <div>
+                    <h3 class="text-base font-semibold leading-6 text-gray-900">Notes</h3>
+                    <p class="mt-1 text-sm text-gray-500">Add notes to this contact</p>
                 </div>
 
+                <div class="flex-1 grid grid-cols-3 gap-6">
+
+                    <div class="col-span-3 h-full">
+                        <textarea name="notes" rows="5" [(ngModel)]="contact.notes"
+                                  class="mt-1 block h-full w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  placeholder=""></textarea>
+                    </div>
+
+                </div>
             </div>
-        </div>
-        <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
-            <button type="button" (click)="saveContact()"
-                    class="inline-flex justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm ">
-                Save
-            </button>
+            <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                <button type="button" (click)="saveContact()"
+                        class="inline-flex justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm ">
+                    Save
+                </button>
+            </div>
         </div>
     </div>
 
