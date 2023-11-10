@@ -12,7 +12,7 @@ import { EditOrganisationComponent } from './components/organisations/edit-organ
 import { AddressBookComponent } from './components/address-book/address-book.component';
 import { DepartmentsComponent } from './components/departments/departments.component';
 import { EditDepartmentComponent } from './components/departments/edit-department/edit-department.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 import {AddressComponent} from './components/address-book/address/address.component';
@@ -21,6 +21,8 @@ import { AddressDialogComponent } from './components/address-book/address-dialog
 import { OrganisationDialogComponent } from './components/organisations/organisation-dialog/organisation-dialog.component';
 import { ContactDialogComponent } from './components/contacts/contact-dialog/contact-dialog.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -49,7 +51,10 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
         MatSelectModule,
         MatButtonModule,
         MatDialogModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatChipsModule,
+        MatCheckboxModule,
+        ReactiveFormsModule
     ],
     exports: [
         ContactsComponent,

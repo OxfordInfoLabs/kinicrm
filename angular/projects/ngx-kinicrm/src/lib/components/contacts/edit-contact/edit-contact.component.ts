@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, Input, ViewChild, ElementRef} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ContactService} from '../../../services/contact.service';
 import {AddressService} from '../../../services/address.service';
@@ -14,6 +14,11 @@ import {AuthenticationService} from 'ng-kiniauth';
 import {BehaviorSubject, merge} from 'rxjs';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import { MatOptionSelectionChange } from '@angular/material/core';
+import {MetadataService} from '../../../services/metadata.service';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'kcrm-edit-contact',
@@ -26,10 +31,16 @@ export class EditContactComponent implements OnInit {
 
     @Input() back = true;
 
+    @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement> | undefined;
+    @ViewChild('categoryInput') categoryInput: ElementRef<HTMLInputElement> | undefined;
+
+    public _ = _;
     public contact: any = {
         organisationDepartments: [{}]
     };
     public addresses: any = [];
+    public tags: any = [];
+    public categories: any = [];
     public organisations: any = [];
     public edit = false;
     public loading = true;
@@ -38,6 +49,11 @@ export class EditContactComponent implements OnInit {
     public loggedInGravatar: string = '';
     public organisationSearch = new BehaviorSubject('');
     public addressSearch = new BehaviorSubject('');
+    public tagSearch = new BehaviorSubject('');
+    public categorySearch = new BehaviorSubject('');
+    public separatorKeysCodes: number[] = [ENTER, COMMA];
+    public emailExists = false;
+    public mailingLists: any = [];
 
     constructor(private route: ActivatedRoute,
                 private contactService: ContactService,
@@ -48,7 +64,8 @@ export class EditContactComponent implements OnInit {
                 private http: HttpClient,
                 private commentService: CommentService,
                 private gravatarService: GravatarService,
-                private authService: AuthenticationService) {
+                private authService: AuthenticationService,
+                private metadataService: MetadataService) {
     }
 
     async ngOnInit() {
@@ -74,6 +91,28 @@ export class EditContactComponent implements OnInit {
             this.addresses = addresses;
         });
 
+        merge(this.tagSearch)
+            .pipe(
+                debounceTime(300),
+                // distinctUntilChanged(),
+                switchMap(() =>
+                    this.loadTags()
+                )
+            ).subscribe((tags: any) => {
+            this.tags = tags;
+        });
+
+        merge(this.categorySearch)
+            .pipe(
+                debounceTime(300),
+                // distinctUntilChanged(),
+                switchMap(() =>
+                    this.loadCategories()
+                )
+            ).subscribe((categories: any) => {
+            this.categories = categories;
+        });
+
         this.route.params.subscribe(async (params: any) => {
             await this.loadContact(params.id);
 
@@ -93,6 +132,24 @@ export class EditContactComponent implements OnInit {
 
         this.loggedInUser = this.authService.authUser.getValue();
         this.loggedInGravatar = await this.gravatarService.getGravatarURL(this.loggedInUser.emailAddress);
+
+        this.mailingLists = await this.contactService.getMailingLists();
+    }
+
+    public async updateMailingList(event: any, mailingList: any, subscriptions: any) {
+
+        const checked = event.target.checked;
+        if (checked) {
+            await this.contactService.subscribeToMailingList(mailingList.key, {
+                name: this.contact.name,
+                emailAddress: this.contact.emailAddress
+            });
+        } else {
+            const subscribedMailingList: any = _.find(subscriptions, {mailingListId: mailingList.id});
+            await this.contactService.unsubscribeToMailingList(subscribedMailingList.unsubscribeKey, subscribedMailingList.emailHash);
+        }
+
+        this.loadContact(this.contact.id);
     }
 
     public updateOrganisation(event: MatOptionSelectionChange, index: number) {
@@ -101,6 +158,67 @@ export class EditContactComponent implements OnInit {
 
     public updateAddress(event: MatOptionSelectionChange) {
         this.contact.address = event.source.value;
+    }
+
+    public removeTag(tag: any) {
+        _.remove(this.contact.tags, {name: tag.name});
+    }
+
+    public selectedTag(event: MatAutocompleteSelectedEvent) {
+        if (!this.contact.tags || !Array.isArray(this.contact.tags)) {
+            this.contact.tags = [];
+        }
+
+        this.contact.tags.push(event.option.value);
+        if (this.tagInput) {
+            this.tagInput.nativeElement.value = '';
+        }
+    }
+
+    public addTag(event: MatChipInputEvent) {
+        if (!this.contact.tags || !Array.isArray(this.contact.tags)) {
+            this.contact.tags = [];
+        }
+
+        const value = (event.value || '').trim();
+
+        const existing = _.find(this.tags, (tag: any) => {
+            return tag.name.toLowerCase() === value.toLowerCase();
+        });
+
+        this.contact.tags.push(existing || {name: value});
+
+        event.chipInput!.clear();
+    }
+
+    public removeCategory(category: any) {
+        _.remove(this.contact.categories, {name: category.name});
+    }
+
+    public selectedCategory(event: MatAutocompleteSelectedEvent) {
+        if (!this.contact.categories || !Array.isArray(this.contact.categories)) {
+            this.contact.categories = [];
+        }
+
+        this.contact.categories.push(event.option.value);
+        if (this.categoryInput) {
+            this.categoryInput.nativeElement.value = '';
+        }
+    }
+
+    public addCategory(event: MatChipInputEvent) {
+        if (!this.contact.categories || !Array.isArray(this.contact.categories)) {
+            this.contact.categories = [];
+        }
+
+        const value = (event.value || '').trim();
+
+        const existing = _.find(this.categories, (category: any) => {
+            return category.name.toLowerCase() === value.toLowerCase();
+        });
+
+        this.contact.categories.push(existing || {name: value});
+        event.chipInput!.clear();
     }
 
     public async emailUpdated() {
@@ -112,6 +230,8 @@ export class EditContactComponent implements OnInit {
         } else {
             this.updateContactGravatar();
         }
+
+        this.emailExists = await this.contactService.doesEmailAddressExist(this.contact.emailAddress);
     }
 
     public async updateContactGravatar() {
@@ -243,9 +363,27 @@ export class EditContactComponent implements OnInit {
 
     private loadOrganisations() {
         return this.organisationService.searchForOrganisations(
-            this.organisationSearch.getValue() || '', 1000, 0)
+            {search: this.organisationSearch.getValue() || ''}, 1000, 0)
             .pipe(map((organisations: any) => {
                     return organisations;
+                })
+            );
+    }
+
+    private loadTags() {
+        return this.metadataService.searchForTags(
+            this.tagSearch.getValue() || '', 1000, 0)
+            .pipe(map((tags: any) => {
+                    return tags;
+                })
+            );
+    }
+
+    private loadCategories() {
+        return this.metadataService.searchForCategories(
+            this.categorySearch.getValue() || '', 1000, 0)
+            .pipe(map((categories: any) => {
+                    return categories;
                 })
             );
     }
@@ -257,6 +395,8 @@ export class EditContactComponent implements OnInit {
             };
         } catch (e) {
         }
+
+        this.contact.subscribedMailingListIds = _.map(this.contact.subscribedMailingLists, 'mailingListId');
 
         this.loading = false;
     }

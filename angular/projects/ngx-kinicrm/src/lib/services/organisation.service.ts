@@ -12,13 +12,13 @@ export class OrganisationService {
     }
 
 
-    public searchForOrganisations(searchString = '', limit = 10, offset = 0) {
-        const url = this.config.adminHttpURL + '/crm/organisation';
-        return this.http.get(url, {
-            params: {
-                searchString, limit: limit.toString(), offset: offset.toString()
-            }
-        })
+    public searchForOrganisations(filters: any = {}, limit = 10, offset = 0) {
+        const url = this.config.adminHttpURL + '/crm/organisation/search?limit=' + limit + '&offset=' + offset;
+        return this.http.post(url, filters)
+    }
+
+    public getOrganisationFilterValues(memberName: string, filters: any = []) {
+        return this.http.post(this.config.adminHttpURL + '/crm/organisation/filterValues/' + memberName, filters);
     }
 
     public getOrganisation(id: number) {
@@ -37,7 +37,7 @@ export class OrganisationService {
 
     public uploadAttachments(organisationId: number, fileUploads: any) {
         const HttpUploadOptions = {
-            headers: new HttpHeaders({ 'Content-Type': 'file' })
+            headers: new HttpHeaders({'Content-Type': 'file'})
         };
         return this.http.post(this.config.adminHttpURL + '/crm/organisation/attachments/' + organisationId,
             fileUploads, HttpUploadOptions)

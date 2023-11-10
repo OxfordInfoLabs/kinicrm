@@ -24,7 +24,8 @@ class ContactService {
         "departments" => "organisationDepartments.department.name",
         "tags" => "tags.tag.name",
         "categories" => "categories.category.name",
-        "search" => "search"
+        "search" => "search",
+        "emailAddress" => "emailAddress"
     ];
 
     /**
@@ -59,7 +60,7 @@ class ContactService {
         // Process filters
         $filters = $this->processQueryFilters($filters);
 
-        return $query->query($filters, "id DESC", $limit, $offset);
+        return $query->query($filters, "name DESC", $limit, $offset);
 
 
     }

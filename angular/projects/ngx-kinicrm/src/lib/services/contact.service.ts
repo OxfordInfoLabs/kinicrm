@@ -14,13 +14,13 @@ export class ContactService {
                 private config: KinicrmModuleConfig) {
     }
 
-    public searchForContacts(searchString = '', limit = 10, offset = 0) {
-        const url = this.config.adminHttpURL + '/crm/contact';
-        return this.http.get(url, {
-            params: {
-                searchString, limit: limit.toString(), offset: offset.toString()
-            }
-        })
+    public searchForContacts(filters: any = {}, limit = 10, offset = 0) {
+        const url = this.config.adminHttpURL + '/crm/contact/search?limit=' + limit + '&offset=' + offset;
+        return this.http.post(url, filters)
+    }
+
+    public getContactFilterValues(memberName: string, filters: any = []) {
+        return this.http.post(this.config.adminHttpURL + '/crm/contact/filterValues/' + memberName, filters);
     }
 
     public getContact(id: number) {
@@ -39,7 +39,7 @@ export class ContactService {
 
     public uploadAttachments(contactId: number, fileUploads: any) {
         const HttpUploadOptions = {
-            headers: new HttpHeaders({ 'Content-Type': 'file' })
+            headers: new HttpHeaders({'Content-Type': 'file'})
         };
         return this.http.post(this.config.adminHttpURL + '/crm/contact/attachments/' + contactId,
             fileUploads, HttpUploadOptions)
@@ -53,5 +53,26 @@ export class ContactService {
 
     public streamAttachment(id: number) {
         window.open(this.config.accessHttpURL + '/attachment/' + id);
+    }
+
+    public async doesEmailAddressExist(emailAddress: string) {
+        const url = this.config.adminHttpURL + '/crm/contact/search?limit=1&offset=0';
+        const contact: any = await this.http.post(url, {emailAddress}).toPromise();
+        return !!contact.length;
+    }
+
+    public getMailingLists() {
+        return this.http.get(this.config.adminHttpURL + '/mailingList?limit=1000&offset=0&accountId=0')
+            .toPromise();
+    }
+
+    public subscribeToMailingList(mailingListKey: string, mailingListSubscriber: any) {
+        return this.http.post(this.config.guestHttpURL + '/mailingList/subscribe/' + mailingListKey, mailingListSubscriber)
+            .toPromise();
+    }
+
+    public unsubscribeToMailingList(unsubscribeKey: string, emailHash: string) {
+        return this.http.get(this.config.guestHttpURL + `/mailinglist/unsubscribe/email/${unsubscribeKey}/${emailHash}`)
+            .toPromise();
     }
 }

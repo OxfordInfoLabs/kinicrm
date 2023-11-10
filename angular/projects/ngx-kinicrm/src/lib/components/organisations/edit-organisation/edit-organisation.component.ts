@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, Input, EventEmitter} from '@angular/core';
+import {Component, OnInit, Output, Input, EventEmitter, ViewChild, ElementRef} from '@angular/core';
 import {AddressService} from '../../../services/address.service';
 import {AddressDialogComponent} from '../../address-book/address-dialog/address-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
@@ -13,6 +13,11 @@ import {AuthenticationService} from 'ng-kiniauth';
 import {BehaviorSubject, merge} from 'rxjs';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {MatOptionSelectionChange} from '@angular/material/core';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import * as _ from 'lodash';
+import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {MetadataService} from '../../../services/metadata.service';
 
 @Component({
     selector: 'kcrm-edit-organisation',
@@ -25,11 +30,16 @@ export class EditOrganisationComponent implements OnInit {
 
     @Input() back = true;
 
+    @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement> | undefined;
+    @ViewChild('categoryInput') categoryInput: ElementRef<HTMLInputElement> | undefined;
+
     public organisation: any = {
         departments: []
     };
     public addresses: any = [];
     public contacts: any = [];
+    public tags: any = [];
+    public categories: any = [];
     public edit = false;
     public loading = true;
     public comments: any = [];
@@ -37,6 +47,10 @@ export class EditOrganisationComponent implements OnInit {
     public loggedInGravatar: string = '';
     public addressSearch = new BehaviorSubject('');
     public contactSearch = new BehaviorSubject('');
+    public organisationContacts: any = [];
+    public tagSearch = new BehaviorSubject('');
+    public categorySearch = new BehaviorSubject('');
+    public separatorKeysCodes: number[] = [ENTER, COMMA];
 
     constructor(private addressService: AddressService,
                 private dialog: MatDialog,
@@ -46,7 +60,8 @@ export class EditOrganisationComponent implements OnInit {
                 private contactService: ContactService,
                 private commentService: CommentService,
                 private gravatarService: GravatarService,
-                private authService: AuthenticationService) {
+                private authService: AuthenticationService,
+                private metadataService: MetadataService) {
     }
 
     async ngOnInit() {
@@ -73,6 +88,28 @@ export class EditOrganisationComponent implements OnInit {
             this.contacts = contacts;
         });
 
+        merge(this.tagSearch)
+            .pipe(
+                debounceTime(300),
+                // distinctUntilChanged(),
+                switchMap(() =>
+                    this.loadTags()
+                )
+            ).subscribe((tags: any) => {
+            this.tags = tags;
+        });
+
+        merge(this.categorySearch)
+            .pipe(
+                debounceTime(300),
+                // distinctUntilChanged(),
+                switchMap(() =>
+                    this.loadCategories()
+                )
+            ).subscribe((categories: any) => {
+            this.categories = categories;
+        });
+
         this.route.params.subscribe(async (params: any) => {
             await this.loadOrganisation(params.id);
 
@@ -80,6 +117,10 @@ export class EditOrganisationComponent implements OnInit {
 
             if (this.organisation.id) {
                 this.loadComments();
+
+                this.organisationContacts = await this.contactService.searchForContacts({
+                    organisations: [this.organisation.name]
+                }, 1000).toPromise();
             }
         });
 
@@ -90,6 +131,67 @@ export class EditOrganisationComponent implements OnInit {
 
         this.loggedInUser = this.authService.authUser.getValue();
         this.loggedInGravatar = await this.gravatarService.getGravatarURL(this.loggedInUser.emailAddress);
+    }
+
+    public removeTag(tag: any) {
+        _.remove(this.organisation.tags, {name: tag.name});
+    }
+
+    public selectedTag(event: MatAutocompleteSelectedEvent) {
+        if (!this.organisation.tags || !Array.isArray(this.organisation.tags)) {
+            this.organisation.tags = [];
+        }
+
+        this.organisation.tags.push(event.option.value);
+        if (this.tagInput) {
+            this.tagInput.nativeElement.value = '';
+        }
+    }
+
+    public addTag(event: MatChipInputEvent) {
+        if (!this.organisation.tags || !Array.isArray(this.organisation.tags)) {
+            this.organisation.tags = [];
+        }
+
+        const value = (event.value || '').trim();
+
+        const existing = _.find(this.tags, (tag: any) => {
+            return tag.name.toLowerCase() === value.toLowerCase();
+        });
+
+        this.organisation.tags.push(existing || {name: value});
+
+        event.chipInput!.clear();
+    }
+
+    public removeCategory(category: any) {
+        _.remove(this.organisation.categories, {name: category.name});
+    }
+
+    public selectedCategory(event: MatAutocompleteSelectedEvent) {
+        if (!this.organisation.categories || !Array.isArray(this.organisation.categories)) {
+            this.organisation.categories = [];
+        }
+
+        this.organisation.categories.push(event.option.value);
+        if (this.categoryInput) {
+            this.categoryInput.nativeElement.value = '';
+        }
+    }
+
+    public addCategory(event: MatChipInputEvent) {
+        if (!this.organisation.categories || !Array.isArray(this.organisation.categories)) {
+            this.organisation.categories = [];
+        }
+
+        const value = (event.value || '').trim();
+
+        const existing = _.find(this.categories, (category: any) => {
+            return category.name.toLowerCase() === value.toLowerCase();
+        });
+
+        this.organisation.categories.push(existing || {name: value});
+        event.chipInput!.clear();
     }
 
     public updateAddress(event: MatOptionSelectionChange) {
@@ -191,6 +293,24 @@ export class EditOrganisationComponent implements OnInit {
         }
     }
 
+    private loadTags() {
+        return this.metadataService.searchForTags(
+            this.tagSearch.getValue() || '', 1000, 0)
+            .pipe(map((tags: any) => {
+                    return tags;
+                })
+            );
+    }
+
+    private loadCategories() {
+        return this.metadataService.searchForCategories(
+            this.categorySearch.getValue() || '', 1000, 0)
+            .pipe(map((categories: any) => {
+                    return categories;
+                })
+            );
+    }
+
     private async sendComment(target: any) {
         if (target.value) {
             await this.commentService.createComment('Organisation', this.organisation.id, target.value);
@@ -211,7 +331,7 @@ export class EditOrganisationComponent implements OnInit {
 
     private loadContacts() {
         return this.contactService.searchForContacts(
-            this.contactSearch.getValue() || '', 1000, 0)
+            {search: this.contactSearch.getValue() || ''}, 1000, 0)
             .pipe(map((contacts: any) => {
                     return contacts;
                 })
