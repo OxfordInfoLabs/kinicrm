@@ -75,9 +75,9 @@
                         <td class="px-4 py-3 text-sm ">
                             <div class="flex items-center">
                                 <div class="h-11 w-11 flex-shrink-0">
-                                    <img class="h-11 w-11 rounded-full"
-                                         [ngClass]="{invisible: !organisation.photo}"
-                                         [src]="organisation.photo" alt="">
+                                    <img class="h-11 w-11 object-contain rounded-full"
+                                         [ngClass]="{invisible: !organisation.logo}"
+                                         [src]="organisation.logo" alt="">
                                 </div>
                                 <div class="ml-4">
                                     <div class="font-medium text-gray-900">{{organisation.name}}</div>

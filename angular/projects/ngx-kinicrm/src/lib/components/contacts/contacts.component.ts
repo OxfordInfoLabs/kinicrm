@@ -14,7 +14,7 @@ export class ContactsComponent implements OnInit {
 
     public contacts: any = [];
     public searchText = new BehaviorSubject('');
-    public limit = 10;
+    public limit = 25;
     public offset = 0;
     public page = 1;
     public endOfResults = false;
