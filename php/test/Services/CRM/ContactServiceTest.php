@@ -116,11 +116,11 @@ class ContactServiceTest extends TestBase {
 
 
         // Check filtering, offset limits
-        $this->assertEquals([$contact2, $contact1], $this->contactService->filterContacts());
-        $this->assertEquals([$contact2], $this->contactService->filterContacts([], 1));
-        $this->assertEquals([$contact1], $this->contactService->filterContacts([], 10, 1));
+        $this->assertEquals([$contact1, $contact2], $this->contactService->filterContacts());
+        $this->assertEquals([$contact1], $this->contactService->filterContacts([], 1));
+        $this->assertEquals([$contact2], $this->contactService->filterContacts([], 10, 1));
 
-        $this->assertEquals([$contact2, $contact1], $this->contactService->filterContacts([
+        $this->assertEquals([$contact1, $contact2], $this->contactService->filterContacts([
             "organisations" => "Test one"
         ]));
 
