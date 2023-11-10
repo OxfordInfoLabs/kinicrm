@@ -60,7 +60,7 @@ class ContactService {
         // Process filters
         $filters = $this->processQueryFilters($filters);
 
-        return $query->query($filters, "name DESC", $limit, $offset);
+        return $query->query($filters, "name ASC", $limit, $offset);
 
 
     }
