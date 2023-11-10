@@ -100,6 +100,9 @@ class ContactServiceTest extends TestBase {
         $this->assertEquals(1, sizeof(Tag::filter("WHERE name = 'Bingo'")));
         $this->assertEquals(1, sizeof(Category::filter("WHERE name = 'Bango'")));
 
+        // Also check existing tags are used correctly
+        $this->assertEquals(1, sizeof(Tag::filter("WHERE name = 'Tag 1'")));
+
 
         $contactItem = new ContactItem("Mr Jones", "smith@oxil . co . uk",
             "07595 543221", "BIG IMAGE", $addressItem, "new Contact", [],
