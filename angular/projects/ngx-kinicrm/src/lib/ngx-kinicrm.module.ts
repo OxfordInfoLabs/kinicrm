@@ -23,6 +23,7 @@ import { ContactDialogComponent } from './components/contacts/contact-dialog/con
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTabsModule} from '@angular/material/tabs';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
         MatAutocompleteModule,
         MatChipsModule,
         MatCheckboxModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatTabsModule
     ],
     exports: [
         ContactsComponent,

@@ -1,65 +1,78 @@
-<div class="p-6 bg-white border-b border-gray-200">
+<div class="px-6 pt-6 pb-2 bg-white ">
     <div class="md:flex md:items-center md:justify-between md:space-x-5">
         <div class="flex items-start flex-1">
-            <div class="pt-1.5">
-                <h1 class="mb-0 text-2xl font-bold text-gray-900">Edit Contact</h1>
-                <!--                <p class="text-sm font-medium text-gray-500">-->
-                <!--                    A list of all the API Connections that are currently available.-->
-                <!--                </p>-->
+            <div *ngIf="!contact.id" class="pt-1.5">
+                <h1 class="mb-0 text-2xl font-bold text-gray-900">Create Contact</h1>
+            </div>
+            <div *ngIf="contact.id" class="pt-1.5">
+                <h1 class="mb-0 text-2xl font-bold text-gray-900">
+                    {{contact.name}} <span *ngIf="contact.organisationDepartments.length > 0" class="font-normal text-gray-500 text-sm">
+                    {{contact.organisationDepartments[0].organisationSummary ? contact.organisationDepartments[0].organisationSummary.name : ''}}
+                </span>
+                </h1>
+                <p class="text-sm font-medium text-gray-500">
+                    {{contact.emailAddress}}
+                </p>
             </div>
         </div>
     </div>
 </div>
-<div class="mx-auto max-w-7xl mt-8">
-    <div class="shadow sm:overflow-hidden sm:rounded-md mb-8">
-        <div class="space-y-6 bg-white px-4 py-6 sm:p-6">
-            <div>
-                <img *ngIf="contact.photo && !edit" [src]="contact.photo"
-                     alt="" class="h-16 w-16 mr-4 float-left flex-none rounded-lg bg-gray-800 object-cover">
-                <div class="flex flex-wrap align-center justify-between text-base font-semibold leading-6 text-gray-900 mb-0">
-                    Contact Information
-                    <button *ngIf="contact.id" type="button" (click)="edit = !edit"
-                            class="inline-flex justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm ">
-                        <span *ngIf="!edit">Edit</span><span *ngIf="edit">View</span>&nbsp;Contact
-                    </button>
-                </div>
-                <p class="mt-1 text-sm text-gray-500">Information relating to the contact including name, email, and
-                    address.</p>
-            </div>
 
-            <dl *ngIf="!edit && contact.id" class="grid grid-cols-1 sm:grid-cols-2">
-                <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
-                    <dt class="text-sm font-medium leading-6 text-gray-900">Contact name</dt>
-                    <dd class="mt-1 text-sm leading-6 text-gray-700">{{contact.name}}</dd>
-                </div>
-                <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
-                    <dt class="text-sm font-medium leading-6 text-gray-900">Email Address</dt>
-                    <dd class="mt-1 text-sm leading-6 text-gray-700">{{contact.emailAddress}}</dd>
-                </div>
-                <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
-                    <dt class="text-sm font-medium leading-6 text-gray-900">Organisation</dt>
-                    <dd class="mt-1 text-sm leading-6 text-gray-700">
-                        <ng-template [ngIf]="contact.organisationDepartments.length > 0">
-                            <div>
-                                {{contact.organisationDepartments[0].organisationSummary ? contact.organisationDepartments[0].organisationSummary.name : ''}}&nbsp;<span class="text-xs text-gray-400">{{contact.organisationDepartments[0].organisationSummary ? contact.organisationDepartments[0].jobTitle : ''}}</span>
-                            </div>
-                        </ng-template>
-                    </dd>
-                </div>
-                <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
-                    <dt class="text-sm font-medium leading-6 text-gray-900">Address</dt>
-                    <dd *ngIf="contact.address" class="mt-1 text-sm leading-6 text-gray-700">
-                        <span class="font-semibold">{{contact.address.street1}}&nbsp;</span>
-                        <span *ngIf="contact.address.street2">{{contact.address.street2}}</span>
-                        <span *ngIf="contact.address.city">, {{contact.address.city}}</span>
-                        <span *ngIf="contact.address.county">, {{contact.address.county}}</span>
-                        <span *ngIf="contact.address.postcode">, {{contact.address.postcode}}</span>
-                        <span *ngIf="contact.address.countryCode">, {{contact.address.countryCode}}</span>
-                    </dd>
-                </div>
-                <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
-                    <dt class="text-sm font-medium leading-6 text-gray-900">Tags</dt>
-                    <dd class="mt-1 text-sm leading-6 text-gray-700">
+<mat-tab-group animationDuration="0ms">
+    <mat-tab label="Details">
+        <div class="mx-auto max-w-7xl mt-8">
+            <div class="shadow sm:overflow-hidden sm:rounded-md mb-8">
+                <div class="space-y-6 bg-white px-4 py-6 sm:p-6">
+                    <div>
+                        <img *ngIf="contact.photo && !edit" [src]="contact.photo"
+                             alt="" class="h-16 w-16 mr-4 float-left flex-none rounded-lg bg-gray-800 object-cover">
+                        <div
+                            class="flex flex-wrap align-center justify-between text-base font-semibold leading-6 text-gray-900 mb-0">
+                            Contact Information
+                            <button *ngIf="contact.id" type="button" (click)="edit = !edit"
+                                    class="inline-flex justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm ">
+                                <span *ngIf="!edit">Edit</span><span *ngIf="edit">View</span>&nbsp;Contact
+                            </button>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Information relating to the contact including name, email,
+                            and
+                            address.</p>
+                    </div>
+
+                    <dl *ngIf="!edit && contact.id" class="grid grid-cols-1 sm:grid-cols-2">
+                        <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">Contact name</dt>
+                            <dd class="mt-1 text-sm leading-6 text-gray-700">{{contact.name}}</dd>
+                        </div>
+                        <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">Email Address</dt>
+                            <dd class="mt-1 text-sm leading-6 text-gray-700">{{contact.emailAddress}}</dd>
+                        </div>
+                        <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">Organisation</dt>
+                            <dd class="mt-1 text-sm leading-6 text-gray-700">
+                                <ng-template [ngIf]="contact.organisationDepartments.length > 0">
+                                    <div>
+                                        {{contact.organisationDepartments[0].organisationSummary ? contact.organisationDepartments[0].organisationSummary.name : ''}}&nbsp;<span
+                                        class="text-xs text-gray-400">{{contact.organisationDepartments[0].organisationSummary ? contact.organisationDepartments[0].jobTitle : ''}}</span>
+                                    </div>
+                                </ng-template>
+                            </dd>
+                        </div>
+                        <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">Address</dt>
+                            <dd *ngIf="contact.address" class="mt-1 text-sm leading-6 text-gray-700">
+                                <span class="font-semibold">{{contact.address.street1}}&nbsp;</span>
+                                <span *ngIf="contact.address.street2">{{contact.address.street2}}</span>
+                                <span *ngIf="contact.address.city">, {{contact.address.city}}</span>
+                                <span *ngIf="contact.address.county">, {{contact.address.county}}</span>
+                                <span *ngIf="contact.address.postcode">, {{contact.address.postcode}}</span>
+                                <span *ngIf="contact.address.countryCode">, {{contact.address.countryCode}}</span>
+                            </dd>
+                        </div>
+                        <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">Tags</dt>
+                            <dd class="mt-1 text-sm leading-6 text-gray-700">
                         <span *ngFor="let tag of contact.tags"
                               class="mt-1 inline-flex items-center mb-0 mr-1 rounded-full whitespace-nowrap px-1.5 py-0.5 text-xs font-medium text-gray-500 bg-gray-50 border border-gray-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -71,11 +84,11 @@
 
                             {{tag.name}}
                         </span>
-                    </dd>
-                </div>
-                <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
-                    <dt class="text-sm font-medium leading-6 text-gray-900">Categories</dt>
-                    <dd class="mt-1 text-sm leading-6 text-gray-700">
+                            </dd>
+                        </div>
+                        <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">Categories</dt>
+                            <dd class="mt-1 text-sm leading-6 text-gray-700">
                         <span *ngFor="let category of contact.categories"
                               class="mt-1 inline-flex items-center mb-0 mr-1 rounded-full whitespace-nowrap px-1.5 py-1 text-xs font-medium text-gray-50 bg-primary">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -86,489 +99,591 @@
                                 </svg>
                             {{category.name}}
                         </span>
-                    </dd>
-                </div>
-            </dl>
-
-            <div *ngIf="(edit || !contact.id) && !loading">
-                <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
-                    <div class="col-span-full flex items-center gap-x-8">
-                        <img *ngIf="contact.photo" [src]="contact.photo"
-                             alt="" class="h-24 w-24 flex-none rounded-lg bg-gray-800 object-cover">
-                        <div>
-                            <button type="button" (click)="photo.click()"
-                                    class="rounded-md bg-secondary px-3 py-2 text-sm font-semibold text-white shadow-sm ">
-                                Upload Photo
-                            </button>
-                            <input name="additionalUpload" type="file" class="sr-only"
-                                   (change)="photoUpload($event)" #photo>
-                            <p class="mt-2 text-xs leading-5 text-gray-400">JPG, GIF or PNG</p>
+                            </dd>
                         </div>
-                    </div>
+                    </dl>
 
-                    <div class="sm:col-span-full">
-                        <label class="block text-sm font-medium leading-6 text-gray-900">Full name <span class="text-red-600">*</span></label>
-                        <div class="mt-2">
-                            <input type="text" name="first-name" [(ngModel)]="contact.name"
-                                   [ngClass]="{'border-red-600 border': !contact.name}"
-                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                        </div>
-                    </div>
-
-                    <div class="sm:col-span-4">
-                        <label class="block text-sm font-medium leading-6 text-gray-900">Email address <span class="text-red-600">*</span></label>
-                        <div class="mt-2">
-                            <input name="email" type="email" [(ngModel)]="contact.emailAddress"
-                                   [ngClass]="{'border-red-600 border': !contact.emailAddress}"
-                                   (change)="emailUpdated()"
-                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                        </div>
-                    </div>
-
-                    <div *ngIf="emailExists" class="sm:col-span-full">
-                        <div class="rounded-md bg-yellow-50 p-4">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-                                    </svg>
+                    <div *ngIf="(edit || !contact.id) && !loading">
+                        <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
+                            <div class="col-span-full flex items-center gap-x-8">
+                                <img *ngIf="contact.photo" [src]="contact.photo"
+                                     alt="" class="h-24 w-24 flex-none rounded-lg bg-gray-800 object-cover">
+                                <div>
+                                    <button type="button" (click)="photo.click()"
+                                            class="rounded-md bg-secondary px-3 py-2 text-sm font-semibold text-white shadow-sm ">
+                                        Upload Photo
+                                    </button>
+                                    <input name="additionalUpload" type="file" class="sr-only"
+                                           (change)="photoUpload($event)" #photo>
+                                    <p class="mt-2 text-xs leading-5 text-gray-400">JPG, GIF or PNG</p>
                                 </div>
-                                <div class="ml-3">
-                                    <h3 class="mb-0 text-sm font-medium text-yellow-800">This email address is already in use by another contact.</h3>
+                            </div>
+
+                            <div class="sm:col-span-full">
+                                <label class="block text-sm font-medium leading-6 text-gray-900">Full name <span
+                                    class="text-red-600">*</span></label>
+                                <div class="mt-2">
+                                    <input type="text" name="first-name" [(ngModel)]="contact.name"
+                                           [ngClass]="{'border-red-600 border': !contact.name}"
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-4">
+                                <label class="block text-sm font-medium leading-6 text-gray-900">Email address <span
+                                    class="text-red-600">*</span></label>
+                                <div class="mt-2">
+                                    <input name="email" type="email" [(ngModel)]="contact.emailAddress"
+                                           [ngClass]="{'border-red-600 border': !contact.emailAddress}"
+                                           (change)="emailUpdated()"
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                            </div>
+
+                            <div *ngIf="emailExists" class="sm:col-span-full">
+                                <div class="rounded-md bg-yellow-50 p-4">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor"
+                                                 aria-hidden="true">
+                                                <path fill-rule="evenodd"
+                                                      d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z"
+                                                      clip-rule="evenodd"/>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h3 class="mb-0 text-sm font-medium text-yellow-800">This email address is
+                                                already in use by another contact.</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="contact.user" class="sm:col-span-full">
+                                <div class="rounded-md bg-secondarylight p-4">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-5 w-5 text-primary" viewBox="0 0 20 20" fill="currentColor"
+                                                 aria-hidden="true">
+                                                <path fill-rule="evenodd"
+                                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                                                      clip-rule="evenodd"/>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h3 class="text-sm font-medium text-secondary mb-0">{{contact.emailAddress}}
+                                                has an active DAP.LIVE account.</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-4">
+                                <label class="block text-sm font-medium leading-6 text-gray-900">Phone Number</label>
+                                <div class="mt-2">
+                                    <input name="phone" type="tel" [(ngModel)]="contact.telephone"
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div *ngIf="contact.user" class="sm:col-span-full">
-                        <div class="rounded-md bg-secondarylight p-4">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-primary" viewBox="0 0 20 20" fill="currentColor"
-                                         aria-hidden="true">
-                                        <path fill-rule="evenodd"
-                                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                              clip-rule="evenodd"/>
-                                    </svg>
+                        <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
+                            <div class="sm:col-span-3">
+                                <label class="block text-sm font-medium leading-6 text-gray-900">Tags</label>
+                                <div class="mt-2">
+                                    <input placeholder="New Tag..." #tagInput
+                                           [matChipInputFor]="tagChipGrid" [matAutocomplete]="auto"
+                                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                           (matChipInputTokenEnd)="addTag($event)"
+                                           [matAutocompletePosition]="'above'"
+                                           (keyup)="tagSearch.next($any($event).target.value)"
+                                           class="ml-0 block w-full rounded-md border-0 py-2 mb-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 "/>
+                                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+                                        <mat-option *ngFor="let tag of tags" [value]="tag">
+                                            {{tag.name}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-chip-grid #tagChipGrid aria-label="Tag selection">
+                                        <mat-chip-row class="text-gray-500 bg-gray-50" *ngFor="let tag of contact.tags"
+                                                      (removed)="removeTag(tag)">
+                                            <div class="flex items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                     fill="currentColor"
+                                                     class="mr-1 w-5 h-5 text-gray-400">
+                                                    <path fill-rule="evenodd"
+                                                          d="M5.25 2.25a3 3 0 00-3 3v4.318a3 3 0 00.879 2.121l9.58 9.581c.92.92 2.39 1.186 3.548.428a18.849 18.849 0 005.441-5.44c.758-1.16.492-2.629-.428-3.548l-9.58-9.581a3 3 0 00-2.122-.879H5.25zM6.375 7.5a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z"
+                                                          clip-rule="evenodd"/>
+                                                </svg>
+                                                {{tag.name}}
+                                            </div>
+
+                                            <button matChipRemove [attr.aria-label]="'remove ' + tag.name">
+                                                <mat-icon>cancel</mat-icon>
+                                            </button>
+                                        </mat-chip-row>
+                                    </mat-chip-grid>
                                 </div>
-                                <div class="ml-3">
-                                    <h3 class="text-sm font-medium text-secondary mb-0">{{contact.emailAddress}} has an active DAP.LIVE account.</h3>
+                            </div>
+
+                            <div class="sm:col-span-3">
+                                <label class="block text-sm font-medium leading-6 text-gray-900">Categories</label>
+                                <div class="mt-2">
+                                    <input placeholder="New Category..." #categoryInput
+                                           [matChipInputFor]="catChipGrid" [matAutocomplete]="catAuto"
+                                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                           (matChipInputTokenEnd)="addCategory($event)"
+                                           [matAutocompletePosition]="'above'"
+                                           (keyup)="categorySearch.next($any($event).target.value)"
+                                           class="ml-0 block w-full rounded-md border-0 py-2 mb-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 "/>
+                                    <mat-autocomplete #catAuto="matAutocomplete"
+                                                      (optionSelected)="selectedCategory($event)">
+                                        <mat-option *ngFor="let category of categories" [value]="category">
+                                            {{category.name}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-chip-grid #catChipGrid aria-label="Category selection">
+                                        <mat-chip-row class="bg-primary text-white"
+                                                      *ngFor="let category of contact.categories"
+                                                      (removed)="removeCategory(category)">
+                                            <div class="flex items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                     fill="currentColor"
+                                                     class="mr-1 w-5 h-5">
+                                                    <path fill-rule="evenodd"
+                                                          d="M3 6a3 3 0 013-3h2.25a3 3 0 013 3v2.25a3 3 0 01-3 3H6a3 3 0 01-3-3V6zm9.75 0a3 3 0 013-3H18a3 3 0 013 3v2.25a3 3 0 01-3 3h-2.25a3 3 0 01-3-3V6zM3 15.75a3 3 0 013-3h2.25a3 3 0 013 3V18a3 3 0 01-3 3H6a3 3 0 01-3-3v-2.25zm9.75 0a3 3 0 013-3H18a3 3 0 013 3V18a3 3 0 01-3 3h-2.25a3 3 0 01-3-3v-2.25z"
+                                                          clip-rule="evenodd"/>
+                                                </svg>
+                                                {{category.name}}
+                                            </div>
+
+                                            <button matChipRemove [attr.aria-label]="'remove ' + category.name">
+                                                <mat-icon>cancel</mat-icon>
+                                            </button>
+                                        </mat-chip-row>
+                                    </mat-chip-grid>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="sm:col-span-4">
-                        <label class="block text-sm font-medium leading-6 text-gray-900">Phone Number</label>
-                        <div class="mt-2">
-                            <input name="phone" type="tel" [(ngModel)]="contact.telephone"
-                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
-                    <div class="sm:col-span-3">
-                        <label class="block text-sm font-medium leading-6 text-gray-900">Tags</label>
-                        <div class="mt-2">
-                            <input placeholder="New Tag..." #tagInput
-                                   [matChipInputFor]="tagChipGrid" [matAutocomplete]="auto"
-                                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                   (matChipInputTokenEnd)="addTag($event)"
-                                   [matAutocompletePosition]="'above'"
-                                   (keyup)="tagSearch.next($any($event).target.value)"
-                                   class="ml-0 block w-full rounded-md border-0 py-2 mb-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 "/>
-                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
-                                <mat-option *ngFor="let tag of tags" [value]="tag">
-                                    {{tag.name}}
-                                </mat-option>
-                            </mat-autocomplete>
-                            <mat-chip-grid #tagChipGrid aria-label="Tag selection">
-                                <mat-chip-row class="text-gray-500 bg-gray-50" *ngFor="let tag of contact.tags" (removed)="removeTag(tag)">
-                                    <div class="flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                             class="mr-1 w-5 h-5 text-gray-400">
-                                            <path fill-rule="evenodd"
-                                                  d="M5.25 2.25a3 3 0 00-3 3v4.318a3 3 0 00.879 2.121l9.58 9.581c.92.92 2.39 1.186 3.548.428a18.849 18.849 0 005.441-5.44c.758-1.16.492-2.629-.428-3.548l-9.58-9.581a3 3 0 00-2.122-.879H5.25zM6.375 7.5a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z"
-                                                  clip-rule="evenodd"/>
-                                        </svg>
-                                        {{tag.name}}
+                        <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
+                            <div class="sm:col-span-full">
+                                <div
+                                    class="mb-4 flex align-center justify-between text-sm font-medium leading-6 text-gray-900">
+                                    Select Organisation(s)
+                                    <div>
+                                        <button type="button" (click)="addOrganisation()"
+                                                class="inline-flex items-center gap-x-1.5 rounded-md bg-white px-2 py-1 text-xs font-semibold text-primary shadow-sm border border-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                 fill="currentColor"
+                                                 class="-ml-0.5 h-6 w-6">
+                                                <path fill-rule="evenodd"
+                                                      d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
+                                                      clip-rule="evenodd"/>
+                                            </svg>
+                                            Add New Organisation
+                                        </button>
                                     </div>
+                                </div>
 
-                                    <button matChipRemove [attr.aria-label]="'remove ' + tag.name">
-                                        <mat-icon>cancel</mat-icon>
-                                    </button>
-                                </mat-chip-row>
-                            </mat-chip-grid>
-                        </div>
-                    </div>
+                                <div *ngFor="let contactOrganisation of contact.organisationDepartments; let i = index"
+                                     class="bg-gray-50 p-4 mb-4 flex">
+                                    <div class="flex-1">
+                                        <label
+                                            class="block text-xs font-normal leading-6 text-gray-700">Organisation</label>
+                                        <div class="flex flex-wrap">
+                                            <div class="flex-1 sm:w-full relative">
+                                                <input name="organisation" type="text"
+                                                       [matAutocomplete]="orgAutocomplete"
+                                                       [value]="contact.organisationDepartments[i].organisationSummary ? contact.organisationDepartments[i].organisationSummary.name : ''"
+                                                       (keyup)="organisationSearch.next($any($event).target.value)"
+                                                       class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
 
-                    <div class="sm:col-span-3">
-                        <label class="block text-sm font-medium leading-6 text-gray-900">Categories</label>
-                        <div class="mt-2">
-                            <input placeholder="New Category..." #categoryInput
-                                   [matChipInputFor]="catChipGrid" [matAutocomplete]="catAuto"
-                                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                   (matChipInputTokenEnd)="addCategory($event)"
-                                   [matAutocompletePosition]="'above'"
-                                   (keyup)="categorySearch.next($any($event).target.value)"
-                                   class="ml-0 block w-full rounded-md border-0 py-2 mb-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 "/>
-                            <mat-autocomplete #catAuto="matAutocomplete" (optionSelected)="selectedCategory($event)">
-                                <mat-option *ngFor="let category of categories" [value]="category">
-                                    {{category.name}}
-                                </mat-option>
-                            </mat-autocomplete>
-                            <mat-chip-grid #catChipGrid aria-label="Category selection">
-                                <mat-chip-row class="bg-primary text-white" *ngFor="let category of contact.categories" (removed)="removeCategory(category)">
-                                    <div class="flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                             class="mr-1 w-5 h-5">
-                                            <path fill-rule="evenodd"
-                                                  d="M3 6a3 3 0 013-3h2.25a3 3 0 013 3v2.25a3 3 0 01-3 3H6a3 3 0 01-3-3V6zm9.75 0a3 3 0 013-3H18a3 3 0 013 3v2.25a3 3 0 01-3 3h-2.25a3 3 0 01-3-3V6zM3 15.75a3 3 0 013-3h2.25a3 3 0 013 3V18a3 3 0 01-3 3H6a3 3 0 01-3-3v-2.25zm9.75 0a3 3 0 013-3H18a3 3 0 013 3V18a3 3 0 01-3 3h-2.25a3 3 0 01-3-3v-2.25z"
-                                                  clip-rule="evenodd"/>
-                                        </svg>
-                                        {{category.name}}
+                                                <mat-autocomplete #orgAutocomplete="matAutocomplete">
+                                                    <mat-option *ngFor="let organisation of organisations"
+                                                                [value]="organisation"
+                                                                (onSelectionChange)="updateOrganisation($event, i)">
+                                                        {{organisation.name}}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </div>
+
+                                        </div>
+                                        <ng-template [ngIf]="contact.organisationDepartments[i].organisationSummary">
+                                            <label
+                                                class="block text-xs font-normal leading-6 text-gray-700">Department</label>
+                                            <div class="flex flex-wrap">
+                                                <div class="flex-1 sm:w-full">
+                                                    <mat-select name="department"
+                                                                [(ngModel)]="contact.organisationDepartments[i].department"
+                                                                [compareWith]="compareWith"
+                                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                        <mat-option [value]="">
+                                                            -- No Department --
+                                                        </mat-option>
+                                                        <mat-option
+                                                            *ngFor="let department of contact.organisationDepartments[i].organisationSummary.departments"
+                                                            [value]="department">
+                                                            {{department.name}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </div>
+                                            </div>
+                                            <label class="block text-xs font-normal leading-6 text-gray-700">Job
+                                                Title</label>
+                                            <div class="flex flex-wrap">
+                                                <div class="flex-1 sm:w-full">
+                                                    <input name="job-title" type="text"
+                                                           [(ngModel)]="contact.organisationDepartments[i].jobTitle"
+                                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                </div>
+                                            </div>
+                                        </ng-template>
                                     </div>
+                                    <div class="align-center ml-4">
+                                        <button *ngIf="contact.organisationDepartments.length > 1" type="button"
+                                                (click)="removeOrganisation(i)"
+                                                class="rounded-full border border-orange-400 bg-orange-100 p-1 text-orange-400 shadow-sm hover:bg-orange-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                 stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                      d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
 
-                                    <button matChipRemove [attr.aria-label]="'remove ' + category.name">
-                                        <mat-icon>cancel</mat-icon>
-                                    </button>
-                                </mat-chip-row>
-                            </mat-chip-grid>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
-                    <div class="sm:col-span-full">
-                        <div class="mb-4 flex align-center justify-between text-sm font-medium leading-6 text-gray-900">
-                            Select Organisation(s)
-                            <div>
-                                <button type="button" (click)="addOrganisation()"
-                                        class="inline-flex items-center gap-x-1.5 rounded-md bg-white px-2 py-1 text-xs font-semibold text-primary shadow-sm border border-primary">
+                                <button type="button" (click)="contact.organisationDepartments.push({})"
+                                        class="mt-4 inline-flex items-center gap-x-1.5 rounded-md bg-gray-100 px-2 py-1 text-xs font-semibold text-primary shadow-sm border border-primary">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                          class="-ml-0.5 h-6 w-6">
                                         <path fill-rule="evenodd"
                                               d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
                                               clip-rule="evenodd"/>
                                     </svg>
-                                    Add New Organisation
+                                    Select Another Organisation
                                 </button>
                             </div>
-                        </div>
 
-                        <div *ngFor="let contactOrganisation of contact.organisationDepartments; let i = index"
-                             class="bg-gray-50 p-4 mb-4 flex">
-                            <div class="flex-1">
-                                <label class="block text-xs font-normal leading-6 text-gray-700">Organisation</label>
-                                <div class="flex flex-wrap">
-                                    <div class="flex-1 sm:w-full relative">
-                                        <input name="organisation" type="text" [matAutocomplete]="orgAutocomplete"
-                                               [value]="contact.organisationDepartments[i].organisationSummary ? contact.organisationDepartments[i].organisationSummary.name : ''"
-                                               (keyup)="organisationSearch.next($any($event).target.value)"
+                        </div>
+                        <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
+
+                            <div class="sm:col-span-full">
+                                <div
+                                    class="mb-4 flex align-center justify-between text-sm font-medium leading-6 text-gray-900">
+                                    Select Address
+                                    <button type="button" (click)="addAddress()"
+                                            class="inline-flex items-center gap-x-1.5 rounded-md bg-gray-100 px-2 py-1 text-xs font-semibold text-primary shadow-sm border border-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                             class="-ml-0.5 h-6 w-6">
+                                            <path fill-rule="evenodd"
+                                                  d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                        Add New Address
+                                    </button>
+                                </div>
+                                <div class="flex flex-wrap mt-2">
+                                    <div class="flex-1 w-full">
+                                        <input name="organisation" type="text" [matAutocomplete]="addressAutocomplete"
+                                               [value]="contact.address ? contact.address.street1 + ', ' + contact.address.city + ', ' + contact.address.postcode + ', ' + contact.address.countryCode : ''"
+                                               (keyup)="addressSearch.next($any($event).target.value)"
                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
 
-                                        <mat-autocomplete #orgAutocomplete="matAutocomplete">
-                                            <mat-option *ngFor="let organisation of organisations"
-                                                        [value]="organisation" (onSelectionChange)="updateOrganisation($event, i)">
-                                                {{organisation.name}}
+                                        <mat-autocomplete #addressAutocomplete="matAutocomplete">
+                                            <mat-option *ngFor="let address of addresses" [value]="address"
+                                                        (onSelectionChange)="updateAddress($event)"
+                                                        class="hover:bg-gray-50">
+                                                <span class="font-semibold">{{address.street1}}&nbsp;</span>
+                                                <span *ngIf="address.street2">{{address.street2}}</span>
+                                                <span *ngIf="address.city">, {{address.city}}</span>
+                                                <span *ngIf="address.county">, {{address.county}}</span>
+                                                <span *ngIf="address.postcode">, {{address.postcode}}</span>
+                                                <span *ngIf="address.countryCode">, {{address.countryCode}}</span>
                                             </mat-option>
                                         </mat-autocomplete>
                                     </div>
-
                                 </div>
-                                <ng-template [ngIf]="contact.organisationDepartments[i].organisationSummary">
-                                    <label class="block text-xs font-normal leading-6 text-gray-700">Department</label>
-                                    <div class="flex flex-wrap">
-                                        <div class="flex-1 sm:w-full">
-                                            <mat-select name="department"
-                                                        [(ngModel)]="contact.organisationDepartments[i].department"
-                                                        [compareWith]="compareWith"
-                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                <mat-option [value]="">
-                                                    -- No Department --
-                                                </mat-option>
-                                                <mat-option
-                                                    *ngFor="let department of contact.organisationDepartments[i].organisationSummary.departments"
-                                                    [value]="department">
-                                                    {{department.name}}
-                                                </mat-option>
-                                            </mat-select>
-                                        </div>
-                                    </div>
-                                    <label class="block text-xs font-normal leading-6 text-gray-700">Job Title</label>
-                                    <div class="flex flex-wrap">
-                                        <div class="flex-1 sm:w-full">
-                                            <input name="job-title" type="text" [(ngModel)]="contact.organisationDepartments[i].jobTitle"
-                                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                        </div>
-                                    </div>
-                                </ng-template>
+
                             </div>
-                            <div class="align-center ml-4">
-                                <button *ngIf="contact.organisationDepartments.length > 1" type="button"
-                                        (click)="removeOrganisation(i)"
-                                        class="rounded-full border border-orange-400 bg-orange-100 p-1 text-orange-400 shadow-sm hover:bg-orange-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                         stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                                    </svg>
-                                </button>
-                            </div>
+
                         </div>
 
-                        <button type="button" (click)="contact.organisationDepartments.push({})"
-                                class="mt-4 inline-flex items-center gap-x-1.5 rounded-md bg-gray-100 px-2 py-1 text-xs font-semibold text-primary shadow-sm border border-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                 class="-ml-0.5 h-6 w-6">
-                                <path fill-rule="evenodd"
-                                      d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
-                                      clip-rule="evenodd"/>
-                            </svg>
-                            Select Another Organisation
+                        <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 py-8">
+
+                            <div class="sm:col-span-full">
+                                <div
+                                    class="mb-4 flex align-center justify-between text-sm font-medium leading-6 text-gray-900">
+                                    Mailing Lists
+                                </div>
+
+                                <fieldset>
+                                    <legend class="sr-only">Subscribe</legend>
+                                    <div class="space-y-5">
+                                        <div *ngFor="let mailingList of mailingLists" class="relative flex items-start">
+                                            <div class="flex h-6 items-center">
+                                                <input name="comments" type="checkbox"
+                                                       (change)="updateMailingList($event, mailingList, contact.subscribedMailingLists)"
+                                                       [checked]="contact.subscribedMailingListIds ? contact.subscribedMailingListIds.indexOf(mailingList.id) > -1 : false"
+                                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                                            </div>
+                                            <div class="ml-3 text-sm leading-6">
+                                                <label class="font-medium text-gray-900">{{mailingList.title}}</label>
+                                                <span class="text-gray-500">{{mailingList.description}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div *ngIf="edit || !contact.id" class="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                    <button type="button" (click)="saveContact()"
+                            class="inline-flex justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm ">
+                        Save
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="contact.id" class="shadow sm:overflow-hidden sm:rounded-md mb-8">
+                <div class="space-y-6 bg-white px-4 py-6 sm:p-6">
+                    <div>
+                        <h2 class="text-base font-semibold leading-7 ">Delete contact</h2>
+                        <p class="mt-1 text-sm leading-6 text-gray-400">Permanently delete this contact.</p>
+                    </div>
+
+                    <form class="flex items-start md:col-span-2">
+                        <button type="button" (click)="deleteContact()"
+                                class="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-400">
+                            Yes, delete this contact
                         </button>
-                    </div>
-
-                </div>
-                <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 border-b py-8">
-
-                    <div class="sm:col-span-full">
-                        <div class="mb-4 flex align-center justify-between text-sm font-medium leading-6 text-gray-900">
-                            Select Address
-                            <button type="button" (click)="addAddress()"
-                                    class="inline-flex items-center gap-x-1.5 rounded-md bg-gray-100 px-2 py-1 text-xs font-semibold text-primary shadow-sm border border-primary">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                     class="-ml-0.5 h-6 w-6">
-                                    <path fill-rule="evenodd"
-                                          d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
-                                          clip-rule="evenodd"/>
-                                </svg>
-                                Add New Address
-                            </button>
-                        </div>
-                        <div class="flex flex-wrap mt-2">
-                            <div class="flex-1 w-full">
-                                <input name="organisation" type="text" [matAutocomplete]="addressAutocomplete"
-                                   [value]="contact.address ? contact.address.street1 + ', ' + contact.address.city + ', ' + contact.address.postcode + ', ' + contact.address.countryCode : ''"
-                                   (keyup)="addressSearch.next($any($event).target.value)"
-                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-
-                                <mat-autocomplete #addressAutocomplete="matAutocomplete">
-                                    <mat-option *ngFor="let address of addresses" [value]="address"
-                                                (onSelectionChange)="updateAddress($event)"
-                                                class="hover:bg-gray-50">
-                                        <span class="font-semibold">{{address.street1}}&nbsp;</span>
-                                        <span *ngIf="address.street2">{{address.street2}}</span>
-                                        <span *ngIf="address.city">, {{address.city}}</span>
-                                        <span *ngIf="address.county">, {{address.county}}</span>
-                                        <span *ngIf="address.postcode">, {{address.postcode}}</span>
-                                        <span *ngIf="address.countryCode">, {{address.countryCode}}</span>
-                                    </mat-option>
-                                </mat-autocomplete>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6 py-8">
-
-                    <div class="sm:col-span-full">
-                        <div class="mb-4 flex align-center justify-between text-sm font-medium leading-6 text-gray-900">
-                            Mailing Lists
-                        </div>
-
-                        <fieldset>
-                            <legend class="sr-only">Subscribe</legend>
-                            <div class="space-y-5">
-                                <div *ngFor="let mailingList of mailingLists" class="relative flex items-start">
-                                    <div class="flex h-6 items-center">
-                                        <input name="comments" type="checkbox" (change)="updateMailingList($event, mailingList, contact.subscribedMailingLists)"
-                                               [checked]="contact.subscribedMailingListIds ? contact.subscribedMailingListIds.indexOf(mailingList.id) > -1 : false"
-                                               class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
-                                    </div>
-                                    <div class="ml-3 text-sm leading-6">
-                                        <label class="font-medium text-gray-900">{{mailingList.title}}</label>
-                                        <span class="text-gray-500">{{mailingList.description}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-
-                    </div>
-
+                    </form>
                 </div>
             </div>
-
         </div>
-        <div *ngIf="edit || !contact.id" class="bg-gray-50 px-4 py-3 text-right sm:px-6">
-            <button type="button" (click)="saveContact()"
-                    class="inline-flex justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm ">
-                Save
-            </button>
-        </div>
-    </div>
+    </mat-tab>
+    <mat-tab *ngIf="contact.id" label="Comments">
 
-    <div *ngIf="contact.id" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div class="mx-auto max-w-7xl mt-8">
 
-        <div class="shadow sm:overflow-hidden sm:rounded-md mb-8">
-            <div class="space-y-6 bg-white px-4 py-6 sm:p-6">
-                <div>
-                    <h3 class="text-base font-semibold leading-6 text-gray-900">Comments</h3>
-                    <p class="mt-1 text-sm text-gray-500">Add comments to this contact</p>
-                </div>
-
-                <div class="max-h-96 overflow-y-scroll px-4">
-                    <ul role="list" class="space-y-8">
-                        <li *ngFor="let comment of comments">
-                            <div class="flex space-x-3">
-                                <div class="flex-shrink-0">
-                                    <img class="h-10 w-10 rounded-full"
-                                         [src]="comment.gravatarURL" alt="">
-                                </div>
-                                <div class="bg-gray-100 py-2 pl-2 pr-8 rounded-lg">
-                                    <div class="text-sm">
-                                        <a *ngIf="comment.user" class="font-medium text-gray-900">{{comment.user.name}}</a>
-                                    </div>
-                                    <div class="mt-1 text-sm text-gray-700">
-                                        <p class="whitespace-pre">{{comment.message}}</p>
-                                    </div>
-                                    <div class="mt-2 space-x-2 text-sm">
-                                        <span class="font-medium text-xs text-gray-500">{{comment.displayDate}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-            <div class="bg-gray-50 px-4 py-3 sm:px-6">
-                <div class="flex space-x-3">
-                    <div class="flex-shrink-0">
-                        <img class="h-10 w-10 rounded-full"
-                             [src]="loggedInGravatar" alt="">
+            <div class="shadow sm:overflow-hidden sm:rounded-md mb-8">
+                <div class="space-y-6 bg-white px-4 py-6 sm:p-6">
+                    <div>
+                        <h3 class="text-base font-semibold leading-6 text-gray-900">Comments</h3>
+                        <p class="mt-1 text-sm text-gray-500">Add comments to this contact</p>
                     </div>
-                    <div class="min-w-0 flex-1">
-                        <div>
+
+                    <div class="max-h-96 overflow-y-scroll px-4">
+                        <ul role="list" class="space-y-8">
+                            <li *ngFor="let comment of comments">
+                                <div class="flex space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <img class="h-10 w-10 rounded-full"
+                                             [src]="comment.gravatarURL" alt="">
+                                    </div>
+                                    <div class="bg-gray-100 py-2 pl-2 pr-8 rounded-lg">
+                                        <div class="text-sm">
+                                            <a *ngIf="comment.user"
+                                               class="font-medium text-gray-900">{{comment.user.name}}</a>
+                                        </div>
+                                        <div class="mt-1 text-sm text-gray-700">
+                                            <p class="whitespace-pre-line">{{comment.message}}</p>
+                                        </div>
+                                        <div class="mt-2 space-x-2 text-sm">
+                                                <span
+                                                    class="font-medium text-xs text-gray-500">{{comment.displayDate}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6">
+                    <div class="flex space-x-3">
+                        <div class="flex-shrink-0">
+                            <img class="h-10 w-10 rounded-full"
+                                 [src]="loggedInGravatar" alt="">
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div>
                             <textarea name="comment" rows="3" #comment (keydown)="addComment(comment, $event)"
                                       class="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
                                       placeholder="Add comment"></textarea>
-                        </div>
-                        <div class="mt-3 flex items-center justify-between">
-                            <div class="text-xs text-gray-500 self-start">
-                                Commenting as {{loggedInUser.name}}<{{loggedInUser.emailAddress}}><br>
-                                Shift + Enter for new line
                             </div>
-                            <button type="button" (click)="addComment(comment)"
-                                    class="inline-flex items-center justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm ">Comment</button>
+                            <div class="mt-3 flex items-center justify-between">
+                                <div class="text-xs text-gray-500 self-start">
+                                    Commenting as {{loggedInUser.name}}<{{loggedInUser.emailAddress}}><br>
+                                    Shift + Enter for new line
+                                </div>
+                                <button type="button" (click)="addComment(comment)"
+                                        class="inline-flex items-center justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm ">
+                                    Comment
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </mat-tab>
+    <mat-tab label="Emails">
 
-        <div class="flex flex-col shadow sm:overflow-hidden sm:rounded-md mb-8">
-            <div class="flex flex-col flex-1 space-y-6 bg-white px-4 py-6 sm:p-6">
-                <div>
-                    <h3 class="text-base font-semibold leading-6 text-gray-900">Notes</h3>
-                    <p class="mt-1 text-sm text-gray-500">Add notes to this contact</p>
+        <div class="mx-auto max-w-7xl mt-8">
+            <div class="flex flex-col bg-white shadow sm:overflow-hidden sm:rounded-md mb-8">
+
+                <div class="flex flex-col w-full" [ngClass]="{'border-b': email.preview}"
+                    *ngFor="let email of contactEmails">
+
+                    <div class="p-4 flex flex-col w-full hover:bg-gray-50 cursor-pointer"
+                         [ngClass]="{'border-b': !email.preview}" (click)="previewEmail(email)">
+                        <div class="flex items-center justify-between">
+                            <div class="font-medium text-lg flex items-center">
+                                {{email.subject}}
+                                <span class="lowercase text-white text-xs px-1.5 py-0.5 rounded-lg ml-2"
+                                    [ngClass]="{'bg-primary': email.status === 'SENT', 'bg-gray-500': email.status !== 'SENT'}">
+                                    {{email.status}}
+                                </span>
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                {{moment(email.sentDate).calendar(null, {
+                                sameDay: '[Today] @ HH:mm',
+                                nextDay: '[Tomorrow] @ HH:mm',
+                                nextWeek: 'dddd @ HH:mm',
+                                lastDay: '[Yesterday] @ HH:mm',
+                                lastWeek: '[Last] dddd @ HH:mm',
+                                sameElse: 'DD/MM/YYYY @ HH:mm'
+                            })}}
+                            </div>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            from {{email.sender}}
+                        </div>
+                        <div class="text-xs text-gray-500 truncate">
+                            to {{email.recipients.join(', ')}}
+                        </div>
+                    </div>
+                    <div *ngIf="email.preview" class="py-4 px-8" [innerHTML]="email.previewContent">
+
+                    </div>
+
                 </div>
 
-                <div class="flex-1 grid grid-cols-3 gap-6">
+            </div>
+        </div>
 
-                    <div class="col-span-3 h-full">
+    </mat-tab>
+    <mat-tab label="Notes">
+
+        <div class="mx-auto max-w-7xl mt-8">
+            <div class="flex flex-col shadow sm:overflow-hidden sm:rounded-md mb-8">
+                <div class="flex flex-col flex-1 space-y-6 bg-white px-4 py-6 sm:p-6">
+                    <div>
+                        <h3 class="text-base font-semibold leading-6 text-gray-900">Notes</h3>
+                        <p class="mt-1 text-sm text-gray-500">Add notes to this contact</p>
+                    </div>
+
+                    <div class="flex-1 grid grid-cols-3 gap-6">
+
+                        <div class="col-span-3 h-full">
                         <textarea name="notes" rows="5" [(ngModel)]="contact.notes"
                                   class="mt-1 block h-full w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                   placeholder=""></textarea>
-                    </div>
+                        </div>
 
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                    <button type="button" (click)="saveContact()"
+                            class="inline-flex justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm ">
+                        Save
+                    </button>
                 </div>
             </div>
-            <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                <button type="button" (click)="saveContact()"
-                        class="inline-flex justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm ">
-                    Save
-                </button>
-            </div>
         </div>
-    </div>
 
-    <div *ngIf="contact.id" class="shadow sm:overflow-hidden sm:rounded-md mb-8">
-        <div class="space-y-6 bg-white px-4 py-6 sm:p-6">
-            <div>
-                <h3 class="text-base font-semibold leading-6 text-gray-900">Attachments</h3>
-                <p class="mt-1 text-sm text-gray-500">Upload documents to this contact</p>
-            </div>
+    </mat-tab>
+    <mat-tab *ngIf="contact.id" label="Attachments">
 
-            <div class="grid grid-cols-3 gap-6">
+        <div class="mx-auto max-w-7xl mt-8">
+            <div class="shadow sm:overflow-hidden sm:rounded-md mb-8">
+                <div class="space-y-6 bg-white px-4 py-6 sm:p-6">
+                    <div>
+                        <h3 class="text-base font-semibold leading-6 text-gray-900">Attachments</h3>
+                        <p class="mt-1 text-sm text-gray-500">Upload documents to this contact</p>
+                    </div>
 
-                <div *ngIf="contact.attachments.length" class="col-span-full">
-                    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                        <dt class="text-sm font-medium leading-6 text-gray-900">Attachments</dt>
-                        <dd class="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                            <ul role="list" class="divide-y divide-gray-100 rounded-md border border-gray-200">
-                                <li *ngFor="let attachment of contact.attachments" class="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
-                                    <div class="flex w-0 flex-1 items-center">
-                                        <svg class="h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd" d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z" clip-rule="evenodd" />
-                                        </svg>
-                                        <div class="ml-4 flex min-w-0 flex-1 gap-2">
+                    <div class="grid grid-cols-3 gap-6">
+
+                        <div *ngIf="contact.attachments.length" class="col-span-full">
+                            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                <dt class="text-sm font-medium leading-6 text-gray-900">Attachments</dt>
+                                <dd class="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                    <ul role="list" class="divide-y divide-gray-100 rounded-md border border-gray-200">
+                                        <li *ngFor="let attachment of contact.attachments"
+                                            class="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
+                                            <div class="flex w-0 flex-1 items-center">
+                                                <svg class="h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20"
+                                                     fill="currentColor" aria-hidden="true">
+                                                    <path fill-rule="evenodd"
+                                                          d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z"
+                                                          clip-rule="evenodd"/>
+                                                </svg>
+                                                <div class="ml-4 flex min-w-0 flex-1 gap-2">
                                             <span (click)="streamAttachment(attachment.id)"
                                                   class="truncate font-medium text-primary hover:underline cursor-pointer">
                                                 {{attachment.filename}}
                                             </span>
-                                            <!--                                        <span class="flex-shrink-0 text-gray-400">2.4mb</span>-->
-                                        </div>
-                                    </div>
-                                    <div class="ml-4 flex align-center flex-shrink-0">
-                                        <button type="button" (click)="removeAttachment(attachment.id)"
-                                                class="rounded-full border border-orange-400 bg-orange-100 p-1 text-orange-400 shadow-sm hover:bg-orange-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </li>
-                            </ul>
-                        </dd>
+                                                    <!--                                        <span class="flex-shrink-0 text-gray-400">2.4mb</span>-->
+                                                </div>
+                                            </div>
+                                            <div class="ml-4 flex align-center flex-shrink-0">
+                                                <button type="button" (click)="removeAttachment(attachment.id)"
+                                                        class="rounded-full border border-orange-400 bg-orange-100 p-1 text-orange-400 shadow-sm hover:bg-orange-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                         class="w-5 h-5">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                              d="M6 18L18 6M6 6l12 12"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </dd>
+                            </div>
+                        </div>
+
+                        <div class="col-span-full">
+                            <button type="button" (click)="attachments.click()"
+                                    class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-8 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke-width="1.5"
+                                     stroke="currentColor" class="mx-auto h-12 w-12 text-gray-400">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M7.5 7.5h-.75A2.25 2.25 0 004.5 9.75v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25h-.75m0-3l-3-3m0 0l-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.75"/>
+                                </svg>
+
+                                <span
+                                    class="mt-2 block text-sm font-semibold text-gray-900">Click to Upload Documents</span>
+                            </button>
+
+                            <input name="attachments" multiple type="file" class="sr-only"
+                                   (change)="attachmentsUpload($event)" #attachments>
+                        </div>
+
                     </div>
                 </div>
-
-                <div class="col-span-full">
-                    <button type="button" (click)="attachments.click()"
-                            class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-8 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                             stroke="currentColor" class="mx-auto h-12 w-12 text-gray-400">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 004.5 9.75v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25h-.75m0-3l-3-3m0 0l-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.75" />
-                        </svg>
-
-                        <span class="mt-2 block text-sm font-semibold text-gray-900">Click to Upload Documents</span>
-                    </button>
-
-                    <input name="attachments" multiple type="file" class="sr-only"
-                           (change)="attachmentsUpload($event)" #attachments>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div *ngIf="contact.id" class="shadow sm:overflow-hidden sm:rounded-md mb-8">
-        <div class="space-y-6 bg-white px-4 py-6 sm:p-6">
-            <div>
-                <h2 class="text-base font-semibold leading-7 ">Delete contact</h2>
-                <p class="mt-1 text-sm leading-6 text-gray-400">Permanently delete this contact.</p>
             </div>
 
-            <form class="flex items-start md:col-span-2">
-                <button type="button" (click)="deleteContact()"
-                        class="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-400">
-                    Yes, delete this contact
-                </button>
-            </form>
         </div>
-    </div>
-</div>
+
+    </mat-tab>
+</mat-tab-group>
+
+

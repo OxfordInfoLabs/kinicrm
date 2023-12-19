@@ -10,7 +10,7 @@ import {Location} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
 import {CommentService} from '../../../services/comment.service';
 import {GravatarService} from '../../../services/gravatar.service';
-import {AuthenticationService} from 'ng-kiniauth';
+import {AuthenticationService, CommunicationService} from 'ng-kiniauth';
 import {BehaviorSubject, merge} from 'rxjs';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import { MatOptionSelectionChange } from '@angular/material/core';
@@ -19,6 +19,8 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import * as _ from 'lodash';
+import moment from 'moment';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
     selector: 'kcrm-edit-contact',
@@ -34,6 +36,7 @@ export class EditContactComponent implements OnInit {
     @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement> | undefined;
     @ViewChild('categoryInput') categoryInput: ElementRef<HTMLInputElement> | undefined;
 
+    public moment = moment;
     public _ = _;
     public contact: any = {
         organisationDepartments: [{}]
@@ -54,6 +57,7 @@ export class EditContactComponent implements OnInit {
     public separatorKeysCodes: number[] = [ENTER, COMMA];
     public emailExists = false;
     public mailingLists: any = [];
+    public contactEmails: any = [];
 
     constructor(private route: ActivatedRoute,
                 private contactService: ContactService,
@@ -65,7 +69,9 @@ export class EditContactComponent implements OnInit {
                 private commentService: CommentService,
                 private gravatarService: GravatarService,
                 private authService: AuthenticationService,
-                private metadataService: MetadataService) {
+                private metadataService: MetadataService,
+                private communicationService: CommunicationService,
+                private sanitise: DomSanitizer) {
     }
 
     async ngOnInit() {
@@ -120,6 +126,10 @@ export class EditContactComponent implements OnInit {
                 this.contact.organisationDepartments = [{}];
             }
 
+            if (this.contact.emailAddress) {
+                this.contactEmails = await this.communicationService.filterStoredEmails(this.contact.emailAddress).toPromise();
+            }
+
             if (this.contact.id) {
                 this.loadComments();
             }
@@ -134,6 +144,19 @@ export class EditContactComponent implements OnInit {
         this.loggedInGravatar = await this.gravatarService.getGravatarURL(this.loggedInUser.emailAddress);
 
         this.mailingLists = await this.contactService.getMailingLists();
+    }
+
+    public async previewEmail(email: any) {
+        this.contactEmails.map((contactEmail: any) => {
+            contactEmail.preview = false;
+            return contactEmail;
+        });
+
+        email.preview = true;
+        if (!email.previewContent) {
+            const previewContent: any = await this.communicationService.getStoredEmailContent(email.id);
+            email.previewContent = this.sanitise.bypassSecurityTrustHtml(previewContent || '');
+        }
     }
 
     public async updateMailingList(event: any, mailingList: any, subscriptions: any) {
