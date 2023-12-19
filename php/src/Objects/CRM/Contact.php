@@ -4,6 +4,7 @@ namespace KiniCRM\Objects\CRM;
 
 use Kiniauth\Objects\Attachment\AttachmentSummary;
 use Kiniauth\Objects\Security\UserSummary;
+use Kiniauth\Traits\Application\Timestamped;
 use KiniCRM\ValueObjects\CRM\ContactItem;
 use KiniCRM\ValueObjects\CRM\OrganisationDepartmentItem;
 use KiniCRM\ValueObjects\Enum\ObjectScope;
@@ -15,6 +16,8 @@ use Kinimailer\Objects\MailingList\MailingListSubscriber;
  * @generate
  */
 class Contact extends ActiveRecord {
+
+    use Timestamped;
 
     /**
      * @var integer
@@ -112,6 +115,10 @@ class Contact extends ActiveRecord {
      * @childJoinColumns item_id,item_type=Contact
      */
     private $tags;
+
+
+
+
 
 
     /**
@@ -318,6 +325,7 @@ class Contact extends ActiveRecord {
     public function setTags(array $tags): void {
         $this->tags = $tags;
     }
+
 
 
 }

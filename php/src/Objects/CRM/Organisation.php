@@ -3,6 +3,7 @@
 namespace KiniCRM\Objects\CRM;
 
 use Kiniauth\Objects\Attachment\AttachmentSummary;
+use Kiniauth\Traits\Application\Timestamped;
 use KiniCRM\ValueObjects\CRM\OrganisationItem;
 
 /**
@@ -10,6 +11,8 @@ use KiniCRM\ValueObjects\CRM\OrganisationItem;
  * @generate
  */
 class Organisation extends OrganisationSummary {
+
+    use Timestamped;
 
     /**
      * @var Address
@@ -63,6 +66,8 @@ class Organisation extends OrganisationSummary {
      * @childJoinColumns item_id,item_type=Organisation
      */
     private $tags;
+
+
 
 
     /**
@@ -194,6 +199,7 @@ class Organisation extends OrganisationSummary {
     public function setTags(array $tags): void {
         $this->tags = $tags;
     }
+
 
 
 }

@@ -3,6 +3,7 @@
 namespace KiniCRM\Objects\CRM;
 
 
+use Kiniauth\Traits\Application\Timestamped;
 use KiniCRM\ValueObjects\CRM\AddressItem;
 use Kinikit\Persistence\ORM\ActiveRecord;
 
@@ -11,6 +12,8 @@ use Kinikit\Persistence\ORM\ActiveRecord;
  * @generate
  */
 class Address extends ActiveRecord {
+
+    use Timestamped;
 
     /**
      * @var integer
@@ -56,6 +59,7 @@ class Address extends ActiveRecord {
      * @required
      */
     private $countryCode;
+
 
     /**
      * @param AddressItem $addressItem
