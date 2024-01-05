@@ -2,12 +2,17 @@
 
 namespace KiniCRM\Services\CRM;
 
+use Kiniauth\Objects\Attachment\Attachment;
 use Kiniauth\Objects\Security\UserSummary;
 use Kiniauth\Test\Services\Security\AuthenticationHelper;
 use KiniCRM\Objects\CRM\Comment;
+use KiniCRM\Objects\CRM\Contact;
 use KiniCRM\TestBase;
+use KiniCRM\ValueObjects\CRM\ContactItem;
 use KiniCRM\ValueObjects\Enum\ObjectScope;
 use Kinikit\Core\DependencyInjection\Container;
+use Kinikit\MVC\Request\FileUpload;
+use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
 
 include_once "autoloader.php";
 
@@ -19,7 +24,7 @@ class CommentServiceTest extends TestBase {
         $this->commentService = Container::instance()->get(CommentService::class);
     }
 
-    public function testCanCreateCommentsWithScopeForLoggedInUser() {
+    public function testCanCreateUpdateAndDeleteCommentsWithScopeForLoggedInUser() {
 
         AuthenticationHelper::login("admin@kinicart.com", "password");
 
@@ -35,7 +40,23 @@ class CommentServiceTest extends TestBase {
         $this->assertEquals("Hello world", $reComment->getMessage());
         $this->assertEquals(UserSummary::fetch(1), $reComment->getUserSummary());
         $this->assertEquals(0, $reComment->getAccountId());
-        $this->assertEquals((new \DateTime())->format("Y-m-d H:i:s"), $reComment->getDateTime()->format("Y-m-d H:i:s"));
+        $this->assertEquals((new \DateTime())->format("Y-m-d H:i:s"), $reComment->getCreatedDate()->format("Y-m-d H:i:s"));
+
+
+        $this->commentService->updateComment($reComment->getId(), "Wondering about this one");
+
+        $reReComment = Comment::fetch($comment->getId());
+        $this->assertEquals("Wondering about this one", $reReComment->getMessage());
+        $this->assertEquals($reComment->getCreatedDate(), $reReComment->getCreatedDate());
+
+        $this->commentService->deleteComment($comment->getId());
+
+        try {
+            Comment::fetch($comment->getId());
+            $this->fail("Should have thrown here");
+        } catch (ObjectNotFoundException $e) {
+
+        }
 
 
     }
@@ -59,5 +80,32 @@ class CommentServiceTest extends TestBase {
         $this->assertEquals([$comment1], $this->commentService->searchForComments(ObjectScope::Contact, 1, "", 100, 1));
 
     }
+
+    public function testCanAttachUploadedFilesToCommentAndRemoveThem() {
+
+
+        // Create a comment
+        $comment = $this->commentService->createComment(ObjectScope::Contact, 5, "Hello world");
+
+        $fileUpload1 = new FileUpload("test", ["name" => "test . txt", "tmp_name" => __DIR__ . "/test.txt"]);
+        $fileUpload2 = new FileUpload("test", ["name" => "test2 . txt", "tmp_name" => __DIR__ . "/test2.txt"]);
+
+        $this->commentService->attachUploadedFilesToComment($comment->getId(), [$fileUpload1, $fileUpload2]);
+
+        $attachments = Attachment::filter("WHERE parent_object_type = ? and parent_object_id = ?", "CRMComment", $comment->getId());
+        $this->assertEquals(2, sizeof($attachments));
+        $this->assertEquals(file_get_contents(__DIR__ . "/test.txt"), $attachments[0]->getContent());
+        $this->assertEquals(file_get_contents(__DIR__ . "/test2.txt"), $attachments[1]->getContent());
+
+        $this->commentService->removeAttachmentFromComment($comment->getId(), $attachments[0]->getId());
+
+        $attachments = Attachment::filter("WHERE parent_object_type = ? and parent_object_id = ?", "CRMComment", $comment->getId());
+        $this->assertEquals(1, sizeof($attachments));
+        $this->assertEquals(file_get_contents(__DIR__ . "/test2.txt"), $attachments[0]->getContent());
+
+    }
+
+
+
 
 }

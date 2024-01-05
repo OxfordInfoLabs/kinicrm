@@ -4,6 +4,7 @@ namespace KiniCRM\Objects\CRM;
 
 use Kiniauth\Objects\Attachment\AttachmentSummary;
 use Kiniauth\Objects\Security\UserSummary;
+use Kiniauth\Traits\Application\Timestamped;
 use KiniCRM\ValueObjects\Enum\ObjectScope;
 use Kinikit\Persistence\ORM\ActiveRecord;
 
@@ -14,6 +15,8 @@ use Kinikit\Persistence\ORM\ActiveRecord;
  * @generate
  */
 class Comment extends ActiveRecord {
+
+    use Timestamped;
 
     /**
      * @var int
@@ -39,12 +42,6 @@ class Comment extends ActiveRecord {
      */
     private ?int $scopeId;
 
-
-    /**
-     * @var \DateTime
-     * @required
-     */
-    private ?\DateTime $dateTime;
 
 
     /**
@@ -74,16 +71,14 @@ class Comment extends ActiveRecord {
     /**
      * @param ObjectScope $scope
      * @param int $scopeId
-     * @param \DateTime $dateTime
      * @param UserSummary $userSummary
      * @param string $message
      * @param int $accountId
      * @param int $id
      */
-    public function __construct(?ObjectScope $scope, ?int $scopeId, ?\DateTime $dateTime, ?UserSummary $userSummary, ?string $message, ?int $accountId, ?int $id = null) {
+    public function __construct(?ObjectScope $scope, ?int $scopeId, ?UserSummary $userSummary, ?string $message, ?int $accountId, ?int $id = null) {
         $this->scope = $scope;
         $this->scopeId = $scopeId;
-        $this->dateTime = $dateTime;
         $this->userSummary = $userSummary;
         $this->message = $message;
         $this->accountId = $accountId;
@@ -134,19 +129,6 @@ class Comment extends ActiveRecord {
         $this->scopeId = $scopeId;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateTime(): \DateTime {
-        return $this->dateTime;
-    }
-
-    /**
-     * @param \DateTime $dateTime
-     */
-    public function setDateTime(\DateTime $dateTime): void {
-        $this->dateTime = $dateTime;
-    }
 
     /**
      * @return UserSummary
