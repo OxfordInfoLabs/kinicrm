@@ -3,13 +3,11 @@
 namespace KiniCRM\Controllers\Admin\CRM;
 
 use Kiniauth\Test\Services\Security\AuthenticationHelper;
-use KiniCRM\Objects\CRM\ItemTag;
 use KiniCRM\Objects\CRM\Tag;
 use KiniCRM\TestBase;
 use KiniCRM\ValueObjects\CRM\ContactItem;
 use KiniCRM\ValueObjects\CRM\TagItem;
 use Kinikit\Core\DependencyInjection\Container;
-use function PHPUnit\Framework\assertNotNull;
 
 include_once "autoloader.php";
 

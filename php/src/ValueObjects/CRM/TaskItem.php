@@ -2,6 +2,8 @@
 
 namespace KiniCRM\ValueObjects\CRM;
 
+use KiniCRM\Objects\CRM\Task;
+
 class TaskItem {
 
     /**
@@ -177,6 +179,25 @@ class TaskItem {
      */
     public function setAssignees(array $assignees): void {
         $this->assignees = $assignees;
+    }
+
+
+    /**
+     * @param Task $task
+     * @return TaskItem
+     */
+    public static function fromTask($task) {
+
+        $assignees = array_map(function ($userSummary) {
+            return $userSummary ?: UserSummaryItem::fromUserSummary($userSummary);
+        }, $task->getAssignees());
+
+        return new TaskItem($task->getTitle(), $task->getDescription(),
+            $task->getDueDate()?->format("Y-m-d"),
+            $task->getStatus() ?: ReferenceTypeItem::fromReferenceType($task->getStatus()),
+            $task->getPriority() ?: ReferenceTypeItem::fromReferenceType($task->getPriority()),
+            $task->getCreator() ?: UserSummaryItem::fromUserSummary($task->getCreator()),
+            $assignees, $task->getId());
     }
 
 

@@ -43,6 +43,7 @@ class Task extends ActiveRecord {
 
     /**
      * @var \DateTime
+     * @sqlType DATE
      */
     private \DateTime $dueDate;
 

@@ -3,7 +3,6 @@
 namespace KiniCRM\ValueObjects\CRM;
 
 use KiniCRM\Objects\CRM\ItemCategory;
-use KiniCRM\Objects\CRM\ItemTag;
 
 class CategoryItem {
 

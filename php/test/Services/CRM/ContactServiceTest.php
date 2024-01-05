@@ -9,7 +9,6 @@ use KiniCRM\Objects\CRM\Address;
 use KiniCRM\Objects\CRM\Category;
 use KiniCRM\Objects\CRM\Contact;
 use KiniCRM\Objects\CRM\ContactUserSummary;
-use KiniCRM\Objects\CRM\ItemTag;
 use KiniCRM\Objects\CRM\Organisation;
 use KiniCRM\Objects\CRM\Tag;
 use KiniCRM\TestBase;

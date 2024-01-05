@@ -2,6 +2,8 @@
 
 namespace KiniCRM\ValueObjects\CRM;
 
+use KiniCRM\Objects\CRM\ReferenceType;
+
 class ReferenceTypeItem {
 
     /**
@@ -72,6 +74,17 @@ class ReferenceTypeItem {
      */
     public function setDescription(string $description): void {
         $this->description = $description;
+    }
+
+
+    /**
+     * Convert a reference type into an item
+     *
+     * @param ReferenceType $referenceType
+     * @return ReferenceTypeItem
+     */
+    public static function fromReferenceType($referenceType) {
+        return new ReferenceTypeItem($referenceType->getName(), $referenceType->getDescription(), $referenceType->getId());
     }
 
 

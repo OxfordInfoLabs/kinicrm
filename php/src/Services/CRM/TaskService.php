@@ -2,7 +2,9 @@
 
 namespace KiniCRM\Services\CRM;
 
-use KiniCRM\Objects\CRM\Contact;
+use Kiniauth\Objects\Account\Account;
+use Kiniauth\Objects\Security\User;
+use Kiniauth\Objects\Security\UserSummary;
 use KiniCRM\Objects\CRM\Task;
 use Kinikit\Core\Util\ArrayUtils;
 use Kinikit\Persistence\ORM\Query\Filter\LikeFilter;
@@ -44,7 +46,7 @@ class TaskService {
         // Process filters
         $filters = $this->processQueryFilters($filters);
 
-        return $query->query($filters, "dueDate DESC", $limit, $offset);
+        return $query->query($filters, "dueDate", $limit, $offset);
 
 
     }
@@ -80,7 +82,14 @@ class TaskService {
      * @param Task $task
      * @return Task
      */
-    public function saveTask($task) {
+    public function saveTask($task, $accountId = Account::LOGGED_IN_ACCOUNT, $userId = User::LOGGED_IN_USER) {
+
+        // Update account id and creator if necessary
+        $task->setAccountId($accountId);
+        if (!$task->getCreator()) {
+            $task->setCreator($userSummary = UserSummary::fetch($userId));
+        }
+
         $task->save();
         return Task::fetch($task->getId());
     }
@@ -110,7 +119,7 @@ class TaskService {
         $filters = ArrayUtils::mapArrayKeys($filters, self::FILTER_MAP);
 
         if (isset($filters["search"])) {
-            $filters["search"] = new LikeFilter(["title", "description", "assignee.name"], "%" . $filters["search"] . "%");
+            $filters["search"] = new LikeFilter(["title", "description", "assignees.name", "assignees.email_address"], "%" . $filters["search"] . "%");
         }
         return $filters;
     }

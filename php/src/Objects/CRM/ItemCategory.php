@@ -3,7 +3,6 @@
 namespace KiniCRM\Objects\CRM;
 
 use KiniCRM\ValueObjects\CRM\CategoryItem;
-use KiniCRM\ValueObjects\CRM\TagItem;
 use KiniCRM\ValueObjects\Enum\ObjectScope;
 
 /**
