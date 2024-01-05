@@ -2,6 +2,7 @@
 
 namespace KiniCRM\Objects\CRM;
 
+use Kiniauth\Objects\Attachment\AttachmentSummary;
 use Kiniauth\Objects\Security\UserSummary;
 use KiniCRM\ValueObjects\Enum\ObjectScope;
 use Kinikit\Persistence\ORM\ActiveRecord;
@@ -60,6 +61,15 @@ class Comment extends ActiveRecord {
      * @required
      */
     private ?string $message;
+
+
+    /**
+     * @var AttachmentSummary[]
+     * @oneToMany
+     * @readOnly
+     * @childJoinColumns parent_object_id,parent_object_type=CRMComment
+     */
+    private ?array $attachments = [];
 
     /**
      * @param ObjectScope $scope
@@ -164,6 +174,20 @@ class Comment extends ActiveRecord {
      */
     public function setMessage(string $message): void {
         $this->message = $message;
+    }
+
+    /**
+     * @return AttachmentSummary[]
+     */
+    public function getAttachments(): array {
+        return $this->attachments;
+    }
+
+    /**
+     * @param AttachmentSummary[] $attachments
+     */
+    public function setAttachments(array $attachments): void {
+        $this->attachments = $attachments;
     }
 
 

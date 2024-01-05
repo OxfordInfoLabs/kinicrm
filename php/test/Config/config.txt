@@ -1,3 +1,6 @@
+
+application.namespace = KiniCRM
+
 db.provider = sqlite3
 db.filename = DB/kinicrm-test.db
 db.logFile = DB/db.log

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "type": "Status",
+    "name": "Pending",
+    "description": "Task awaiting start"
+  },
+  {
+    "id": 2,
+    "type": "Status",
+    "name": "In Progress",
+    "description": "Task started"
+  },
+  {
+    "id": 3,
+    "type": "Status",
+    "name": "Completed",
+    "description": "Task completed"
+  },
+  {
+    "id": 4,
+    "type": "Priority",
+    "name": "Low",
+    "description": "Low Priority"
+  },
+  {
+    "id": 5,
+    "type": "Priority",
+    "name": "Medium",
+    "description": "Medium Priority"
+  },
+  {
+    "id": 6,
+    "type": "Priority",
+    "name": "High",
+    "description": "High Priority"
+  }
+]

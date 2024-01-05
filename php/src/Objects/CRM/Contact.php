@@ -7,7 +7,6 @@ use Kiniauth\Objects\Security\UserSummary;
 use Kiniauth\Traits\Application\Timestamped;
 use KiniCRM\ValueObjects\CRM\ContactItem;
 use KiniCRM\ValueObjects\CRM\OrganisationDepartmentItem;
-use KiniCRM\ValueObjects\Enum\ObjectScope;
 use Kinikit\Persistence\ORM\ActiveRecord;
 use Kinimailer\Objects\MailingList\MailingListSubscriber;
 
