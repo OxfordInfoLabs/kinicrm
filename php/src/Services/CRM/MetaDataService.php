@@ -4,6 +4,7 @@ namespace KiniCRM\Services\CRM;
 
 
 use KiniCRM\Objects\CRM\Category;
+use KiniCRM\Objects\CRM\ReferenceType;
 use KiniCRM\Objects\CRM\Tag;
 use Kinikit\Persistence\ORM\Query\Filter\LikeFilter;
 use Kinikit\Persistence\ORM\Query\Query;
@@ -72,6 +73,17 @@ class MetaDataService {
     public function deleteCategory($categoryId) {
         $category = Category::fetch($categoryId);
         $category->remove();
+    }
+
+
+    /**
+     * Return all reference types for a given type.
+     *
+     * @param $type
+     * @return ReferenceType[]
+     */
+    public function getReferenceTypes($type): array {
+        return ReferenceType::filter("WHERE type = ?", $type);
     }
 
 }

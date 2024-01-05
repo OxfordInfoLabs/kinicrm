@@ -3,6 +3,7 @@
 namespace KiniCRM\Services\CRM;
 
 use KiniCRM\Objects\CRM\Category;
+use KiniCRM\Objects\CRM\ReferenceType;
 use KiniCRM\Objects\CRM\Tag;
 use KiniCRM\TestBase;
 use KiniCRM\ValueObjects\CRM\CategoryItem;
@@ -47,7 +48,7 @@ class MetaDataServiceTest extends TestBase {
         try {
             Tag::fetch($tag1->getId());
             $this->fail("Should have thrown here");
-        } catch (ObjectNotFoundException $e){
+        } catch (ObjectNotFoundException $e) {
             // Good
         }
 
@@ -78,10 +79,17 @@ class MetaDataServiceTest extends TestBase {
         try {
             Category::fetch($category1->getId());
             $this->fail("Should have thrown here");
-        } catch (ObjectNotFoundException $e){
+        } catch (ObjectNotFoundException $e) {
             // Good
         }
 
+
+    }
+
+    public function testCanGetAllReferenceTypesForType() {
+
+        $this->assertEquals([ReferenceType::fetch(1), ReferenceType::fetch(2), ReferenceType::fetch(3)], $this->metaDataService->getReferenceTypes("Status"));
+        $this->assertEquals([ReferenceType::fetch(4), ReferenceType::fetch(5), ReferenceType::fetch(6)], $this->metaDataService->getReferenceTypes("Priority"));
 
     }
 

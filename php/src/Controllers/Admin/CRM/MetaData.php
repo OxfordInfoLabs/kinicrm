@@ -4,6 +4,7 @@ namespace KiniCRM\Controllers\Admin\CRM;
 
 use KiniCRM\Services\CRM\MetaDataService;
 use KiniCRM\ValueObjects\CRM\CategoryItem;
+use KiniCRM\ValueObjects\CRM\ReferenceTypeItem;
 use KiniCRM\ValueObjects\CRM\TagItem;
 
 
@@ -81,6 +82,19 @@ class MetaData {
      */
     public function deleteCategory($categoryId) {
         $this->metaDataService->deleteCategory($categoryId);
+    }
+
+
+    /**
+     * @http GET /referenceTypes/$type
+     *
+     * @param $type
+     * @return ReferenceTypeItem[]
+     */
+    public function getReferenceTypes($type) {
+        return array_map(function ($type) {
+            return ReferenceTypeItem::fromReferenceType($type);
+        }, $this->metaDataService->getReferenceTypes($type));
     }
 
 }
