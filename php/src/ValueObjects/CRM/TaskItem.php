@@ -194,9 +194,9 @@ class TaskItem {
 
         return new TaskItem($task->getTitle(), $task->getDescription(),
             $task->getDueDate()?->format("Y-m-d"),
-            $task->getStatus() ?: ReferenceTypeItem::fromReferenceType($task->getStatus()),
-            $task->getPriority() ?: ReferenceTypeItem::fromReferenceType($task->getPriority()),
-            $task->getCreator() ?: UserSummaryItem::fromUserSummary($task->getCreator()),
+            $task->getStatus() ? ReferenceTypeItem::fromReferenceType($task->getStatus()) : null,
+            $task->getPriority() ? ReferenceTypeItem::fromReferenceType($task->getPriority()) : null,
+            $task->getCreator() ? UserSummaryItem::fromUserSummary($task->getCreator()) : null,
             $assignees, $task->getId());
     }
 
