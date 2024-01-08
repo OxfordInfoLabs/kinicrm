@@ -24,6 +24,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatTabsModule} from '@angular/material/tabs';
+import { TasksComponent } from './components/tasks/tasks.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import {MatTabsModule} from '@angular/material/tabs';
         EditDepartmentComponent,
         AddressDialogComponent,
         OrganisationDialogComponent,
-        ContactDialogComponent
+        ContactDialogComponent,
+        TasksComponent
     ],
     imports: [
         BrowserModule,

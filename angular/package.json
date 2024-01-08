@@ -23,7 +23,7 @@
         "js-sha512": "^0.8.0",
         "lodash": "^4.17.21",
         "moment": "^2.29.4",
-        "ng-kiniauth": "0.14.44",
+        "ng-kiniauth": "0.14.45",
         "ng-recaptcha": "^11.0.0",
         "ngx-kinimailer": "file:../../kinimailer/angular/ngx-kinimailer/dist/ngx-kinimailer",
         "ngx-google-places-autocomplete": "^2.0.5",

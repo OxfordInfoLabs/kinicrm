@@ -19,6 +19,8 @@ class TaskService {
         "status" => "status.name",
         "assignee" => "assignees.name",
         "search" => "search",
+        "scope" => "scope",
+        "scopeId" => "scopeId"
     ];
 
 

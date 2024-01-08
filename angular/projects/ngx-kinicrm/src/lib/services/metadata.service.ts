@@ -28,4 +28,9 @@ export class MetadataService {
             }
         })
     }
+
+    public getReferenceTypes(type: string) {
+        const url = this.config.adminHttpURL + '/crm/metadata/referenceTypes/' + type;
+        return this.http.get(url).toPromise()
+    }
 }

@@ -1,0 +1,226 @@
+<div class="p-6 bg-white space-y-4">
+    <div class="grid grid-cols-7 gap-7">
+        <div class="col-span-5">
+            <label class="text-sm font-medium leading-6 text-gray-900">Task Title</label>
+            <input type="text" [(ngModel)]="newTask.title"
+                   class="py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+        </div>
+        <div class="col-span-2">
+            <label class="text-sm font-medium leading-6 text-gray-900">Due Date</label>
+            <input type="date" [(ngModel)]="newTask.dueDate"
+                   class="py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+        </div>
+    </div>
+
+    <div class="col-span-6">
+        <label class="text-sm font-medium leading-6 text-gray-900">Task Description</label>
+        <textarea rows="2" [(ngModel)]="newTask.description"
+                  class="w-full py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+
+        </textarea>
+    </div>
+
+    <div class="grid grid-cols-7 gap-7">
+        <div class="col-span-3 sm:col-span-2">
+            <label class="text-sm font-medium leading-6 text-gray-900">Assigned To</label>
+            <mat-select [(ngModel)]="newTask.assignees" [multiple]="true"
+                        class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <mat-option *ngFor="let user of users" [value]="user">{{ user.name }}</mat-option>
+            </mat-select>
+        </div>
+
+        <div class="col-span-3 sm:col-span-2">
+            <label class="text-sm font-medium leading-6 text-gray-900">Priority</label>
+            <mat-select [(ngModel)]="newTask.priority"
+                        class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <mat-option *ngFor="let priority of priorities" [value]="priority">{{ priority.name }}</mat-option>
+            </mat-select>
+        </div>
+
+        <div class="col-span-3 sm:col-span-2">
+            <label class="text-sm font-medium leading-6 text-gray-900">Status</label>
+            <mat-select [(ngModel)]="newTask.status"
+                        class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <mat-option *ngFor="let status of statuses" [value]="status">{{ status.name }}</mat-option>
+            </mat-select>
+        </div>
+
+        <div class="col-span-1 flex items-end">
+            <button type="submit" (click)="saveNewTask(newTask)"
+                    class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Add Task
+            </button>
+        </div>
+    </div>
+
+</div>
+<table class="min-w-full">
+    <thead class="bg-gray-50">
+    <tr>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Priority
+        </th>
+        <th scope="col" class="w-1/2 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Task
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Due
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Assignees
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Status
+        </th>
+        <th scope="col" class="relative px-6 py-3">
+            <span class="sr-only">Edit</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody *ngIf="!tasks.length" class="bg-white divide-y divide-gray-200">
+    <tr>
+        <td colspan="6" class="px-6 py-4 whitespace-nowrap">
+            There are no tasks currently associated with this {{scope}}.
+        </td>
+    </tr>
+    </tbody>
+    <ng-template [ngIf]="tasks.length">
+        <ng-template ngFor let-task [ngForOf]="tasks" [ngForTrackBy]="trackByFn">
+            <tbody [ngClass]="{'bg-white': !task.edit, 'bg-gray-50': task.edit}">
+            <tr>
+                <td class="px-6 py-4 whitespace-nowrap" [ngClass]="{'border-none': task.edit}">
+                    <mat-select [(ngModel)]="task.priority" [compareWith]="bindSelectValue"
+                                (ngModelChange)="updateTaskItem(task)"
+                                [ngClass]="{'bg-blue-100 border-blue-200 text-blue-600': task.priority.name === 'Low',
+                                            'bg-orange-100 border-orange-200 text-orange-600': task.priority.name === 'Medium',
+                                            'bg-red-100 border-red-200 text-red-600': task.priority.name === 'High'}"
+                                class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <mat-option *ngFor="let priority of priorities" [value]="priority">{{ priority.name }}</mat-option>
+                    </mat-select>
+                </td>
+                <td class="px-6 py-4" [ngClass]="{'border-none': task.edit}">
+                    <div class="text-sm text-gray-900">
+                        {{ task.title }}
+                    </div>
+                    <div class="text-xs text-gray-500 truncate w-full">
+                        {{ task.description }}
+                    </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" [ngClass]="{'border-none': task.edit}" style="min-width: 200px">
+                    {{
+                        moment(task.dueDate).calendar(null, {
+                            sameDay: '[Today]',
+                            nextDay: '[Tomorrow]',
+                            nextWeek: 'dddd',
+                            lastDay: '[Yesterday]',
+                            lastWeek: '[Last]',
+                            sameElse: 'DD/MM/YYYY'
+                        })
+                    }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap font-medium" style="min-width: 210px" [ngClass]="{'border-none': task.edit}">
+                    <div>{{ task.assignees.length ? _.map(task.assignees, 'name').join(', ') : '' }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" [ngClass]="{'border-none': task.edit}">
+                    <mat-select [(ngModel)]="task.status" [compareWith]="bindSelectValue"
+                                (ngModelChange)="updateTaskItem(task)"
+                                [ngClass]="{'bg-purple-600 border-purple-800 text-purple-50': task.status.name === 'Pending',
+                        'bg-blue-600 border-blue-800 text-blue-50': task.status.name === 'In Progress',
+                        'bg-green-600 border-green-800 text-green-50': task.status.name === 'Completed'}"
+                                class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <mat-option *ngFor="let status of statuses" [value]="status">{{ status.name }}</mat-option>
+                    </mat-select>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" [ngClass]="{'border-none': task.edit}">
+                    <a href="javascript:void(0)" (click)="task.edit = !task.edit"
+                       class="text-gray-600 hover:text-gray-800 text-right inline-block mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                            <path
+                                d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z"/>
+                            <path
+                                d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z"/>
+                        </svg>
+
+                    </a>
+                    <a href="javascript:void(0)" (click)="deleteTask(task.id)"
+                       class="text-red-600 hover:text-red-800 text-right inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                             stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                    </a>
+
+                </td>
+            </tr>
+
+            </tbody>
+            <tbody *ngIf="task.edit" class="bg-gray-50">
+            <tr>
+                <td colspan="6" class="p-0">
+                    <div class="p-6 pt-0 space-y-4">
+                        <div class="grid grid-cols-7 gap-7">
+                            <div class="col-span-5">
+                                <label class="text-sm font-medium leading-6 text-gray-900">Task Title</label>
+                                <input type="text" [(ngModel)]="task.title"
+                                       class="py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+                            <div class="col-span-2">
+                                <label class="text-sm font-medium leading-6 text-gray-900">Due Date</label>
+                                <input type="date" [(ngModel)]="task.dueDate"
+                                       class="py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+                        </div>
+
+                        <div class="col-span-6">
+                            <label class="text-sm font-medium leading-6 text-gray-900">Task Description</label>
+                            <textarea rows="2" [(ngModel)]="task.description"
+                                      class="w-full py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+
+                            </textarea>
+                        </div>
+
+                        <div class="grid grid-cols-7 gap-7">
+                            <div class="col-span-3 sm:col-span-2">
+                                <label class="text-sm font-medium leading-6 text-gray-900">Assigned To</label>
+                                <mat-select [(ngModel)]="task.assignees" [multiple]="true" [compareWith]="bindSelectValue"
+                                            class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <mat-option *ngFor="let user of users" [value]="user">{{ user.name }}</mat-option>
+                                </mat-select>
+                            </div>
+
+                            <div class="col-span-3 sm:col-span-2">
+                                <label class="text-sm font-medium leading-6 text-gray-900">Priority</label>
+                                <mat-select [(ngModel)]="task.priority" [compareWith]="bindSelectValue"
+                                            class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <mat-option *ngFor="let priority of priorities"
+                                                [value]="priority">{{ priority.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+
+                            <div class="col-span-3 sm:col-span-2">
+                                <label class="text-sm font-medium leading-6 text-gray-900">Status</label>
+                                <mat-select [(ngModel)]="task.status" [compareWith]="bindSelectValue"
+                                            class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <mat-option *ngFor="let status of statuses" [value]="status">{{ status.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+
+                            <div class="col-span-1 flex items-end">
+                                <button type="submit" (click)="saveNewTask(task)"
+                                        class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Save Task
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </ng-template>
+    </ng-template>
+
+</table>

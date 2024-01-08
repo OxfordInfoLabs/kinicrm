@@ -363,6 +363,16 @@
         <div class="bg-gray-50 px-4 py-3 text-right sm:px-6"></div>
     </div>
 
+    <div *ngIf="organisation.id" class="shadow sm:overflow-hidden sm:rounded-md mb-8">
+        <div class="space-y-6 bg-white">
+            <div>
+                <h2 class="px-4 pt-6 mb-0 pb-0 text-base font-semibold leading-7 ">Organisation Tasks</h2>
+            </div>
+
+            <kcrm-tasks scope="Organisation" [scopeId]="organisation.id"></kcrm-tasks>
+        </div>
+    </div>
+
     <div *ngIf="organisation.id" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 
         <div class="shadow sm:overflow-hidden sm:rounded-md mb-8">
