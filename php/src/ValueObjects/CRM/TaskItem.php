@@ -156,14 +156,14 @@ class TaskItem {
     /**
      * @return UserSummaryItem
      */
-    public function getCreatedBy(): UserSummaryItem {
+    public function getCreatedBy(): ?UserSummaryItem {
         return $this->createdBy;
     }
 
     /**
      * @param UserSummaryItem $createdBy
      */
-    public function setCreatedBy(UserSummaryItem $createdBy): void {
+    public function setCreatedBy(?UserSummaryItem $createdBy): void {
         $this->createdBy = $createdBy;
     }
 
