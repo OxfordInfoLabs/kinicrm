@@ -78,6 +78,20 @@ class Task {
 
 
     /**
+     * Update a task
+     *
+     * @http PUT /$id
+     *
+     * @param integer $id
+     * @param TaskItem $taskItem
+     * @return TaskItem
+     */
+    public function updateTask($id, $taskItem) {
+        $task = $this->taskService->getTask($id);
+        return TaskItem::fromTask($this->taskService->saveTask(new \KiniCRM\Objects\CRM\Task($taskItem, $task->getScope(), $task->getScopeId(), 0)));
+    }
+
+    /**
      * Remove a task by id
      *
      * @http DELETE /

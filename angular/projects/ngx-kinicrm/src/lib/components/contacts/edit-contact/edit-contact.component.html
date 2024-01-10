@@ -18,7 +18,7 @@
     </div>
 </div>
 
-<mat-tab-group animationDuration="0ms">
+<mat-tab-group animationDuration="0ms" [selectedIndex]="selectedIndex" (selectedTabChange)="tabChange($event)">
     <mat-tab label="Details">
         <div class="mx-auto max-w-7xl mt-8">
             <div class="shadow sm:overflow-hidden sm:rounded-md mb-8">
@@ -465,7 +465,7 @@
             </div>
         </div>
     </mat-tab>
-    <mat-tab label="Tasks">
+    <mat-tab *ngIf="contact.id" label="Tasks">
 
         <div class="mx-auto max-w-7xl mt-8">
             <div class="flex flex-col shadow sm:overflow-hidden sm:rounded-md mb-8">
@@ -479,68 +479,11 @@
         <div class="mx-auto max-w-7xl mt-8">
 
             <div class="shadow sm:overflow-hidden sm:rounded-md mb-8">
-                <div class="space-y-6 bg-white px-4 py-6 sm:p-6">
-                    <div>
-                        <h3 class="text-base font-semibold leading-6 text-gray-900">Comments</h3>
-                        <p class="mt-1 text-sm text-gray-500">Add comments to this contact</p>
-                    </div>
-
-                    <div class="max-h-96 overflow-y-scroll px-4">
-                        <ul role="list" class="space-y-8">
-                            <li *ngFor="let comment of comments">
-                                <div class="flex space-x-3">
-                                    <div class="flex-shrink-0">
-                                        <img class="h-10 w-10 rounded-full"
-                                             [src]="comment.gravatarURL" alt="">
-                                    </div>
-                                    <div class="bg-gray-100 py-2 pl-2 pr-8 rounded-lg">
-                                        <div class="text-sm">
-                                            <a *ngIf="comment.user"
-                                               class="font-medium text-gray-900">{{comment.user.name}}</a>
-                                        </div>
-                                        <div class="mt-1 text-sm text-gray-700">
-                                            <p class="whitespace-pre-line">{{comment.message}}</p>
-                                        </div>
-                                        <div class="mt-2 space-x-2 text-sm">
-                                                <span
-                                                    class="font-medium text-xs text-gray-500">{{comment.displayDate}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6">
-                    <div class="flex space-x-3">
-                        <div class="flex-shrink-0">
-                            <img class="h-10 w-10 rounded-full"
-                                 [src]="loggedInGravatar" alt="">
-                        </div>
-                        <div class="min-w-0 flex-1">
-                            <div>
-                            <textarea name="comment" rows="3" #comment (keydown)="addComment(comment, $event)"
-                                      class="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-                                      placeholder="Add comment"></textarea>
-                            </div>
-                            <div class="mt-3 flex items-center justify-between">
-                                <div class="text-xs text-gray-500 self-start">
-                                    Commenting as {{loggedInUser.name}}<{{loggedInUser.emailAddress}}><br>
-                                    Shift + Enter for new line
-                                </div>
-                                <button type="button" (click)="addComment(comment)"
-                                        class="inline-flex items-center justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm ">
-                                    Comment
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <kcrm-comments scope="Contact" [scopeId]="contact.id"></kcrm-comments>
             </div>
         </div>
     </mat-tab>
-    <mat-tab label="Emails">
+    <mat-tab *ngIf="contact.id"label="Emails">
 
         <div class="mx-auto max-w-7xl mt-8">
             <div class="flex flex-col bg-white shadow sm:overflow-hidden sm:rounded-md mb-8">

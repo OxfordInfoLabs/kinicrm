@@ -1,5 +1,5 @@
 import {Component, OnInit, Output, EventEmitter, Input, ViewChild, ElementRef} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ContactService} from '../../../services/contact.service';
 import {AddressService} from '../../../services/address.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -21,6 +21,7 @@ import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import * as _ from 'lodash';
 import moment from 'moment';
 import {DomSanitizer} from '@angular/platform-browser';
+import {MatTabChangeEvent} from '@angular/material/tabs';
 
 @Component({
     selector: 'kcrm-edit-contact',
@@ -58,6 +59,9 @@ export class EditContactComponent implements OnInit {
     public emailExists = false;
     public mailingLists: any = [];
     public contactEmails: any = [];
+    public selectedIndex = 0;
+
+    private currentURL = '';
 
     constructor(private route: ActivatedRoute,
                 private contactService: ContactService,
@@ -71,10 +75,14 @@ export class EditContactComponent implements OnInit {
                 private authService: AuthenticationService,
                 private metadataService: MetadataService,
                 private communicationService: CommunicationService,
-                private sanitise: DomSanitizer) {
+                private sanitise: DomSanitizer,
+                private router: Router) {
     }
 
     async ngOnInit() {
+        this.route.url.subscribe((url: any) => {
+            this.currentURL = '/' + _.map(url, 'path').join('/');
+        });
         merge(this.organisationSearch)
             .pipe(
                 debounceTime(300),
@@ -130,10 +138,13 @@ export class EditContactComponent implements OnInit {
                 this.contactEmails = await this.communicationService.filterStoredEmails(this.contact.emailAddress).toPromise();
             }
 
-            if (this.contact.id) {
-                this.loadComments();
-            }
+            this.route.fragment.subscribe((fragment: any) => {
+                if (fragment !== null) {
+                    this.selectedIndex = fragment;
+                }
+            });
         });
+
 
         const params: any = this.route.snapshot.params;
         if (!params.id) {
@@ -144,6 +155,10 @@ export class EditContactComponent implements OnInit {
         this.loggedInGravatar = await this.gravatarService.getGravatarURL(this.loggedInUser.emailAddress);
 
         this.mailingLists = await this.contactService.getMailingLists();
+    }
+
+    public tabChange(event: MatTabChangeEvent) {
+        this.router.navigate([this.currentURL], {fragment: (event.index).toString()});
     }
 
     public async previewEmail(email: any) {
@@ -307,19 +322,6 @@ export class EditContactComponent implements OnInit {
         reader.readAsDataURL(file);
     }
 
-    public async addComment(target: any, event?: any) {
-        if (event) {
-            const keyCode = event.which || event.keyCode;
-            if (keyCode === 13 && !event.shiftKey) {
-                event.preventDefault();
-
-                this.sendComment(target);
-            }
-        } else {
-            this.sendComment(target);
-        }
-    }
-
     public async attachmentsUpload(event: any) {
         const files: any[] = Array.from(event.target.files);
 
@@ -364,15 +366,6 @@ export class EditContactComponent implements OnInit {
         if (this.back) {
             this.location.back();
         }
-    }
-
-    private async sendComment(target: any) {
-        if (target.value) {
-            await this.commentService.createComment('Contact', this.contact.id, target.value);
-        }
-
-        target.value = '';
-        this.loadComments();
     }
 
     private loadAddresses() {
@@ -422,10 +415,6 @@ export class EditContactComponent implements OnInit {
         this.contact.subscribedMailingListIds = _.map(this.contact.subscribedMailingLists, 'mailingListId');
 
         this.loading = false;
-    }
-
-    private async loadComments() {
-        this.comments = await this.commentService.searchForComments('Contact', this.contact.id).toPromise();
     }
 
     private toDataURL(url: string, callback: any) {

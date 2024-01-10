@@ -12,5 +12,7 @@ export * from './lib/components/address-book/address-book.component';
 export * from './lib/components/address-book/address/address.component';
 export * from './lib/components/organisations/organisations.component';
 export * from './lib/components/organisations/edit-organisation/edit-organisation.component';
+export * from './lib/components/tasks/tasks.component';
+export * from './lib/components/tasks/task/task.component';
 
 export * from './lib/ngx-kinicrm.module';

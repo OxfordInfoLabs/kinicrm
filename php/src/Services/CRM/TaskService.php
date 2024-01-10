@@ -18,6 +18,7 @@ class TaskService {
         "priority" => "priority.name",
         "status" => "status.name",
         "assignee" => "assignees.name",
+        "assigneeEmail" => "assignees.email_address",
         "search" => "search",
         "scope" => "scope",
         "scopeId" => "scopeId"

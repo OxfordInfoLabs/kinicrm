@@ -1,0 +1,200 @@
+<div class="p-1 border-b w-full flex items-center">
+    <button mat-icon-button (click)="back()">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+</div>
+<main *ngIf="task" class="flex-1 mt-8 h-full bg-white">
+    <div class="h-full bg-white">
+        <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 xl:grid xl:max-w-6xl xl:grid-cols-3">
+            <div class="xl:col-span-2 xl:border-r xl:border-gray-200">
+                <div>
+                    <div>
+                        <div class="md:flex md:items-center md:justify-between md:space-x-4 xl:border-b">
+                            <div class="w-full xl:pr-8">
+                                <input class="text-2xl font-bold text-gray-900 w-full py-2" [(ngModel)]="task.title">
+                                <p class="mt-2 text-sm text-gray-500">
+                                    #{{task.id}} opened by
+                                    <a href="#" class="font-medium text-gray-900">{{task.createdBy.name}}</a>
+                                </p>
+                            </div>
+                        </div>
+                        <aside class="xl:hidden">
+                            <h2 class="sr-only">Details</h2>
+                            <div class="space-y-5">
+                                <div class="flex items-center space-x-2">
+                                    <div *ngIf="!updateDate" (click)="updateDate = !updateDate"
+                                         class="flex w-full p-4 items-center border-l-8 text-white cursor-pointer"
+                                         [ngClass]="{'border-red-400 bg-red-500': moment(task.dueDate).isSameOrBefore(moment().format('YYYY-MM-DD')) && task.status.name !== 'Completed',
+                                            'border-gray-300 bg-gray-400':  task.status.name === 'Completed' || moment(task.dueDate).isSameOrAfter(moment().add(3, 'days').format('YYYY-MM-DD')),
+                                            'border-orange-300 bg-orange-400': (moment(task.dueDate).isAfter(moment().format('YYYY-MM-DD')) && moment(task.dueDate).isSameOrBefore(moment().add(3, 'days').format('YYYY-MM-DD'))) && task.status.name !== 'Completed'}">
+                                        <svg class="h-5 w-5 mr-3 "
+                                             viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span class="text-base font-thin">Due {{
+                                                moment(task.dueDate).calendar(null, {
+                                                    sameDay: '[Today]',
+                                                    nextDay: '[Tomorrow]',
+                                                    nextWeek: 'dddd',
+                                                    lastDay: '[Yesterday]',
+                                                    lastWeek: '[Last]',
+                                                    sameElse: 'DD/MM/YYYY'
+                                                })
+                                            }}</span>
+                                    </div>
+                                    <input type="date" class="w-full" [(ngModel)]="task.dueDate" *ngIf="updateDate"
+                                           (ngModelChange)="updateDate = !updateDate">
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <div>
+                                        <h2 class="text-sm font-medium text-gray-500">Priority</h2>
+                                        <mat-select [(ngModel)]="task.priority" [compareWith]="bindSelectValue"
+                                                    (ngModelChange)="saveTask(task)"
+                                                    [ngClass]="{'bg-blue-100 text-blue-600': task.priority.name === 'Low',
+                                                'bg-orange-100 text-orange-600': task.priority.name === 'Medium',
+                                                'bg-red-100 text-red-600': task.priority.name === 'High'}"
+                                                    class="w-24 mt-1 block py-1.5 px-3 border-none bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
+                                            <mat-option *ngFor="let priority of priorities" [value]="priority">{{ priority.name }}</mat-option>
+                                        </mat-select>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <div>
+                                        <h2 class="text-sm font-medium text-gray-500">Status</h2>
+                                        <mat-select [(ngModel)]="task.status" [compareWith]="bindSelectValue"
+                                                    (ngModelChange)="saveTask(task)"
+                                                    [ngClass]="{'bg-purple-600 text-purple-50': task.status.name === 'Pending',
+                                                'bg-blue-600 text-blue-50': task.status.name === 'In Progress',
+                                                'bg-green-600 text-green-50': task.status.name === 'Completed'}"
+                                                    class="w-32 mt-1 block py-1.5 px-3 border-none bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
+                                            <mat-option *ngFor="let status of statuses" [value]="status">{{ status.name }}</mat-option>
+                                        </mat-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 space-y-8 border-b border-t border-gray-200 py-6">
+                                <div>
+                                    <h2 class="text-sm font-medium text-gray-500">Assignees</h2>
+                                    <ul *ngIf="task.assignees.length" role="list" class="mt-3 space-y-3">
+                                        <li *ngFor="let assignee of task.assignees" class="flex justify-start">
+                                            <a class="flex items-center space-x-3">
+                                                <div class="flex-shrink-0">
+                                                    <img class="h-5 w-5 rounded-full" [src]="assignee.photo || 'https://gravatar.com/avatar/?d=mp&s=512'" alt="">
+                                                </div>
+                                                <div class="text-sm font-medium text-gray-900">{{assignee.name}}</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <mat-select [(ngModel)]="task.assignees" [multiple]="true" [compareWith]="bindSelectValue"
+                                                (ngModelChange)="saveTask(task)"
+                                                class="mt-4 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
+                                        <mat-option *ngFor="let user of users" [value]="user">{{ user.name }}</mat-option>
+                                    </mat-select>
+                                </div>
+                            </div>
+                            <div class="mt-6 space-y-8 border-t border-gray-200 py-6">
+                                <div class="flex items-center space-x-2">
+                                    <button type="button" (click)="saveTask(task)"
+                                            class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary ">
+                                        Save Task
+                                    </button>
+                                </div>
+                            </div>
+                        </aside>
+                        <div class="py-3 xl:pb-0 xl:pt-6 xl:pr-8">
+                            <textarea class="w-full" rows="10" [(ngModel)]="task.description">
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+                <section aria-labelledby="activity-title" class="mt-4">
+                    <kcrm-comments scope="Task" [scopeId]="task.id"></kcrm-comments>
+                </section>
+            </div>
+            <aside class="hidden xl:block xl:pl-8">
+                <h2 class="sr-only">Details</h2>
+                <div class="space-y-5">
+                    <div class="flex items-center space-x-2">
+                        <div *ngIf="!updateDate" (click)="updateDate = !updateDate"
+                             class="flex w-full p-4 items-center border-l-8 text-white cursor-pointer"
+                             [ngClass]="{'border-red-400 bg-red-500': moment(task.dueDate).isSameOrBefore(moment().format('YYYY-MM-DD')) && task.status.name !== 'Completed',
+                                            'border-gray-300 bg-gray-400':  task.status.name === 'Completed' || moment(task.dueDate).isSameOrAfter(moment().add(3, 'days').format('YYYY-MM-DD')),
+                                            'border-orange-300 bg-orange-400': (moment(task.dueDate).isAfter(moment().format('YYYY-MM-DD')) && moment(task.dueDate).isSameOrBefore(moment().add(3, 'days').format('YYYY-MM-DD'))) && task.status.name !== 'Completed'}">
+                            <svg class="h-5 w-5 mr-3 "
+                                 viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-base font-thin">Due {{
+                                moment(task.dueDate).calendar(null, {
+                                    sameDay: '[Today]',
+                                    nextDay: '[Tomorrow]',
+                                    nextWeek: 'dddd',
+                                    lastDay: '[Yesterday]',
+                                    lastWeek: '[Last]',
+                                    sameElse: 'DD/MM/YYYY'
+                                })
+                            }}</span>
+                        </div>
+                    <input type="date" class="w-full" [(ngModel)]="task.dueDate" *ngIf="updateDate"
+                        (ngModelChange)="updateDate = !updateDate">
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-full">
+                            <h2 class="text-sm font-medium text-gray-500 mb-1">Priority</h2>
+                            <mat-select [(ngModel)]="task.priority" [compareWith]="bindSelectValue"
+                                        (ngModelChange)="saveTask(task)"
+                                        [ngClass]="{'bg-blue-100 text-blue-600': task.priority.name === 'Low',
+                                                'bg-orange-100 text-orange-600': task.priority.name === 'Medium',
+                                                'bg-red-100 text-red-600': task.priority.name === 'High'}"
+                                        class="w-full mt-1 block py-1.5 px-3 border-none bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
+                                <mat-option *ngFor="let priority of priorities" [value]="priority">{{ priority.name }}</mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-full">
+                            <h2 class="text-sm font-medium text-gray-500 mb-1">Status</h2>
+                            <mat-select [(ngModel)]="task.status" [compareWith]="bindSelectValue"
+                                        (ngModelChange)="saveTask(task)"
+                                        [ngClass]="{'bg-purple-600 text-purple-50': task.status.name === 'Pending',
+                                                'bg-blue-600 text-blue-50': task.status.name === 'In Progress',
+                                                'bg-green-600 text-green-50': task.status.name === 'Completed'}"
+                                        class="w-full mt-1 block py-1.5 px-3 border-none bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
+                                <mat-option *ngFor="let status of statuses" [value]="status">{{ status.name }}</mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 space-y-8 border-t border-gray-200 py-6">
+                    <div>
+                        <h2 class="text-sm font-medium text-gray-500">Assignees</h2>
+                        <ul *ngIf="task.assignees.length" role="list" class="mt-3 space-y-3">
+                            <li *ngFor="let assignee of task.assignees" class="flex justify-start">
+                                <a class="flex items-center space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <img class="h-5 w-5 rounded-full" [src]="assignee.photo || 'https://gravatar.com/avatar/?d=mp&s=512'" alt="">
+                                    </div>
+                                    <div class="text-sm font-medium text-gray-900">{{assignee.name}}</div>
+                                </a>
+                            </li>
+                        </ul>
+                        <mat-select [(ngModel)]="task.assignees" [multiple]="true" [compareWith]="bindSelectValue"
+                                    (ngModelChange)="saveTask(task)"
+                                    class="mt-4 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
+                            <mat-option *ngFor="let user of users" [value]="user">{{ user.name }}</mat-option>
+                        </mat-select>
+                    </div>
+                </div>
+                <div class="mt-6 space-y-8 border-t border-gray-200 py-6">
+                    <div class="flex items-center space-x-2">
+                        <button type="button" (click)="saveTask(task)"
+                                class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary">
+                            Save Task
+                        </button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</main>
+

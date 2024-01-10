@@ -3,7 +3,7 @@ import {AddressService} from '../../../services/address.service';
 import {AddressDialogComponent} from '../../address-book/address-dialog/address-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {OrganisationService} from '../../../services/organisation.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {ContactService} from '../../../services/contact.service';
 import {ContactDialogComponent} from '../../contacts/contact-dialog/contact-dialog.component';
@@ -18,6 +18,7 @@ import * as _ from 'lodash';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {MetadataService} from '../../../services/metadata.service';
+import {MatTabChangeEvent} from '@angular/material/tabs';
 
 @Component({
     selector: 'kcrm-edit-organisation',
@@ -51,6 +52,9 @@ export class EditOrganisationComponent implements OnInit {
     public tagSearch = new BehaviorSubject('');
     public categorySearch = new BehaviorSubject('');
     public separatorKeysCodes: number[] = [ENTER, COMMA];
+    public selectedIndex = 0;
+
+    private currentURL = '';
 
     constructor(private addressService: AddressService,
                 private dialog: MatDialog,
@@ -61,11 +65,14 @@ export class EditOrganisationComponent implements OnInit {
                 private commentService: CommentService,
                 private gravatarService: GravatarService,
                 private authService: AuthenticationService,
-                private metadataService: MetadataService) {
+                private metadataService: MetadataService,
+                private router: Router) {
     }
 
     async ngOnInit() {
-
+        this.route.url.subscribe((url: any) => {
+            this.currentURL = '/' + _.map(url, 'path').join('/');
+        });
         merge(this.addressSearch)
             .pipe(
                 debounceTime(300),
@@ -122,6 +129,12 @@ export class EditOrganisationComponent implements OnInit {
                     organisations: [this.organisation.name]
                 }, 1000).toPromise();
             }
+
+            this.route.fragment.subscribe((fragment: any) => {
+                if (fragment !== null) {
+                    this.selectedIndex = fragment;
+                }
+            });
         });
 
         const params: any = this.route.snapshot.params;
@@ -131,6 +144,10 @@ export class EditOrganisationComponent implements OnInit {
 
         this.loggedInUser = this.authService.authUser.getValue();
         this.loggedInGravatar = await this.gravatarService.getGravatarURL(this.loggedInUser.emailAddress);
+    }
+
+    public tabChange(event: MatTabChangeEvent) {
+        this.router.navigate([this.currentURL], {fragment: (event.index).toString()});
     }
 
     public removeTag(tag: any) {

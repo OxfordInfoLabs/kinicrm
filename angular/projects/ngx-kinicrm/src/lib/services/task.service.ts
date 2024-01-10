@@ -25,6 +25,11 @@ export class TaskService {
         return this.http.post(url, taskItem).toPromise();
     }
 
+    public updateTask(taskItem: any) {
+        const url = this.config.adminHttpURL + `/crm/task/${taskItem.id}`;
+        return this.http.put(url, taskItem).toPromise();
+    }
+
     public removeTask(taskId: number) {
         return this.http.delete(this.config.adminHttpURL + '/crm/task', {
             params: {taskId}

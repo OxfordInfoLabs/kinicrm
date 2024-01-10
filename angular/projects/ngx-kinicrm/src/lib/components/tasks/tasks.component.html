@@ -3,28 +3,62 @@
         <div class="col-span-5">
             <label class="text-sm font-medium leading-6 text-gray-900">Task Title</label>
             <input type="text" [(ngModel)]="newTask.title"
-                   class="py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                   class="py-2 px-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
         </div>
         <div class="col-span-2">
             <label class="text-sm font-medium leading-6 text-gray-900">Due Date</label>
             <input type="date" [(ngModel)]="newTask.dueDate"
-                   class="py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                   class="py-2 px-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
         </div>
     </div>
 
     <div class="col-span-6">
         <label class="text-sm font-medium leading-6 text-gray-900">Task Description</label>
         <textarea rows="2" [(ngModel)]="newTask.description"
-                  class="w-full py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                  class="w-full py-2 px-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
 
         </textarea>
+    </div>
+
+    <div *ngIf="!scope && !scopeId" class="grid grid-cols-6 gap-7">
+        <div class="col-span-3">
+            <label class="text-sm font-medium leading-6 text-gray-900">Organisation</label>
+            <input name="organisation" type="text"
+                   [matAutocomplete]="orgAutocomplete"
+                   [value]="selectedOrganisation ? selectedOrganisation.name : ''"
+                   (keyup)="organisationSearch.next($any($event).target.value)"
+                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+
+            <mat-autocomplete #orgAutocomplete="matAutocomplete">
+                <mat-option *ngFor="let organisation of organisations"
+                            [value]="organisation"
+                            (onSelectionChange)="updateOrganisation($event)">
+                    {{organisation.name}}
+                </mat-option>
+            </mat-autocomplete>
+        </div>
+        <div class="col-span-3">
+            <label class="text-sm font-medium leading-6 text-gray-900">Contact</label>
+            <input name="contact" type="text" [matAutocomplete]="contactAutocomplete"
+                   [value]="selectedContact ? selectedContact.name : ''"
+                   (keyup)="contactSearch.next($any($event).target.value)"
+                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+
+            <mat-autocomplete #contactAutocomplete="matAutocomplete">
+                <mat-option *ngFor="let contact of contacts" [value]="contact"
+                            (onSelectionChange)="updateContact($event)"
+                            class="hover:bg-gray-50">
+                    {{contact.name}}
+                </mat-option>
+            </mat-autocomplete>
+        </div>
     </div>
 
     <div class="grid grid-cols-7 gap-7">
         <div class="col-span-3 sm:col-span-2">
             <label class="text-sm font-medium leading-6 text-gray-900">Assigned To</label>
             <mat-select [(ngModel)]="newTask.assignees" [multiple]="true"
-                        class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
                 <mat-option *ngFor="let user of users" [value]="user">{{ user.name }}</mat-option>
             </mat-select>
         </div>
@@ -32,7 +66,10 @@
         <div class="col-span-3 sm:col-span-2">
             <label class="text-sm font-medium leading-6 text-gray-900">Priority</label>
             <mat-select [(ngModel)]="newTask.priority"
-                        class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        [ngClass]="{'bg-blue-100 text-blue-600': newTask.priority && newTask.priority.name === 'Low',
+                                    'bg-orange-100 text-orange-600': newTask.priority && newTask.priority.name === 'Medium',
+                                    'bg-red-100 text-red-600': newTask.priority && newTask.priority.name === 'High'}"
+                        class="mt-1 block w-full py-1.5 px-3 border-none bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
                 <mat-option *ngFor="let priority of priorities" [value]="priority">{{ priority.name }}</mat-option>
             </mat-select>
         </div>
@@ -40,26 +77,39 @@
         <div class="col-span-3 sm:col-span-2">
             <label class="text-sm font-medium leading-6 text-gray-900">Status</label>
             <mat-select [(ngModel)]="newTask.status"
-                        class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        [ngClass]="{'bg-purple-600 text-purple-50': newTask.status && newTask.status.name === 'Pending',
+                        'bg-blue-600 text-blue-50': newTask.status && newTask.status.name === 'In Progress',
+                        'bg-green-600 text-green-50': newTask.status && newTask.status.name === 'Completed'}"
+                        class="mt-1 block w-full py-1.5 px-3 border-none bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
                 <mat-option *ngFor="let status of statuses" [value]="status">{{ status.name }}</mat-option>
             </mat-select>
         </div>
 
         <div class="col-span-1 flex items-end">
             <button type="submit" (click)="saveNewTask(newTask)"
-                    class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary ">
                 Add Task
             </button>
         </div>
     </div>
 
 </div>
+<div class="bg-gray-50 px-5 py-2 border-t bg-white flex items-center justify-between">
+    <div class="flex items-center">
+        <span class="font-medium">All Tickets</span>&nbsp;<mat-slide-toggle (change)="ticketView($event)">My Tickets</mat-slide-toggle>
+    </div>
+    <div>
+        <mat-checkbox (ngModelChange)="toggleCompleted()"
+            [(ngModel)]="hideCompleted" color="primary"
+            [labelPosition]="'after'">
+            Hide Completed Tasks
+        </mat-checkbox>
+    </div>
+
+</div>
 <table class="min-w-full">
     <thead class="bg-gray-50">
     <tr>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Priority
-        </th>
         <th scope="col" class="w-1/2 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Task
         </th>
@@ -68,6 +118,9 @@
         </th>
         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Assignees
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Priority
         </th>
         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Status
@@ -87,61 +140,66 @@
     <ng-template [ngIf]="tasks.length">
         <ng-template ngFor let-task [ngForOf]="tasks" [ngForTrackBy]="trackByFn">
             <tbody [ngClass]="{'bg-white': !task.edit, 'bg-gray-50': task.edit}">
-            <tr>
-                <td class="px-6 py-4 whitespace-nowrap" [ngClass]="{'border-none': task.edit}">
-                    <mat-select [(ngModel)]="task.priority" [compareWith]="bindSelectValue"
-                                (ngModelChange)="updateTaskItem(task)"
-                                [ngClass]="{'bg-blue-100 border-blue-200 text-blue-600': task.priority.name === 'Low',
-                                            'bg-orange-100 border-orange-200 text-orange-600': task.priority.name === 'Medium',
-                                            'bg-red-100 border-red-200 text-red-600': task.priority.name === 'High'}"
-                                class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <mat-option *ngFor="let priority of priorities" [value]="priority">{{ priority.name }}</mat-option>
-                    </mat-select>
-                </td>
-                <td class="px-6 py-4" [ngClass]="{'border-none': task.edit}">
-                    <div class="text-sm text-gray-900">
+            <tr class="hover:bg-gray-50 cursor-pointer" [ngClass]="{'opacity-60': task.status.name === 'Completed'}">
+                <td [routerLink]="['/crm/tasks/' + task.id]" class="px-6 py-4" [ngClass]="{'border-none': task.edit}">
+                    <div class="text-base text-gray-900 hover:underline">
                         {{ task.title }}
                     </div>
                     <div class="text-xs text-gray-500 truncate w-full">
                         {{ task.description }}
                     </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" [ngClass]="{'border-none': task.edit}" style="min-width: 200px">
-                    {{
-                        moment(task.dueDate).calendar(null, {
-                            sameDay: '[Today]',
-                            nextDay: '[Tomorrow]',
-                            nextWeek: 'dddd',
-                            lastDay: '[Yesterday]',
-                            lastWeek: '[Last]',
-                            sameElse: 'DD/MM/YYYY'
-                        })
-                    }}
+                <td [routerLink]="['/crm/tasks/' + task.id]" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div class="flex items-center">
+                        <mat-icon [ngClass]="{'text-red-500 visible': moment(task.dueDate).isSameOrBefore(moment().format('YYYY-MM-DD')) && task.status.name !== 'Completed',
+                        'invisible': task.status.name === 'Completed' || moment(task.dueDate).isSameOrAfter(moment().add(3, 'days').format('YYYY-MM-DD')),
+                        'visible text-orange-300': (moment(task.dueDate).isAfter(moment().format('YYYY-MM-DD')) && moment(task.dueDate).isSameOrBefore(moment().add(3, 'days').format('YYYY-MM-DD'))) && task.status.name !== 'Completed'}">priority_high</mat-icon>
+                        {{
+                            moment(task.dueDate).calendar(null, {
+                                sameDay: '[Today]',
+                                nextDay: '[Tomorrow]',
+                                nextWeek: 'dddd',
+                                lastDay: '[Yesterday]',
+                                lastWeek: '[Last]',
+                                sameElse: 'DD/MM/YYYY'
+                            })
+                        }}
+                    </div>
+
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap font-medium" style="min-width: 210px" [ngClass]="{'border-none': task.edit}">
+                <td [routerLink]="['/crm/tasks/' + task.id]" class="px-6 py-4 whitespace-nowrap font-medium" style="min-width: 210px" [ngClass]="{'border-none': task.edit}">
                     <div>{{ task.assignees.length ? _.map(task.assignees, 'name').join(', ') : '' }}</div>
+                </td>
+                <td  class="px-6 py-4 whitespace-nowrap" [ngClass]="{'border-none': task.edit}">
+                    <mat-select [(ngModel)]="task.priority" [compareWith]="bindSelectValue"
+                                (ngModelChange)="updateTaskItem(task)"
+                                [ngClass]="{'bg-blue-100 text-blue-600': task.priority.name === 'Low',
+                                            'bg-orange-100 text-orange-600': task.priority.name === 'Medium',
+                                            'bg-red-100 text-red-600': task.priority.name === 'High'}"
+                                class="w-24 mt-1 block py-1 px-3 border-none bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
+                        <mat-option *ngFor="let priority of priorities" [value]="priority">{{ priority.name }}</mat-option>
+                    </mat-select>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" [ngClass]="{'border-none': task.edit}">
                     <mat-select [(ngModel)]="task.status" [compareWith]="bindSelectValue"
                                 (ngModelChange)="updateTaskItem(task)"
-                                [ngClass]="{'bg-purple-600 border-purple-800 text-purple-50': task.status.name === 'Pending',
-                        'bg-blue-600 border-blue-800 text-blue-50': task.status.name === 'In Progress',
-                        'bg-green-600 border-green-800 text-green-50': task.status.name === 'Completed'}"
-                                class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                [ngClass]="{'bg-purple-600 text-purple-50': task.status.name === 'Pending',
+                        'bg-blue-600 text-blue-50': task.status.name === 'In Progress',
+                        'bg-green-600 text-green-50': task.status.name === 'Completed'}"
+                                class="w-32 mt-1 block py-1 px-3 border-none bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
                         <mat-option *ngFor="let status of statuses" [value]="status">{{ status.name }}</mat-option>
                     </mat-select>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" [ngClass]="{'border-none': task.edit}">
-                    <a href="javascript:void(0)" (click)="task.edit = !task.edit"
-                       class="text-gray-600 hover:text-gray-800 text-right inline-block mr-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                            <path
-                                d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z"/>
-                            <path
-                                d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z"/>
-                        </svg>
-
-                    </a>
+<!--                    <a -->
+<!--                       class="text-gray-600 hover:text-gray-800 text-right inline-block mr-2">-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">-->
+<!--                            <path-->
+<!--                                d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z"/>-->
+<!--                            <path-->
+<!--                                d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z"/>-->
+<!--                        </svg>-->
+<!--                    </a>-->
                     <a href="javascript:void(0)" (click)="deleteTask(task.id)"
                        class="text-red-600 hover:text-red-800 text-right inline-block">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
@@ -163,19 +221,19 @@
                             <div class="col-span-5">
                                 <label class="text-sm font-medium leading-6 text-gray-900">Task Title</label>
                                 <input type="text" [(ngModel)]="task.title"
-                                       class="py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                       class="py-2 px-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
                             <div class="col-span-2">
                                 <label class="text-sm font-medium leading-6 text-gray-900">Due Date</label>
                                 <input type="date" [(ngModel)]="task.dueDate"
-                                       class="py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                       class="py-2 px-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
                         </div>
 
                         <div class="col-span-6">
                             <label class="text-sm font-medium leading-6 text-gray-900">Task Description</label>
                             <textarea rows="2" [(ngModel)]="task.description"
-                                      class="w-full py-2 px-3 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                      class="w-full py-2 px-3 mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
 
                             </textarea>
                         </div>
@@ -184,7 +242,7 @@
                             <div class="col-span-3 sm:col-span-2">
                                 <label class="text-sm font-medium leading-6 text-gray-900">Assigned To</label>
                                 <mat-select [(ngModel)]="task.assignees" [multiple]="true" [compareWith]="bindSelectValue"
-                                            class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
                                     <mat-option *ngFor="let user of users" [value]="user">{{ user.name }}</mat-option>
                                 </mat-select>
                             </div>
@@ -192,7 +250,10 @@
                             <div class="col-span-3 sm:col-span-2">
                                 <label class="text-sm font-medium leading-6 text-gray-900">Priority</label>
                                 <mat-select [(ngModel)]="task.priority" [compareWith]="bindSelectValue"
-                                            class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            [ngClass]="{'bg-blue-100 text-blue-600': task.priority.name === 'Low',
+                                            'bg-orange-100 text-orange-600': task.priority.name === 'Medium',
+                                            'bg-red-100 text-red-600': task.priority.name === 'High'}"
+                                            class="mt-1 block w-full py-1.5 px-3 border-none bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
                                     <mat-option *ngFor="let priority of priorities"
                                                 [value]="priority">{{ priority.name }}
                                     </mat-option>
@@ -202,7 +263,10 @@
                             <div class="col-span-3 sm:col-span-2">
                                 <label class="text-sm font-medium leading-6 text-gray-900">Status</label>
                                 <mat-select [(ngModel)]="task.status" [compareWith]="bindSelectValue"
-                                            class="mt-1 block w-full py-1.5 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            [ngClass]="{'bg-purple-600 text-purple-50': task.status.name === 'Pending',
+                                                        'bg-blue-600 text-blue-50': task.status.name === 'In Progress',
+                                                        'bg-green-600 text-green-50': task.status.name === 'Completed'}"
+                                            class="mt-1 block w-full py-1.5 px-3 border-none bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
                                     <mat-option *ngFor="let status of statuses" [value]="status">{{ status.name }}
                                     </mat-option>
                                 </mat-select>
@@ -210,12 +274,14 @@
 
                             <div class="col-span-1 flex items-end">
                                 <button type="submit" (click)="saveNewTask(task)"
-                                        class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 ">
                                     Save Task
                                 </button>
                             </div>
                         </div>
-
+                        <div class="col-span-6">
+                            <kcrm-comments scope="Task" [scopeId]="task.id"></kcrm-comments>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -224,3 +290,25 @@
     </ng-template>
 
 </table>
+<div class="flex items-center justify-end p-0 bg-white">
+    <div class="text-xs text-gray-400 mr-10">
+        Showing {{offset + 1}} - {{(page * limit) - (limit - tasks.length)}}</div>
+    <select [value]="limit" (change)="pageSizeChange($any($event).target.value)"
+            class="mr-8 p-1.5">
+        <option [value]="1">1</option>
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="25">25</option>
+        <option [value]="50">50</option>
+        <option [value]="100">100</option>
+        <option [value]="250">250</option>
+        <option [value]="1000">1000</option>
+    </select>
+    <button mat-icon-button class="mr-4" (click)="decreaseOffset()"
+            [disabled]="page <= 1">
+        <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button mat-icon-button (click)="increaseOffset()" [disabled]="endOfResults">
+        <mat-icon>chevron_right</mat-icon>
+    </button>
+</div>

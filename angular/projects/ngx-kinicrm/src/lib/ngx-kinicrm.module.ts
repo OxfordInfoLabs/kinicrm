@@ -25,6 +25,11 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatTabsModule} from '@angular/material/tabs';
 import { TasksComponent } from './components/tasks/tasks.component';
+import { CommentsComponent } from './components/comments/comments.component';
+import { TaskComponent } from './components/tasks/task/task.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -40,7 +45,9 @@ import { TasksComponent } from './components/tasks/tasks.component';
         AddressDialogComponent,
         OrganisationDialogComponent,
         ContactDialogComponent,
-        TasksComponent
+        TasksComponent,
+        CommentsComponent,
+        TaskComponent
     ],
     imports: [
         BrowserModule,
@@ -58,7 +65,10 @@ import { TasksComponent } from './components/tasks/tasks.component';
         MatChipsModule,
         MatCheckboxModule,
         ReactiveFormsModule,
-        MatTabsModule
+        MatTabsModule,
+        MatDatepickerModule,
+        MatInputModule,
+        MatSlideToggleModule
     ],
     exports: [
         ContactsComponent,
@@ -66,7 +76,9 @@ import { TasksComponent } from './components/tasks/tasks.component';
         AddressBookComponent,
         AddressComponent,
         OrganisationsComponent,
-        EditOrganisationComponent
+        EditOrganisationComponent,
+        TasksComponent,
+        TaskComponent
     ]
 })
 export class NgxKinicrmModule {
