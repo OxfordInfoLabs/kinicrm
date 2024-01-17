@@ -22,6 +22,7 @@ import * as _ from 'lodash';
 import moment from 'moment';
 import {DomSanitizer} from '@angular/platform-browser';
 import {MatTabChangeEvent} from '@angular/material/tabs';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
     selector: 'kcrm-edit-contact',
@@ -76,7 +77,8 @@ export class EditContactComponent implements OnInit {
                 private metadataService: MetadataService,
                 private communicationService: CommunicationService,
                 private sanitise: DomSanitizer,
-                private router: Router) {
+                private router: Router,
+                private snackBar: MatSnackBar) {
     }
 
     async ngOnInit() {
@@ -155,6 +157,13 @@ export class EditContactComponent implements OnInit {
         this.loggedInGravatar = await this.gravatarService.getGravatarURL(this.loggedInUser.emailAddress);
 
         this.mailingLists = await this.contactService.getMailingLists();
+    }
+
+    public copied() {
+        this.snackBar.open('Copied to Clipboard', '', {
+            duration: 2000,
+            verticalPosition: 'bottom'
+        });
     }
 
     public tabChange(event: MatTabChangeEvent) {

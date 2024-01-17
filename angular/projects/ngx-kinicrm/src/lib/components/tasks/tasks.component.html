@@ -107,10 +107,10 @@
     </div>
 
 </div>
-<table class="min-w-full">
+<table class="min-w-full table-fixed">
     <thead class="bg-gray-50">
     <tr>
-        <th scope="col" class="w-1/2 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        <th scope="col" class="w-1/3 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Task
         </th>
         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -142,10 +142,10 @@
             <tbody [ngClass]="{'bg-white': !task.edit, 'bg-gray-50': task.edit}">
             <tr class="hover:bg-gray-50 cursor-pointer" [ngClass]="{'opacity-60': task.status.name === 'Completed'}">
                 <td [routerLink]="['/crm/tasks/' + task.id]" class="px-6 py-4" [ngClass]="{'border-none': task.edit}">
-                    <div class="text-base text-gray-900 hover:underline">
+                    <div [title]="task.title" class="text-base text-gray-900 truncate hover:underline">
                         {{ task.title }}
                     </div>
-                    <div class="text-xs text-gray-500 truncate w-full">
+                    <div [title]="task.description" class="text-xs text-gray-500 truncate">
                         {{ task.description }}
                     </div>
                 </td>
@@ -160,14 +160,14 @@
                                 nextDay: '[Tomorrow]',
                                 nextWeek: 'dddd',
                                 lastDay: '[Yesterday]',
-                                lastWeek: '[Last]',
+                                lastWeek: '[Last] dddd',
                                 sameElse: 'DD/MM/YYYY'
                             })
                         }}
                     </div>
 
                 </td>
-                <td [routerLink]="['/crm/tasks/' + task.id]" class="px-6 py-4 whitespace-nowrap font-medium" style="min-width: 210px" [ngClass]="{'border-none': task.edit}">
+                <td [routerLink]="['/crm/tasks/' + task.id]" class="px-6 py-4 font-medium" style="min-width: 210px" [ngClass]="{'border-none': task.edit}">
                     <div>{{ task.assignees.length ? _.map(task.assignees, 'name').join(', ') : '' }}</div>
                 </td>
                 <td  class="px-6 py-4 whitespace-nowrap" [ngClass]="{'border-none': task.edit}">

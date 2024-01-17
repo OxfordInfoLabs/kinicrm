@@ -30,6 +30,7 @@ import { TaskComponent } from './components/tasks/task/task.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 
 @NgModule({
@@ -68,7 +69,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
         MatTabsModule,
         MatDatepickerModule,
         MatInputModule,
-        MatSlideToggleModule
+        MatSlideToggleModule,
+        ClipboardModule
     ],
     exports: [
         ContactsComponent,

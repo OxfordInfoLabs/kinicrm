@@ -46,7 +46,16 @@
                         </div>
                         <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
                             <dt class="text-sm font-medium leading-6 text-gray-900">Email Address</dt>
-                            <dd class="mt-1 text-sm leading-6 text-gray-700">{{contact.emailAddress}}</dd>
+                            <dd class="mt-1 text-sm leading-6 text-gray-700 ">
+                                <div class="flex items-center">
+                                    <div class="mr-2">{{contact.emailAddress}}</div>
+                                    <button class="p-0 h-6 w-6" mat-icon-button [cdkCopyToClipboard]="contact.emailAddress"
+                                            (cdkCopyToClipboardCopied)="copied()">
+                                        <mat-icon class="text-base">content_copy</mat-icon>
+                                    </button>
+                                </div>
+
+                            </dd>
                         </div>
                         <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
                             <dt class="text-sm font-medium leading-6 text-gray-900">Organisation</dt>
