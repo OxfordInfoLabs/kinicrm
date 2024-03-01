@@ -4,7 +4,6 @@ namespace KiniCRM\Controllers\Admin\CRM;
 
 use Kiniauth\Test\Services\Security\AuthenticationHelper;
 use KiniCRM\TestBase;
-use KiniCRM\ValueObjects\CRM\OrganisationItem;
 use KiniCRM\ValueObjects\CRM\ReferenceTypeItem;
 use KiniCRM\ValueObjects\CRM\TaskItem;
 use KiniCRM\ValueObjects\CRM\UserSummaryItem;

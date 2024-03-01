@@ -8,7 +8,6 @@ use Kiniauth\Objects\Security\User;
 use Kiniauth\Objects\Security\UserSummary;
 use Kiniauth\Services\Attachment\AttachmentService;
 use KiniCRM\Objects\CRM\Comment;
-use KiniCRM\Objects\CRM\Contact;
 use KiniCRM\ValueObjects\Enum\ObjectScope;
 use Kinikit\Core\Stream\File\ReadOnlyFileStream;
 use Kinikit\MVC\Request\FileUpload;

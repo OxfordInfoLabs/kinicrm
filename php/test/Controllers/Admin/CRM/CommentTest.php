@@ -3,9 +3,7 @@
 namespace KiniCRM\Controllers\Admin\CRM;
 
 use Kiniauth\Test\Services\Security\AuthenticationHelper;
-use KiniCRM\Services\CRM\CommentService;
 use KiniCRM\TestBase;
-use KiniCRM\ValueObjects\Enum\ObjectScope;
 use Kinikit\Core\DependencyInjection\Container;
 
 include_once "autoloader.php";

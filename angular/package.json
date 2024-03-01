@@ -25,8 +25,8 @@
         "moment": "^2.29.4",
         "ng-kiniauth": "0.14.45",
         "ng-recaptcha": "^11.0.0",
-        "ngx-kinimailer": "file:../../kinimailer/angular/ngx-kinimailer/dist/ngx-kinimailer",
         "ngx-google-places-autocomplete": "^2.0.5",
+        "ngx-kinimailer": "file:../../kinimailer/angular/ngx-kinimailer/dist/ngx-kinimailer",
         "rxjs": "~7.8.0",
         "tslib": "^2.3.0",
         "zone.js": "~0.12.0"

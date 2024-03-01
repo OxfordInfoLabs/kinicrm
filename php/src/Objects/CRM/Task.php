@@ -3,6 +3,7 @@
 namespace KiniCRM\Objects\CRM;
 
 use Kiniauth\Objects\Security\UserSummary;
+use Kiniauth\Objects\Workflow\PropertyChangeWorkflow;
 use Kiniauth\Traits\Application\Timestamped;
 use KiniCRM\ValueObjects\CRM\TaskItem;
 use KiniCRM\ValueObjects\Enum\ObjectScope;
@@ -12,7 +13,7 @@ use Kinikit\Persistence\ORM\ActiveRecord;
  * @table kcr_task
  * @generate
  */
-class Task extends ActiveRecord {
+class Task extends ActiveRecord implements PropertyChangeWorkflow {
 
     use Timestamped;
 
@@ -108,7 +109,7 @@ class Task extends ActiveRecord {
             }
             if ($taskItem->getAssignees()) {
                 foreach ($taskItem->getAssignees() as $assignee) {
-                    $this->assignees[] = new UserSummary($assignee->getName(),$assignee->getStatus(),$assignee->getEmailAddress(),0, [], $assignee->getId());
+                    $this->assignees[] = new UserSummary($assignee->getName(), $assignee->getStatus(), $assignee->getEmailAddress(), 0, [], $assignee->getId());
                 }
             }
         }
@@ -123,7 +124,7 @@ class Task extends ActiveRecord {
 
 
     /**
-     * @return int|null
+     * @return int
      *
      */
     public function getId(): ?int {
@@ -131,14 +132,14 @@ class Task extends ActiveRecord {
     }
 
     /**
-     * @return int|null
+     * @return int
      */
     public function getAccountId(): ?int {
         return $this->accountId;
     }
 
     /**
-     * @param int|null $accountId
+     * @param int $accountId
      */
     public function setAccountId(?int $accountId): void {
         $this->accountId = $accountId;
@@ -146,28 +147,28 @@ class Task extends ActiveRecord {
 
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getTitle(): ?string {
         return $this->title;
     }
 
     /**
-     * @param string|null $title
+     * @param string $title
      */
     public function setTitle(?string $title): void {
         $this->title = $title;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getDescription(): ?string {
         return $this->description;
     }
 
     /**
-     * @param string|null $description
+     * @param string $description
      */
     public function setDescription(?string $description): void {
         $this->description = $description;
