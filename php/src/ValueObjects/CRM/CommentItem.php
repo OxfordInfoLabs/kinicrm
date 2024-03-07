@@ -88,8 +88,8 @@ class CommentItem {
      * @return CommentItem
      */
     public static function fromComment($comment) {
-        return new CommentItem($comment->getCreatedDate() ? $comment->getCreatedDate()->format("Y-m-d H:i:s") : null,
-            $comment->getLastModifiedDate() ? $comment->getLastModifiedDate()->format("Y-m-d H:i:s") : null,
+        return new CommentItem($comment->getCreatedDate() ? $comment->getCreatedDate()->format("Y-m-d H:i:s") : date("Y-m-d H:i:s"),
+            $comment->getLastModifiedDate() ? $comment->getLastModifiedDate()->format("Y-m-d H:i:s") : date("Y-m-d H:i:s"),
             $comment->getUserSummary() ? UserSummaryItem::fromUserSummary($comment->getUserSummary()) : null,
             $comment->getMessage(), $comment->getId());
     }

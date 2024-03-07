@@ -114,16 +114,6 @@ class TaskService {
     }
 
 
-    /**
-     * Process task notifications.  This is triggered from the CRM task scheduled task.
-     *
-     * @return void
-     */
-    public function processTaskNotifications() {
-
-
-    }
-
 
     /**
      * @param array $filters

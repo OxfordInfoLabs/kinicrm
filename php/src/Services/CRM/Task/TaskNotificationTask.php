@@ -4,8 +4,11 @@ namespace KiniCRM\Services\CRM\Task;
 
 use Kiniauth\Services\Application\Session;
 use Kiniauth\Services\Workflow\Task\ObjectWorkflowStepTask;
+use KiniCRM\Services\CRM\CommentService;
 use KiniCRM\Services\CRM\TaskService;
+use KiniCRM\ValueObjects\CRM\CommentItem;
 use KiniCRM\ValueObjects\CRM\TaskItem;
+use KiniCRM\ValueObjects\Enum\ObjectScope;
 use Kinikit\Core\Exception\InsufficientParametersException;
 use Kinimailer\Objects\Template\TemplateParameter;
 use Kinimailer\Services\Mailing\MailingService;
@@ -17,6 +20,11 @@ class TaskNotificationTask extends ObjectWorkflowStepTask {
      * @var TaskService
      */
     private TaskService $taskService;
+
+    /**
+     * @var CommentService
+     */
+    private CommentService $commentService;
 
 
     /**
@@ -33,11 +41,13 @@ class TaskNotificationTask extends ObjectWorkflowStepTask {
 
     /**
      * @param TaskService $taskService
+     * @param CommentService $commentService
      * @param MailingService $mailingService
      * @param Session $session
      */
-    public function __construct(TaskService $taskService, MailingService $mailingService, Session $session) {
+    public function __construct(TaskService $taskService, CommentService $commentService, MailingService $mailingService, Session $session) {
         $this->taskService = $taskService;
+        $this->commentService = $commentService;
         $this->mailingService = $mailingService;
         $this->session = $session;
     }
@@ -61,14 +71,26 @@ class TaskNotificationTask extends ObjectWorkflowStepTask {
         // Get the task
         $task = $this->taskService->getTask($objectPk);
 
-        foreach ($task->getAssignees() as $assignee) {
-            $adhocMailing = new AdhocMailing($mailingId, $assignee->getName(), $assignee->getEmailAddress(), [],
-                [
-                    new TemplateParameter("task", "Task", TemplateParameter::TYPE_TEXT, TaskItem::fromTask($task)),
-                    new TemplateParameter("loggedInUser", "Logged in User", TemplateParameter::TYPE_TEXT, $this->session->__getLoggedInSecurable())
-                ]);
+        // Proceed provided the task is not completed
+        if ($task->getStatus()->getName() !== "Completed") {
 
-            $this->mailingService->processAdhocMailing($adhocMailing);
+            // Grab task comments
+            $taskComments = array_map(function ($comment) {
+                return CommentItem::fromComment($comment);
+            }, $this->commentService->searchForComments(ObjectScope::Task, $objectPk));
+
+
+            foreach ($task->getAssignees() as $assignee) {
+                $adhocMailing = new AdhocMailing($mailingId, $assignee->getName(), $assignee->getEmailAddress(), [],
+                    [
+                        new TemplateParameter("task", "Task", TemplateParameter::TYPE_TEXT, TaskItem::fromTask($task)),
+                        new TemplateParameter("loggedInUser", "Logged in User", TemplateParameter::TYPE_TEXT, $this->session->__getLoggedInSecurable()),
+                        new TemplateParameter("taskComments", "Task Comments", TemplateParameter::TYPE_TEXT, $taskComments),
+                        new TemplateParameter("latestTaskComment", "Latest Task Comment", TemplateParameter::TYPE_TEXT, $taskComments[0] ?? null)
+                    ]);
+
+                $this->mailingService->processAdhocMailing($adhocMailing);
+            }
         }
 
     }
