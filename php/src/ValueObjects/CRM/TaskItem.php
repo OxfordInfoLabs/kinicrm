@@ -2,6 +2,7 @@
 
 namespace KiniCRM\ValueObjects\CRM;
 
+use KiniCRM\Objects\CRM\ScopeObject;
 use KiniCRM\Objects\CRM\Task;
 
 class TaskItem {
@@ -49,6 +50,11 @@ class TaskItem {
     private array $assignees;
 
     /**
+     * @var ScopeObject|null
+     */
+    private ?ScopeObject $scopeObject;
+
+    /**
      * @param string $title
      * @param string $description
      * @param ?string $dueDate
@@ -57,8 +63,9 @@ class TaskItem {
      * @param ?UserSummaryItem $createdBy
      * @param ?UserSummaryItem[] $assignees
      * @param ?int $id
+     * @param ?ScopeObject $scopeObject
      */
-    public function __construct(string $title, string $description, ?string $dueDate = null, ?ReferenceTypeItem $status = null, ?ReferenceTypeItem $priority = null, ?UserSummaryItem $createdBy = null, ?array $assignees = null, ?int $id = null) {
+    public function __construct(string $title, string $description, ?string $dueDate = null, ?ReferenceTypeItem $status = null, ?ReferenceTypeItem $priority = null, ?UserSummaryItem $createdBy = null, ?array $assignees = null, ?int $id = null, ?ScopeObject $scopeObject = null) {
         $this->id = $id;
         $this->title = $title;
         $this->description = $description;
@@ -67,6 +74,7 @@ class TaskItem {
         $this->priority = $priority;
         $this->createdBy = $createdBy;
         $this->assignees = $assignees;
+        $this->scopeObject = $scopeObject;
     }
 
     /**
@@ -181,6 +189,10 @@ class TaskItem {
         $this->assignees = $assignees;
     }
 
+    public function getScopeObject(): ?ScopeObject {
+        return $this->scopeObject;
+    }
+
 
     /**
      * @param Task $task
@@ -197,7 +209,9 @@ class TaskItem {
             $task->getStatus() ? ReferenceTypeItem::fromReferenceType($task->getStatus()) : null,
             $task->getPriority() ? ReferenceTypeItem::fromReferenceType($task->getPriority()) : null,
             $task->getCreator() ? UserSummaryItem::fromUserSummary($task->getCreator()) : null,
-            $assignees, $task->getId());
+            $assignees, $task->getId(),
+            $task->getScopeObject()
+        );
     }
 
 

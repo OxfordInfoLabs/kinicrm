@@ -94,8 +94,15 @@ class Task extends ActiveRecord implements PropertyChangeWorkflow {
      */
     private ?array $assignees = [];
 
+    /**
+     * @var ScopeObject
+     * @manyToOne
+     * @parentJoinColumns scope,scope_id
+     * @readOnly
+     */
+    private ?ScopeObject $scopeObject;
 
-    public function __construct($taskItem, ?ObjectScope $scope = null, ?int $scopeId = null, ?int $accountId = null, ?UserSummary $creator = null) {
+    public function __construct($taskItem, ?ObjectScope $scope = null, ?int $scopeId = null, ?int $accountId = null, ?UserSummary $creator = null, ?ScopeObject $scopeObject = null) {
         if ($taskItem instanceof TaskItem) {
             $this->id = $taskItem->getId();
             $this->title = $taskItem->getTitle();
@@ -119,7 +126,7 @@ class Task extends ActiveRecord implements PropertyChangeWorkflow {
         $this->accountId = $accountId;
         $this->scope = $scope;
         $this->scopeId = $scopeId;
-
+        $this->scopeObject = $scopeObject;
     }
 
 
@@ -270,6 +277,21 @@ class Task extends ActiveRecord implements PropertyChangeWorkflow {
      */
     public function setAssignees(?array $assignees): void {
         $this->assignees = $assignees;
+    }
+
+    /**
+     * @return ScopeObject|null
+     */
+    public function getScopeObject(): ?ScopeObject {
+        return $this->scopeObject;
+    }
+
+    /**
+     * @param ScopeObject|null $scopeObject
+     * @return void
+     */
+    public function setScopeObject(?ScopeObject $scopeObject): void {
+        $this->scopeObject = $scopeObject;
     }
 
 
