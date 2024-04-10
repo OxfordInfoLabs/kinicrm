@@ -8,6 +8,8 @@ import {Location} from '@angular/common';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import _ from 'lodash';
 import {UserService} from 'ng-kiniauth';
+import {ContactService} from '../../../services/contact.service';
+import {OrganisationService} from '../../../services/organisation.service';
 
 @Component({
     selector: 'kcrm-task',
@@ -21,6 +23,8 @@ export class TaskComponent implements OnInit {
     public priorities: any = [];
     public users: any = [];
     public updateDate = false;
+    public contact: any = null;
+    public organisation: any = null;
 
     constructor(private route: ActivatedRoute,
                 private taskService: TaskService,
@@ -28,7 +32,9 @@ export class TaskComponent implements OnInit {
                 private gravatarService: GravatarService,
                 private location: Location,
                 private snackBar: MatSnackBar,
-                private userService: UserService) {
+                private userService: UserService,
+                private contactService: ContactService,
+                private organisationService: OrganisationService) {
     }
 
     async ngOnInit() {
@@ -41,6 +47,14 @@ export class TaskComponent implements OnInit {
                     }
                     return assignee;
                 });
+                if (this.task.scopeObject && this.task.scopeObject.id) {
+                    if (this.task.scopeObject.scope === 'Contact') {
+                        this.contact = await this.contactService.getContact(this.task.scopeObject.id);
+                    }
+                    if (this.task.scopeObject.scope === 'Organisation') {
+                        this.organisation = await this.organisationService.getOrganisation(this.task.scopeObject.id);
+                    }
+                }
             }
         });
 

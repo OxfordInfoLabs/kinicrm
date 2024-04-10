@@ -21,6 +21,21 @@
                         <aside class="xl:hidden">
                             <h2 class="sr-only">Details</h2>
                             <div class="space-y-5">
+                                <div *ngIf="organisation">
+                                    <img *ngIf="organisation.logo" [src]="organisation.logo"
+                                         alt="" class="h-16 mr-4 float-left flex-none rounded-lg bg-gray-800 object-cover">
+                                    <div class="flex flex-wrap align-center justify-between text-base font-semibold leading-6 text-gray-900 mb-0">
+                                        {{organisation.name}}
+                                    </div>
+                                    <p *ngIf="organisation.address" class="mt-1 text-sm text-gray-500">
+                                        <span class="font-semibold">{{organisation.address.street1}}&nbsp;</span>
+                                        <span *ngIf="organisation.address.street2">{{organisation.address.street2}}</span>
+                                        <span *ngIf="organisation.address.city">, {{organisation.address.city}}</span>
+                                        <span *ngIf="organisation.address.county">, {{organisation.address.county}}</span>
+                                        <span *ngIf="organisation.address.postcode">, {{organisation.address.postcode}}</span>
+                                        <span *ngIf="organisation.address.countryCode">, {{organisation.address.countryCode}}</span>
+                                    </p>
+                                </div>
                                 <div class="flex items-center space-x-2">
                                     <div *ngIf="!updateDate" (click)="updateDate = !updateDate"
                                          class="flex w-full p-4 items-center border-l-8 text-white cursor-pointer"
@@ -114,6 +129,45 @@
             <aside class="hidden xl:block xl:pl-8">
                 <h2 class="sr-only">Details</h2>
                 <div class="space-y-5">
+                    <div *ngIf="organisation" class="pb-4 flex border-b">
+                        <img *ngIf="organisation.logo" [src]="organisation.logo"
+                             alt="" class="w-20 h-16 mr-4 float-left flex-none rounded-lg bg-gray-800 object-cover">
+                        <div>
+                            <a [routerLink]="['/crm', 'organisations', organisation.id]" target="_blank"
+                                class="cursor-pointer hover:underline flex flex-wrap align-center justify-between text-base font-semibold leading-6 text-gray-900 mb-0">
+                                {{organisation.name}}
+                            </a>
+                            <p *ngIf="organisation.address" class="mt-1 mb-0 text-sm text-gray-500">
+                                <span class="font-semibold">{{organisation.address.street1}}&nbsp;</span>
+                                <span *ngIf="organisation.address.street2">{{organisation.address.street2}}</span>
+                                <span *ngIf="organisation.address.city">, {{organisation.address.city}}</span>
+                                <span *ngIf="organisation.address.county">, {{organisation.address.county}}</span>
+                                <span *ngIf="organisation.address.postcode">, {{organisation.address.postcode}}</span>
+                                <span *ngIf="organisation.address.countryCode">, {{organisation.address.countryCode}}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div *ngIf="contact" class="pb-4 flex border-b">
+                        <img *ngIf="contact.photo" [src]="contact.photo"
+                             alt="" class="w-20 h-16 mr-4 float-left flex-none rounded-lg bg-gray-800 object-cover">
+                        <div>
+                            <a [routerLink]="['/crm', 'contacts', contact.id]" target="_blank"
+                               class="cursor-pointer hover:underline flex flex-wrap align-center justify-between text-base font-semibold leading-6 text-gray-900 mb-0">
+                                {{contact.name}}
+                            </a>
+                            <div *ngIf="contact.organisationDepartments.length"
+                                class="font-medium text-sm text-gray-500">
+                                {{contact.organisationDepartments[0].organisationSummary.name}}
+                            </div>
+                            <div *ngIf="contact.organisationDepartments.length && contact.organisationDepartments[0].jobTitle"
+                                 class="text-xs text-gray-500">
+                                {{contact.organisationDepartments[0].jobTitle}}
+                            </div>
+                            <p class="mt-1 mb-0 text-sm text-gray-500">
+                                {{contact.emailAddress}}
+                            </p>
+                        </div>
+                    </div>
                     <div class="flex items-center space-x-2">
                         <div *ngIf="!updateDate" (click)="updateDate = !updateDate"
                              class="flex w-full p-4 items-center border-l-8 text-white cursor-pointer"

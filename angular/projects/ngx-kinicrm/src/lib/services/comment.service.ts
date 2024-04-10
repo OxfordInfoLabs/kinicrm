@@ -38,7 +38,7 @@ export class CommentService {
 
                     comment.gravatarURL = 'https://gravatar.com/avatar/' + hash + '?d=mp&s=512';
 
-                    comment.displayDate = this.moment(comment.dateTime).calendar();
+                    comment.displayDate = this.moment(comment.createdDate).calendar();
 
                     return comment;
                 }));

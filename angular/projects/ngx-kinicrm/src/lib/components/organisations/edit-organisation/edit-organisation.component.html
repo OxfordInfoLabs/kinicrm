@@ -30,33 +30,24 @@
                         <img *ngIf="organisation.logo && !edit" [src]="organisation.logo"
                              alt="" class="h-16 mr-4 float-left flex-none rounded-lg bg-gray-800 object-cover">
                         <div class="flex flex-wrap align-center justify-between text-base font-semibold leading-6 text-gray-900 mb-0">
-                            Organisation Information
+                            {{organisation.name}}
                             <button *ngIf="organisation.id" type="button" (click)="edit = !edit"
                                     class="inline-flex justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm ">
                                 <span *ngIf="!edit">Edit</span><span *ngIf="edit">View</span>&nbsp;Organisation
                             </button>
                         </div>
-                        <p class="mt-1 text-sm text-gray-500">Information relating to the organisation including name, address,
-                            and departments.</p>
+                        <p *ngIf="organisation.address" class="mt-1 text-sm text-gray-500">
+                            <span class="font-semibold">{{organisation.address.street1}}&nbsp;</span>
+                            <span *ngIf="organisation.address.street2">{{organisation.address.street2}}</span>
+                            <span *ngIf="organisation.address.city">, {{organisation.address.city}}</span>
+                            <span *ngIf="organisation.address.county">, {{organisation.address.county}}</span>
+                            <span *ngIf="organisation.address.postcode">, {{organisation.address.postcode}}</span>
+                            <span *ngIf="organisation.address.countryCode">, {{organisation.address.countryCode}}</span>
+                        </p>
                     </div>
 
 
                     <dl *ngIf="!edit && organisation.id" class="grid grid-cols-1 sm:grid-cols-2">
-                        <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
-                            <dt class="text-sm font-medium leading-6 text-gray-900">Organisation name</dt>
-                            <dd class="mt-1 text-sm leading-6 text-gray-700">{{organisation.name}}</dd>
-                        </div>
-                        <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
-                            <dt class="text-sm font-medium leading-6 text-gray-900">Address</dt>
-                            <dd *ngIf="organisation.address" class="mt-1 text-sm leading-6 text-gray-700">
-                                <span class="font-semibold">{{organisation.address.street1}}&nbsp;</span>
-                                <span *ngIf="organisation.address.street2">{{organisation.address.street2}}</span>
-                                <span *ngIf="organisation.address.city">, {{organisation.address.city}}</span>
-                                <span *ngIf="organisation.address.county">, {{organisation.address.county}}</span>
-                                <span *ngIf="organisation.address.postcode">, {{organisation.address.postcode}}</span>
-                                <span *ngIf="organisation.address.countryCode">, {{organisation.address.countryCode}}</span>
-                            </dd>
-                        </div>
                         <div class="border-t border-gray-100 px-4 py-4 sm:col-span-1 sm:px-0">
                             <dt class="text-sm font-medium leading-6 text-gray-900">Tags</dt>
                             <dd class="mt-1 text-sm leading-6 text-gray-700">
