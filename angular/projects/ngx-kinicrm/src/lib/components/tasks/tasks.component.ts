@@ -33,7 +33,7 @@ export class TasksComponent implements OnInit {
     public endOfResults = false;
     public loading = true;
     public showFilters = false;
-    public hideCompleted = false;
+    public hideCompleted = true;
     public selectedContact: any;
     public selectedOrganisation: any;
     public organisationSearch = new BehaviorSubject('');
@@ -42,7 +42,7 @@ export class TasksComponent implements OnInit {
     public contactSearch = new BehaviorSubject('');
 
     private reload = new Subject();
-    private filters: any = {};
+    private filters: any = {status: ['In Progress', 'Pending']};
     private loggedInUser: any = null;
 
     constructor(private userService: UserService,
@@ -170,7 +170,11 @@ export class TasksComponent implements OnInit {
     }
 
     public async updateTaskItem(task: any) {
-        await this.taskService.updateTask(task);
+        const clone = _.clone(task);
+        if (clone.scopeObject) {
+            delete clone.scopeObject;
+        }
+        await this.taskService.updateTask(clone);
     }
 
     public updateTaskName(task: any) {

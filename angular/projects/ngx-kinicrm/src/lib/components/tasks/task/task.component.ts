@@ -83,7 +83,11 @@ export class TaskComponent implements OnInit {
     }
 
     public async saveTask(task: any, showSnack = true) {
-        await this.taskService.updateTask(task);
+        const clone = _.clone(task);
+        if (clone.scopeObject) {
+            delete clone.scopeObject;
+        }
+        await this.taskService.updateTask(clone);
         if (showSnack) {
             this.snackBar.open('Task Successfully Saved.', '', {
                 duration: 2000,

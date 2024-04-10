@@ -38,7 +38,14 @@ export class CommentService {
 
                     comment.gravatarURL = 'https://gravatar.com/avatar/' + hash + '?d=mp&s=512';
 
-                    comment.displayDate = this.moment(comment.createdDate).calendar();
+                    comment.displayDate = this.moment(comment.createdDate).calendar(null, {
+                        sameDay: '[Today] @ HH:mm',
+                        nextDay: '[Tomorrow] @ HH:mm',
+                        nextWeek: 'dddd @ HH:mm',
+                        lastDay: '[Yesterday] @ HH:mm',
+                        lastWeek: '[Last] dddd @ HH:mm',
+                        sameElse: 'DD/MM/YYYY @ HH:mm'
+                    });
 
                     return comment;
                 }));
