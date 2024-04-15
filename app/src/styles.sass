@@ -1,0 +1,155 @@
+/* You can add global styles to this file, and also import other style files */
+@use 'sass:map'
+@use '@angular/material' as mat
+
+@tailwind base
+@tailwind components
+@tailwind utilities
+
+@import "custom-theme"
+
+@import "sass/layout"
+@import "sass/forms"
+@import "sass/menu"
+@import "sass/dialog"
+
+.mat-button-toggle-appearance-standard
+    .mat-button-toggle-label-content
+        line-height: 28px !important
+
+.mat-horizontal-content-container
+    overflow: auto !important
+
+.mat-form-field-underline
+    display: none
+
+td.nop
+    padding: 0 !important
+
+.metric-item
+    display: flex
+    align-items: center
+    justify-content: center
+    height: 100%
+    width: 100%
+    flex-direction: column
+    .main
+        font-size: 2rem
+    .sub-metric
+        margin-top: .5rem
+        font-size: 1.1rem
+        .sub-change
+            &.up
+                color: green
+            &.down
+                color: red
+
+.inline-modal
+    padding: 2rem
+    .apply-bar
+        padding: 2rem
+
+.rg-bottom
+    background-color: #e1e1e1 !important
+
+.alert-conditions
+    .top-filters
+        background-color: transparent !important
+
+ki-edit-notification-group
+    padding: 1rem
+    display: block
+
+.draggable-toolbar
+    .grid-stack-item
+        .grid-stack-item-content
+            @apply text-primary
+
+mat-radio-group
+    mat-radio-button
+        display: block
+        margin-top: .5rem
+        label
+            flex-direction: row
+            font-weight: 400
+
+.grid-stack-item-content.ui-draggable-dragging
+    background-color: white
+    //border: 1px dashed #c4c4c4
+    @apply text-primary
+    border-radius: 6px
+    .item-disabled
+        display: none
+
+mat-checkbox
+    label.mat-checkbox-layout
+        flex-direction: row
+
+a:not([href])
+    cursor: pointer
+    -webkit-user-select: none
+    -moz-user-select: none
+    user-select: none
+
+.grid-stack > .grid-stack-item > .ui-resizable-se,
+.grid-stack > .grid-stack-item > .ui-resizable-sw
+    background-image: url('/assets/resize.png') !important
+    background-size: 15px !important
+    transform: rotate(-90deg) !important
+    margin: 2px !important
+
+.no-menu-padding
+    min-width: 200px !important
+    min-height: 48px !important
+    .mat-menu-content
+        padding: 0 !important
+
+mat-tab-group.gray-header
+    mat-tab-header.mat-tab-header
+        margin-top: 4px
+        background-color: whitesmoke
+
+mat-tab-group
+    .mat-tab-body-wrapper
+        height: 100%
+
+
+.CodeMirror
+    min-height: 150px !important
+    height: 100% !important
+
+mat-radio-group.dashboard-operations
+    label.mat-radio-label
+        display: flex
+        flex-direction: column
+        align-items: center
+        width: 80px
+        padding-top: 5px
+        span.mat-radio-label-content
+            padding: 0
+            font-size: 12px
+
+mat-button-toggle.mat-button-toggle-checked
+    background-color: mat.get-color-from-palette($primary-palette, 100)
+
+mat-option
+    background-color: white !important
+
+.cdk-overlay-pane.mat-mdc-autocomplete-panel-above
+    border-left: 1px solid lightgrey
+    border-right: 1px solid lightgrey
+    border-top: 1px solid lightgrey
+    > div
+        padding: 0
+
+.mat-mdc-tab-header
+    background-color: white
+    border-bottom: 1px solid lightgrey
+
+.mdc-tab-indicator--active .mdc-tab-indicator__content
+    border-color: mat.get-color-from-palette($primary-palette, 600)
+    border-top-width: 3px !important
+
+.mdc-tab
+    //font-weight: 500
+    letter-spacing: 0.025em

@@ -1,0 +1,18 @@
+<mat-toolbar id="toolbar" class="border-b p-0 justify-between text-gray-700 bg-gray-50">
+    <div class="flex items-center h-full">
+        <div class="logo-container ml-4 flex items-center cursor-pointer" [routerLink]="['/']">
+            <span class="h-6 ml-2 text-lg text-gray-500 font-normal">{{environment.appName}}</span>
+        </div>
+    </div>
+</mat-toolbar>
+<div class="login-wrapper flex flex-col justify-center pb-12 sm:px-6 lg:px-8">
+
+    <div class="bg-white py-8 md:w-3/5 sm:w-3/4 w-full mx-auto rounded-md shadow">
+        <div class="justify-center ml-4 flex items-center cursor-pointer" [routerLink]="['/']">
+            <span class="h-6 ml-2 text-lg text-gray-500 font-normal">{{environment.appName}}</span>
+        </div>
+        <ka-login [loginRoute]="loginRoute" [recaptchaKey]="environment.recaptchaKey"
+                  (loggedIn)="loggedIn()"></ka-login>
+    </div>
+
+</div>

@@ -1,0 +1,86 @@
+<div class="p-6 bg-white border-b border-gray-200">
+    <div class="md:flex md:items-center md:justify-between md:space-x-5">
+        <div class="flex items-start flex-1">
+            <div class="">
+                <h1 class="text-2xl font-bold text-gray-900">Getting Started</h1>
+                <p class="text-sm font-medium text-gray-500">
+                    Follow the steps below for setting up your app.
+                </p>
+            </div>
+        </div>
+        <div class="mt-6 flex flex-col-reverse justify-stretch">
+            <!--            <button type="button" -->
+            <!--                    class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary focus:outline-none">-->
+            <!--                Create New -->
+            <!--            </button>-->
+        </div>
+    </div>
+</div>
+
+<div class="m-6">
+
+    <div class="bg-white shadow rounded-md p-4 mb-4">
+        <div class="text-gray-500 mb-2">Install Dependant Libraries</div>
+        <div class="text-sm">To get the app up and running you'll first need to install all the required libraries.
+            Run <code class="text-xs bg-gray-100 p-1 text-gray-600 rounded-md">npm install</code> in the root of the
+            app directory.
+        </div>
+    </div>
+
+    <div class="bg-white shadow rounded-md p-4 mb-4">
+        <div class="text-gray-500 mb-2">Configure Localhost</div>
+        <div class="text-sm">You'll want to decide on the hostname you want to use for developing the app locally.
+            This can be set in the package.json file here <code
+                class="text-xs bg-gray-100 p-1 text-gray-600 rounded-md">[app-directory]/package.json</code>.
+            Change this line to match the desired hostname and set an open and available port to use.
+            <div><code class="text-xs bg-gray-100 p-1 text-gray-600 rounded-md">"start-secure": "ng serve
+                --host=kini-starter-app.oxil.uk --port=6999 --ssl"</code> You'll also want to make sure you have added this hostname to your local <code
+                class="text-xs bg-gray-100 p-1 text-gray-600 rounded-md">/etc/hosts</code> file.</div>
+        </div>
+
+    </div>
+
+    <div class="bg-white shadow rounded-md p-4 mb-4">
+        <div class="text-gray-500 mb-2">Set Environment Variables</div>
+        <div class="text-sm">To get the app to start working and communicating with the backend you will need to
+            configure
+            various URLs. Head to <code class="text-xs bg-gray-100 p-1 text-gray-600 rounded-md">[app-directory]/src/environments</code>
+            and update both the production and dev json files.
+        </div>
+
+        <img class="h-48" src="assets/img/Screenshot%202024-04-08%20at%2014.30.04.png" alt="">
+    </div>
+    <div class="bg-white shadow rounded-md p-4 mb-4">
+        <div class="text-gray-500 mb-2">Set App Colour Palette</div>
+        <div class="text-sm mb-2">There are two places you need to update the colour palettes - one is for use with the
+            Angular Material library we use for some widgets and components. The other is for the CSS library we use
+            for theming the whole app.
+        </div>
+        <div class="text-sm mb-2"><b>Material</b> colour palette can be found here <code
+            class="text-xs bg-gray-100 p-1 text-gray-600 rounded-md">[app-directory]/src/custom-theme.scss</code>
+            You will then need to update the two palette variables named <code
+                class="text-xs bg-gray-100 p-1 text-gray-600 rounded-md">$palette-primary</code> and <code
+                class="text-xs bg-gray-100 p-1 text-gray-600 rounded-md">$palette-secondary</code>. You can use the
+            following service for generating a full palette based on a primary colour
+            <a class="text-secondary" href="http://mcg.mbitson.com/#!?mcgpalette0=%233f51b5">http://mcg.mbitson.com/#!?mcgpalette0=%233f51b5</a>
+        </div>
+
+        <div class="text-sm mb-2"><b>Tailwind CSS</b> colour palette can be found here <code
+            class="text-xs bg-gray-100 p-1 text-gray-600 rounded-md">[app-directory]/tailwind.config.js</code>
+            You will then need to update the colour objects for <code
+                class="text-xs bg-gray-100 p-1 text-gray-600 rounded-md">textColor</code>, <code
+                class="text-xs bg-gray-100 p-1 text-gray-600 rounded-md">backgroundColor</code>, and <code
+                class="text-xs bg-gray-100 p-1 text-gray-600 rounded-md">borderColor</code>.
+            You can find the full range of CSS classes available for styling the app at
+            <a class="text-secondary"
+               href="https://v2.tailwindcss.com/docs/flex">https://v2.tailwindcss.com/docs/flex</a></div>
+    </div>
+
+    <div class="bg-white shadow rounded-md p-4 mb-4">
+        <div class="text-gray-500 mb-2">Start the App</div>
+        <div class="text-sm">To start the app run <code class="text-xs bg-gray-100 p-1 text-gray-600 rounded-md">npm run
+            start-secure</code> in the root of the app directory.
+        </div>
+    </div>
+
+</div>

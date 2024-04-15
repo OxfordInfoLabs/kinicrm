@@ -70,9 +70,8 @@ export class EditOrganisationComponent implements OnInit {
     }
 
     async ngOnInit() {
-        this.route.url.subscribe((url: any) => {
-            this.currentURL = '/' + _.map(url, 'path').join('/');
-        });
+        this.currentURL = window.location.pathname.split('#')[0];
+
         merge(this.addressSearch)
             .pipe(
                 debounceTime(300),

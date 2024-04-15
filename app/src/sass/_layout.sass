@@ -1,0 +1,89 @@
+app-router
+    display: block
+    height: 100vh
+    width: 100vw
+
+ki-dashboard-editor
+    height: 100%
+    width: 100%
+
+#toolbar
+    height: 64px
+    position: sticky
+    top: 0
+    z-index: 99
+    left: 0
+    right: 0
+
+#sidebar
+    width: 250px
+    background-color: white
+    //border-right: none
+    position: fixed
+    padding-bottom: 3rem
+    height: calc(100vh - 100px)
+    margin-top: 100px
+    &.enforcement
+        height: calc(100vh - 140px)
+        margin-top: 140px
+    .mat-drawer-inner-container
+        display: flex
+        flex-direction: column
+        justify-content: space-between
+
+#main
+    background-color: whitesmoke
+    height: calc(100vh - 100px)
+    &.enforcement
+        height: calc(100vh - 140px)
+    &::-webkit-scrollbar
+        width: 0.5em
+        height: 0.5em
+        background: transparent
+    &::-webkit-scrollbar-thumb
+        background: #777777
+    .page-header
+        display: flex
+        align-items: center
+        justify-content: space-between
+        margin: 0 .5rem 1rem .5rem
+        h1
+            margin: 0
+    .page-title
+        letter-spacing: .7px
+    .flex-container
+        display: flex
+        flex-wrap: wrap
+    &.small-sidebar
+        margin-left: 55px !important
+        width: calc(100% - 55px)
+    .content
+        display: flex
+        align-items: flex-start
+        text-align: left
+        max-width: 940px
+        margin: 0 auto
+        min-height: 100vh
+        flex-direction: column
+
+
+mat-sidenav-container
+    min-height: calc(100vh - 100px)
+    background-color: #F5F5F5 !important
+    &.enforcement
+        min-height: calc(100vh - 140px)
+
+.header
+    box-shadow: 0 0 1px #aaa
+
+.content-wrapper
+    border: 1px solid #e8e8e8
+    border-radius: 3px
+
+table
+    width: 100%
+.align-center
+    display: flex
+    align-items: center
+.sb
+    justify-content: space-between

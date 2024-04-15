@@ -1,0 +1,45 @@
+<div class="p-6 bg-white border-b border-gray-200">
+    <div class="md:flex md:items-center md:justify-between md:space-x-5">
+        <div class="flex items-start flex-1">
+            <div class="pt-1.5">
+                <h1 class="text-2xl font-bold text-gray-900">CRM Settings</h1>
+                <p class="text-sm font-medium text-gray-500">
+                    Manage the address book and custom workflows
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mx-auto max-w-7xl mt-8">
+    <div
+            class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-200 shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0">
+        <div
+                class="rounded-tl-lg rounded-tr-lg sm:rounded-tr-none group relative bg-white p-6 hover:bg-gray-50">
+            <div>
+              <span class="inline-flex rounded-lg p-3 bg-blue-50 text-blue-700 ring-4 ring-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                </svg>
+              </span>
+            </div>
+            <div class="mt-8">
+                <h3 class="text-base font-semibold leading-6 text-gray-900">
+                    <a [routerLink]="['/crm/settings/address-book']" class="focus:outline-none">
+                        <!-- Extend touch target to entire panel -->
+                        <span class="absolute inset-0" aria-hidden="true"></span>
+                        Address Book
+                    </a>
+                </h3>
+                <p class="mt-2 text-sm text-gray-500">Manage Addresses used in the system.</p>
+            </div>
+            <span class="pointer-events-none absolute right-6 top-6 text-gray-300 group-hover:text-gray-400"
+                  aria-hidden="true">
+              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                        d="M20 4h1a1 1 0 00-1-1v1zm-1 12a1 1 0 102 0h-2zM8 3a1 1 0 000 2V3zM3.293 19.293a1 1 0 101.414 1.414l-1.414-1.414zM19 4v12h2V4h-2zm1-1H8v2h12V3zm-.707.293l-16 16 1.414 1.414 16-16-1.414-1.414z"/>
+              </svg>
+            </span>
+        </div>
+
+    </div>
+</div>
