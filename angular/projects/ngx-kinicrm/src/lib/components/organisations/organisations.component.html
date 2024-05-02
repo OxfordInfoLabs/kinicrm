@@ -70,7 +70,7 @@
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr *ngFor="let organisation of organisations" [routerLink]="['/crm/organisations/' + organisation.id]"
+                    <tr *ngFor="let organisation of organisations" (click)="open('/crm/organisations/' + organisation.id)"
                         class="cursor-pointer hover:bg-gray-50">
                         <td class="px-4 py-3 text-sm ">
                             <div class="flex items-center">

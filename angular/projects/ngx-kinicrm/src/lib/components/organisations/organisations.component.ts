@@ -52,6 +52,10 @@ export class OrganisationsComponent implements OnInit {
         });
     }
 
+    public open(url: string) {
+        window.open(url, '_blank');
+    }
+
     public updateFilter(config: any) {
         this.filters[config.member] = config.memberFilter.filter((filter: any) => {
             return filter.checked;
